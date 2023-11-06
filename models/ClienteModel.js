@@ -2617,7 +2617,7 @@ const Cliente = {
   getAllOperators: async () => {
     try {
       const query =
-      "SELECT usr_nome, usr_login\n"+
+      "SELECT usr_login\n"+
       "FROM fr_usuario\n"+
       "WHERE cd_perfil_acesso IN (11,13,14,15,23)\n"+
       "AND (usr_nome NOT ILIKE '%dispon%'\n"+
@@ -2635,6 +2635,242 @@ const Cliente = {
       throw error;
     }
   },
+  getAllOperators3M: async () => {
+    try {
+      const query =
+      "SELECT usuario.usr_login\n"+
+      "FROM fr_usuario usuario\n"+
+      "WHERE usuario.usr_email ILIKE '%venda%tm.%'\n"+
+      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllOperatorsVarzea: async () => {
+    try {
+      const query =
+      "SELECT usuario.usr_login\n"+
+      "FROM fr_usuario usuario\n"+
+      "WHERE usuario.usr_email ILIKE '%venda%vp.%' or usuario.usr_login ILIKE '%itamaralorra%'\n"+
+      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllOperatorsBuritizeiro: async () => {
+    try {
+      const query =
+      "SELECT usuario.usr_login\n"+
+      "FROM fr_usuario usuario\n"+
+      "WHERE usuario.usr_login ILIKE '%robertabarbosa840%' or usuario.usr_login ILIKE '%thaissouza673%'\n"+
+      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllOperatorsPirapora: async () => {
+    try {
+      const query =
+      "SELECT usuario.usr_login\n"+
+      "FROM fr_usuario usuario\n"+
+      "WHERE usuario.usr_login ILIKE '%robertamonti620%' or usuario.usr_login ILIKE '%lorendannesantana605%'\n"+
+      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllOperatorsJP: async () => {
+    try {
+      const query =
+      "SELECT usuario.usr_login\n"+
+      "FROM fr_usuario usuario\n"+
+      "WHERE usuario.usr_login in ('rayssa133',\n"+
+      "'luanasouza177',\n"+
+      "'kamillyramos133',\n"+
+      "'eduardareis697',\n"+
+      "'kamilagomes655')\n"+
+      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllOperatorsPatos: async () => {
+    try {
+      const query =
+      "SELECT usuario.usr_login\n"+
+      "FROM fr_usuario usuario\n"+
+      "WHERE usuario.usr_login in (\n"+
+      "'andressasouza650',\n"+
+      "'anaflavia183',\n"+
+      "'brunaeduarda622',\n"+
+      "'danielasoares695',\n"+
+      "'erikaalves646',\n"+
+      "'janinemenezes655',\n"+
+      "'renatalima694')\n"+
+      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllOperatorsVarjao: async () => {
+    try {
+      const query =
+      "SELECT usuario.usr_login\n"+
+      "FROM fr_usuario usuario\n"+
+      "WHERE usuario.usr_login in (\n"+
+      "'gabriellesilva630',\n"+
+      "'keithhellen507'\n"+
+      ")\n"+
+      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllOperatorsSaoGoncalo: async () => {
+    try {
+      const query =
+      "SELECT usuario.usr_login\n"+
+      "FROM fr_usuario usuario\n"+
+      "WHERE usuario.usr_login in (\n"+
+      "'guilhermealves600',\n"+
+      "'jordanacristina679'\n"+
+      ")\n"+
+      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllOperatorsPresidente: async () => {
+    try {
+      const query =
+      "SELECT usuario.usr_login\n"+
+      "FROM fr_usuario usuario\n"+
+      "WHERE usuario.usr_login in (\n"+
+      "'alexarayane680',\n"+
+      "'jessicavieira676',\n"+
+      "'geovaniasilva127'\n"+
+      ")\n"+
+      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllOperatorsIrai: async () => {
+    try {
+      const query =
+      "SELECT usuario.usr_login\n"+
+      "FROM fr_usuario usuario\n"+
+      "WHERE usuario.usr_login in (\n"+
+      "'angelicalima645',\n"+
+      "'claricepereira607'\n"+
+      ")\n"+
+      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllOperatorsAbadia: async () => {
+    try {
+      const query =
+      "SELECT usuario.usr_login\n"+
+      "FROM fr_usuario usuario\n"+
+      "WHERE usuario.usr_login in (\n"+
+      "'ketnenpaula138',\n"+
+      "'danielasilva674'\n"+
+      ")\n"+
+      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllOperatorsLagoa: async () => {
+    try {
+      const query =
+      "SELECT usuario.usr_login\n"+
+      "FROM fr_usuario usuario\n"+
+      "WHERE usuario.usr_login in (\n"+
+      "'isabelsoares686',\n"+
+      "'nathanimorais683'\n"+
+      ")\n"+
+      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllOperatorsGuima: async () => {
+    try {
+      const query =
+      "SELECT usuario.usr_login\n"+
+      "FROM fr_usuario usuario\n"+
+      "WHERE usuario.usr_login in (\n"+
+      "'adrianecaixeta626',\n"+
+      "'ellencristina667',\n"+
+      "'larissaoliveira678'\n"+
+      ")\n"+
+      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },   
+  getAllOperatorsCruzeiro: async () => {
+    try {
+      const query =
+      "SELECT usuario.usr_login\n"+
+      "FROM fr_usuario usuario\n"+
+      "WHERE usuario.usr_login in (\n"+
+      "'luizavieira648',\n"+
+      "'andressalemos657'\n"+
+      ")\n"+
+      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllOperatorsPatro: async () => {
+    try {
+      const query =
+      "SELECT usuario.usr_login\n"+
+      "FROM fr_usuario usuario\n"+
+      "WHERE usuario.usr_login in (\n"+
+      "'annaclara621',\n"+
+      "'jessicasilva619',\n"+
+      "'larissasilva681'\n"+
+      ")\n"+
+      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },    
 };
 
 module.exports = Cliente;
