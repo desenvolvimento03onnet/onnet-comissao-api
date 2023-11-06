@@ -1,7 +1,7 @@
 const db = require("../config/db"); // Importe a configuração do banco de dados
 
 const Cliente = {
-  getComissaoTotal: async (dataInicio, dataFim) => {
+  getComissaoTotal: async ( comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoRecorrenteFrente50, comissaoRenovacaoRecorrenteTele3, comissaoRenovacaoRecorrenteTele4, dataInicio, dataFim ) => {
     try {
       const query =
       "SELECT\n"+
@@ -207,7 +207,7 @@ const Cliente = {
 			"SELECT\n"+
       "case\n"+
       "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
-      "ELSE '0'\n"+
+      "ELSE $1\n"+
       "END\n"+
 			"from\n"+
 			"mk_faturas fatura\n"+
@@ -232,7 +232,7 @@ const Cliente = {
       "WHERE\n"+
 			"plano.cd_plano_principal = planoC\n"+
       "AND UPPER(produto.descricao) LIKE '%TEL%ADICIONAL%'\n"+
-      ") IS NOT NULL THEN '3'\n"+
+      ") IS NOT NULL THEN $2\n"+
       "ELSE '0'\n"+
       "end\n"+
       "end\n"+
@@ -258,7 +258,7 @@ const Cliente = {
       "WHERE\n"+
       "plano.cd_plano_principal = planoC\n"+
       "AND UPPER(produto.descricao) LIKE '%TEL%ADICIONAL%'\n"+
-      ") IS NOT NULL THEN '3'\n"+
+      ") IS NOT NULL THEN $2\n"+
       "ELSE '0'\n"+
       "end\n"+
       "end\n"+
@@ -284,7 +284,7 @@ const Cliente = {
       "WHERE\n"+
       "trans.cd_fatura = fatura.codfatura\n"+
 			"AND trans.excluida = 'N'\n"+
-      ") IS TRUE THEN '4'\n"+
+      ") IS TRUE THEN $3\n"+
       "ELSE '0'\n"+
       "END\n"+
 			"end\n"+
@@ -309,7 +309,7 @@ const Cliente = {
       "WHERE\n"+
       "trans.cd_fatura = fatura.codfatura\n"+
       "AND trans.excluida = 'N'\n"+
-      ") IS TRUE THEN '4'\n"+
+      ") IS TRUE THEN $3\n"+
       "ELSE '0'\n"+
       "END\n"+
       "end\n"+
@@ -345,7 +345,7 @@ const Cliente = {
       "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
       "ELSE (\n"+
       "SELECT\n"+
-      "(plano.vlr_mensalidade * 0.15)||''\n"+
+      "(plano.vlr_mensalidade * $4)||''\n"+
       "from\n"+
       "mk_planos_acesso plano\n"+
       "where\n"+
@@ -384,8 +384,8 @@ const Cliente = {
       "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
       "ELSE\n"+
       "case\n"+
-      "WHEN vencimento IN (2) THEN '5'\n"+
-      "WHEN vencimento IN (4) THEN '2.5'\n"+
+      "WHEN vencimento IN (2) THEN $5\n"+
+      "WHEN vencimento IN (4) THEN $6\n"+
       "ELSE '0'\n"+
       "end\n"+
       "END\n"+
@@ -451,7 +451,7 @@ const Cliente = {
       "LEFT JOIN fr_usuario usuario ON (usuario.usr_login = contrato.operador)\n"+
       "LEFT JOIN mk_usuarios_perfil_acesso_master setor ON (setor.codperfilacessomaster = usuario.cd_perfil_acesso)\n"+
       "WHERE\n"+
-      "contrato.adesao BETWEEN $1 and $2\n"+
+      "contrato.adesao BETWEEN $17 and $18\n"+
       "AND cliente.inativo = 'N'\n"+
       "GROUP BY 1,2,3,4,5,6,7,8\n"+
       ") AS tabela\n"+
@@ -573,7 +573,7 @@ const Cliente = {
       "plano.cd_plano_principal = planoC\n"+
       "AND (UPPER(produto.descricao) LIKE '%TELA%'\n"+
       "OR UPPER(produto.descricao) LIKE '%CDN%')\n"+
-      ") IS NOT NULL THEN '2'\n"+
+      ") IS NOT NULL THEN $7\n"+
       "ELSE '0'\n"+
       "end\n"+
       "end\n"+
@@ -589,19 +589,67 @@ const Cliente = {
       "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
       "ELSE\n"+
       "case\n"+
-      "WHEN (\n"+
+      "WHEN\n"+
+      "exists(\n"+
       "SELECT\n"+
       "produto.descricao\n"+
       "FROM\n"+
       "mk_crm_produtos plano\n"+
       "INNER JOIN mk_crm_produtos_composicao item ON (item.cd_produto = plano.codcrmproduto)\n"+
-      "LEFT JOIN mk_planos_acesso produto ON (produto.codplano = item.cd_plano)\n"+
+      "INNER JOIN mk_planos_acesso produto ON (produto.codplano = item.cd_plano)\n"+
       "WHERE\n"+
-      "plano.cd_plano_principal = planoC\n"+
+      "plano.cd_plano_principal = ultimoPlanoV\n"+
       "AND (UPPER(produto.descricao) LIKE '%TELA%'\n"+
       "OR UPPER(produto.descricao) LIKE '%CDN%')\n"+
-      ") IS NOT NULL THEN\n"+
+      ") IS FALSE AND\n"+
+      "exists(\n"+
+      "SELECT\n"+
+      "produto.descricao\n"+
+      "FROM\n"+
+      "mk_crm_produtos plano\n"+
+      "INNER JOIN mk_crm_produtos_composicao item ON (item.cd_produto = plano.codcrmproduto)\n"+
+      "INNER JOIN mk_planos_acesso produto ON (produto.codplano = item.cd_plano)\n"+
+      "WHERE\n"+
+      "plano.cd_plano_principal = ultimoPlanoN\n"+
+      "AND (UPPER(produto.descricao) LIKE '%TELA%'\n"+
+      "OR UPPER(produto.descricao) LIKE '%CDN%')\n"+
+      ") IS TRUE THEN\n"+
       "case\n"+
+      "WHEN operador IN (\n"+
+      "'rayssa133',\n"+
+      "'eduardareis697',\n"+
+      "'kamilagomes655',\n"+
+      "'andressasouza650',\n"+
+      "'anaflavia183',\n"+
+      "'brunaeduarda622',\n"+
+      "'danielasoares695',\n"+
+      "'erikaalves646',\n"+
+      "'janinemenezes655',\n"+
+      "'keithhellen507',\n"+
+      "'gabriellesilva630',\n"+
+      "'guilhermealves600',\n"+
+      "'jordanacristina679',\n"+
+      "'geovaniasilva127',\n"+
+      "'jessicavieira676',\n"+
+      "'angelicalima645',\n"+
+      "'claricepereira607',\n"+
+      "'danielasilva674',\n"+
+      "'alinerocha658',\n"+
+      "'itamaralorrane622',\n"+
+      "'robertabarbosa840',\n"+
+      "'thaissouza673',\n"+
+      "'lorendannesantana605',\n"+
+      "'robertamonti620',\n"+
+      "'andressalemos657',\n"+
+      "'luizavieira648',\n"+
+      "'adrianecaixeta626',\n"+
+      "'ellencristina667',\n"+
+      "'larissaoliveira678',\n"+
+      "'isabelsoares686',\n"+
+      "'nathanimorais683',\n"+
+      "'joicepereira625',\n"+
+      "'vanielelarisse637'\n"+
+      ") THEN $7\n"+
       "WHEN operador IN (\n"+
       "'luisgustavo954',\n"+
       "'cecilia148',\n"+
@@ -614,7 +662,7 @@ const Cliente = {
       "'yasminsouza696',\n"+
       "'pedrohenrique608',\n"+
       "'larissaoliveira613'\n"+
-      ") THEN '2'\n"+
+      ") THEN $8\n"+
       "ELSE '0'\n"+
       "END\n"+
       "ELSE '0'\n"+
@@ -644,7 +692,7 @@ const Cliente = {
       "plano.cd_plano_principal = planoC\n"+
       "AND (UPPER(produto.descricao) LIKE '%TELEFONIA%'\n"+
       "OR UPPER(produto.descricao) LIKE '%DDR%')\n"+
-      ") IS NOT NULL THEN '3'\n"+
+      ") IS NOT NULL THEN $9\n"+
       "ELSE '0'\n"+
       "end\n"+
       "end\n"+
@@ -687,7 +735,58 @@ const Cliente = {
       ") IS TRUE THEN\n"+
       "CASE\n"+
       "WHEN ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "ELSE '3'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "WHEN operador IN (\n"+
+      "'rayssa133',\n"+
+      "'eduardareis697',\n"+
+      "'kamilagomes655',\n"+
+      "'andressasouza650',\n"+
+      "'anaflavia183',\n"+
+      "'brunaeduarda622',\n"+
+      "'danielasoares695',\n"+
+      "'erikaalves646',\n"+
+      "'janinemenezes655',\n"+
+      "'keithhellen507',\n"+
+      "'gabriellesilva630',\n"+
+      "'guilhermealves600',\n"+
+      "'jordanacristina679',\n"+
+      "'geovaniasilva127',\n"+
+      "'jessicavieira676',\n"+
+      "'angelicalima645',\n"+
+      "'claricepereira607',\n"+
+      "'danielasilva674',\n"+
+      "'alinerocha658',\n"+
+      "'itamaralorrane622',\n"+
+      "'robertabarbosa840',\n"+
+      "'thaissouza673',\n"+
+      "'lorendannesantana605',\n"+
+      "'robertamonti620',\n"+
+      "'andressalemos657',\n"+
+      "'luizavieira648',\n"+
+      "'adrianecaixeta626',\n"+
+      "'ellencristina667',\n"+
+      "'larissaoliveira678',\n"+
+      "'isabelsoares686',\n"+
+      "'nathanimorais683',\n"+
+      "'joicepereira625',\n"+
+      "'vanielelarisse637'\n"+
+      ") THEN $9\n"+
+      "WHEN operador IN (\n"+
+      "'luisgustavo954',\n"+
+      "'cecilia148',\n"+
+      "'grasielaluiza670',\n"+
+      "'deborahabadia609',\n"+
+      "'paulogabriel689',\n"+
+      "'geovaneeutaqui603',\n"+
+      "'jullianabouzan690',\n"+
+      "'marcosrogerio655',\n"+
+      "'yasminsouza696',\n"+
+      "'pedrohenrique608',\n"+
+      "'larissaoliveira613'\n"+
+      ") THEN $10\n"+
+      "ELSE '0'\n"+
+      "END\n"+
       "end\n"+
       "ELSE '0'\n"+
       "end\n"+
@@ -714,7 +813,7 @@ const Cliente = {
       "WHERE\n"+
       "trans.cd_fatura = fatura.codfatura\n"+
       "AND trans.excluida = 'N'\n"+
-      ") IS TRUE THEN '4'\n"+
+      ") IS TRUE THEN $11\n"+
       "ELSE '0'\n"+
       "END\n"+
       "end\n"+
@@ -775,7 +874,7 @@ const Cliente = {
 			"'nathanimorais683',\n"+
       "'joicepereira625',\n"+
       "'vanielelarisse637'\n"+
-      ") THEN '4'\n"+
+      ") THEN $11\n"+
       "WHEN operador IN (\n"+
       "'luisgustavo954',\n"+
       "'cecilia148',\n"+
@@ -788,7 +887,7 @@ const Cliente = {
       "'yasminsouza696',\n"+
       "'pedrohenrique608',\n"+
       "'larissaoliveira613'\n"+
-      ") THEN '3'\n"+
+      ") THEN $12\n"+
       "ELSE '0'\n"+
       "end\n"+
       "ELSE '0'\n"+
@@ -860,12 +959,12 @@ const Cliente = {
       "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) = 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "else (ultimoPlanoNmensal * 0.02)||''\n"+
+      "else (ultimoPlanoNmensal * $13)||''\n"+
       "end\n"+
       "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) > 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "else ((ultimoPlanoNmensal - penultimoPlanoVmensal) * 0.5)||''\n"+
+      "else ((ultimoPlanoNmensal - penultimoPlanoVmensal) * $14)||''\n"+
       "end\n"+
       "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) < 0) THEN '0'\n"+
       "END\n"+
@@ -874,12 +973,12 @@ const Cliente = {
       "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) = 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "else (ultimoPlanoNmensal * 0.02)||''\n"+
+      "else (ultimoPlanoNmensal * $13)||''\n"+
       "end\n"+
       "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) > 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "ELSE ((ultimoPlanoNmensal - ultimoPlanoVmensal) * 0.5)||''\n"+
+      "ELSE ((ultimoPlanoNmensal - ultimoPlanoVmensal) * $14)||''\n"+
       "end\n"+
       "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) < 0) THEN '0'\n"+
       "END\n"+
@@ -903,12 +1002,12 @@ const Cliente = {
       "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) = 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "else '3'\n"+
+      "else $15\n"+
       "end\n"+
       "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) > 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "ELSE '4'\n"+
+      "ELSE $16\n"+
       "end\n"+
       "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) < 0) THEN '0'\n"+
       "END\n"+
@@ -917,12 +1016,12 @@ const Cliente = {
       "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) = 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "ELSE '3'\n"+
+      "ELSE $15\n"+
       "end\n"+
       "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) > 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "ELSE '4'\n"+
+      "ELSE $16\n"+
       "end\n"+
       "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) < 0) THEN '0'\n"+
       "END\n"+
@@ -1151,12 +1250,12 @@ const Cliente = {
       "LEFT JOIN fr_usuario usuarios ON (usuarios.usr_login = hist.operador)\n"+
       "inner JOIN mk_usuarios_perfil_acesso_master perfis ON (perfis.codperfilacessomaster = usuarios.cd_perfil_acesso)\n"+
       "WHERE\n"+
-      "ultimo.dt_hr::DATE BETWEEN $1 and $2\n"+
+      "ultimo.dt_hr::DATE BETWEEN $17 and $18\n"+
       "AND contrato.cancelado = 'N'\n"+
       ") AS tabela\n"+
       ") AS tb\n"+
       "ORDER BY 3,6,11";
-      const values = [dataInicio, dataFim];
+      const values = [ comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoRecorrenteFrente50, comissaoRenovacaoRecorrenteTele3, comissaoRenovacaoRecorrenteTele4, dataInicio, dataFim ];
       const result = await db.query(query, values);
       return result.rows;
     } catch (error) {

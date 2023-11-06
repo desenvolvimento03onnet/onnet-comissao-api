@@ -3,9 +3,9 @@ const ClienteModel = require("../models/ClienteModel"); // Importe o modelo
 
 const clienteController = {
   getComissaoTotal: async (req, res) => {
-    const { dataInicio, dataFim } = req.body;
+    const { comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoRecorrenteFrente50, comissaoRenovacaoRecorrenteTele3, comissaoRenovacaoRecorrenteTele4, dataInicio, dataFim } = req.body;
     try {
-      const clients = await ClienteModel.getComissaoTotal(dataInicio, dataFim);
+      const clients = await ClienteModel.getComissaoTotal( comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoRecorrenteFrente50, comissaoRenovacaoRecorrenteTele3, comissaoRenovacaoRecorrenteTele4, dataInicio, dataFim );
       res.status(200).json(clients);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de clientes."+error });
