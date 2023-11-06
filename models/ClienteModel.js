@@ -1,11 +1,1161 @@
 const db = require("../config/db"); // Importe a configuração do banco de dados
 
-
 const Cliente = {
-  getAllClients: async (dataInicio, dataFim) => {
+  getComissaoTotal: async (dataInicio, dataFim) => {
     try {
       const query =
-      'select codcontrato, cancelado, adesao from public.mk_contratos where adesao between $1 and $2';
+      "SELECT\n"+
+      "codigo,\n"+
+      "cliente,\n"+
+      "cidade,\n"+
+      "contrato,\n"+
+      "data,\n"+
+      "operacao,\n"+
+      "operador,\n"+
+      "setor,\n"+
+      "fatura,\n"+
+      "dt_liquidacao,\n"+
+      "pago,\n"+
+      "CASE\n"+
+      "WHEN valor_plano NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(valor_plano,'.',',')\n"+
+      "ELSE valor_plano\n"+
+      "END valor_plano,\n"+
+      "CASE\n"+
+      "WHEN valor_tv NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(valor_tv,'.',',')\n"+
+      "ELSE valor_tv\n"+
+      "END valor_tv,\n"+
+      "CASE\n"+
+      "WHEN valor_telefonia NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(valor_telefonia,'.',',')\n"+
+      "ELSE valor_telefonia\n"+
+      "END valor_telefonia,\n"+
+      "CASE\n"+
+      "WHEN valor_recorrente NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(valor_recorrente,'.',',')\n"+
+      "ELSE valor_recorrente\n"+
+      "END valor_recorrente,\n"+
+      "CASE\n"+
+      "WHEN comissao_venda NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(comissao_venda,'.',',')\n"+
+      "ELSE comissao_venda\n"+
+      "END comissao_venda,\n"+
+      "CASE\n"+
+      "WHEN dia_02_04 NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(dia_02_04,'.',',')\n"+
+      "ELSE dia_02_04\n"+
+      "END dia_02_04,\n"+
+      "CASE\n"+
+      "WHEN dt_liquidacao NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN\n"+
+      "REPLACE(\n"+
+      "(\n"+
+			"(\n"+
+      "select\n"+
+      "CASE\n"+
+      "WHEN valor_tv NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN CAST(valor_tv AS NUMERIC(9,3))\n"+
+      "END\n"+
+			")\n"+
+			"+\n"+
+			"(\n"+
+      "select\n"+
+      "CASE\n"+
+      "WHEN valor_telefonia NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN CAST(valor_telefonia AS NUMERIC(9,3))\n"+
+      "END\n"+
+			")\n"+
+			"+\n"+
+			"(\n"+
+      "select\n"+
+      "CASE\n"+
+      "WHEN valor_recorrente NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN CAST(valor_recorrente AS NUMERIC(9,3))\n"+
+      "END\n"+
+			")\n"+
+			"+\n"+
+			"(\n"+
+      "select\n"+
+      "CASE\n"+
+      "WHEN comissao_venda NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN CAST(comissao_venda AS NUMERIC(9,3))\n"+
+      "END\n"+
+			")\n"+
+			"+\n"+
+			"(\n"+
+      "select\n"+
+      "CASE\n"+
+      "WHEN dia_02_04 NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN CAST(dia_02_04 AS NUMERIC(9,3))\n"+
+      "END\n"+
+			")\n"+
+      ")\n"+
+      "||'','.',',')\n"+
+      "ELSE dt_liquidacao\n"+
+      "end valor_total\n"+
+      "FROM\n"+
+      "(\n"+
+      "SELECT\n"+
+      "codigo,\n"+
+      "cliente,\n"+
+      "cidade,\n"+
+      "contrato,\n"+
+      "adesao AS \"data\",\n"+
+      "'Venda' operacao,\n"+
+      "operador,\n"+
+      "setor,\n"+
+      "coalesce(fat||'','Cliente não possui faturas') fatura,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+			"CASE\n"+
+      "WHEN fatura.data_liquidacao IS NULL THEN 'Cliente ainda não pagou'\n"+
+      "ELSE fatura.data_liquidacao||''\n"+
+			"END\n"+
+      "from\n"+
+			"mk_faturas fatura\n"+
+      "where\n"+
+			"fatura.codfatura = fat\n"+
+      ") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "else\n"+
+      "(\n"+
+			"SELECT\n"+
+      "CASE\n"+
+      "WHEN fatura.data_liquidacao IS NULL THEN 'Cliente ainda não pagou'\n"+
+      "ELSE fatura.data_liquidacao||''\n"+
+      "END\n"+
+			"from\n"+
+      "mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end dt_liquidacao,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE 'Cliente pagou a 1ª Mensalidade'\n"+
+      "end\n"+
+			"from\n"+
+      "mk_faturas fatura\n"+
+			"where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "else\n"+
+      "(\n"+
+      "SELECT\n"+
+			"case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE 'Cliente pagou a 1ª Mensalidade'\n"+
+			"end\n"+
+      "from\n"+
+			"mk_faturas fatura\n"+
+      "where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end pago,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE (\n"+
+      "SELECT\n"+
+      "REPLACE (plano.vlr_mensalidade||'','.',',')\n"+
+      "from\n"+
+      "mk_planos_acesso plano\n"+
+      "where\n"+
+      "planoC = plano.codplano\n"+
+      ")\n"+
+      "END\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "ELSE\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE (\n"+
+      "SELECT\n"+
+      "replace(plano.vlr_mensalidade||'','.',',')\n"+
+      "from\n"+
+      "mk_planos_acesso plano\n"+
+      "where\n"+
+      "planoC = plano.codplano\n"+
+      ")\n"+
+      "END\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end valor_plano,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE (\n"+
+      "SELECT\n"+
+      "REPLACE (plano.vlr_mensalidade||'','.',',')\n"+
+      "from\n"+
+      "mk_planos_acesso plano\n"+
+      "where\n"+
+      "planoC = plano.codplano\n"+
+      ")\n"+
+      "END\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "ELSE\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE '0'\n"+
+      "END\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "END valor_tv,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+			"ELSE\n"+
+      "case\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "produto.descricao\n"+
+      "FROM\n"+
+      "mk_crm_produtos plano\n"+
+      "INNER JOIN mk_crm_produtos_composicao item ON (item.cd_produto = plano.codcrmproduto)\n"+
+      "INNER JOIN mk_planos_acesso produto ON (produto.codplano = item.cd_plano)\n"+
+      "WHERE\n"+
+			"plano.cd_plano_principal = planoC\n"+
+      "AND UPPER(produto.descricao) LIKE '%TEL%ADICIONAL%'\n"+
+      ") IS NOT NULL THEN '3'\n"+
+      "ELSE '0'\n"+
+      "end\n"+
+      "end\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "else\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+			"ELSE\n"+
+      "case\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "produto.descricao\n"+
+      "FROM\n"+
+      "mk_crm_produtos plano\n"+
+      "INNER JOIN mk_crm_produtos_composicao item ON (item.cd_produto = plano.codcrmproduto)\n"+
+      "INNER JOIN mk_planos_acesso produto ON (produto.codplano = item.cd_plano)\n"+
+      "WHERE\n"+
+      "plano.cd_plano_principal = planoC\n"+
+      "AND UPPER(produto.descricao) LIKE '%TEL%ADICIONAL%'\n"+
+      ") IS NOT NULL THEN '3'\n"+
+      "ELSE '0'\n"+
+      "end\n"+
+      "end\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end valor_telefonia,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+			"case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "when\n"+
+      "exists(\n"+
+      "select\n"+
+      "trans.codtransacaocartao\n"+
+      "from\n"+
+      "mk_transacoes_cartao_geradas trans\n"+
+      "WHERE\n"+
+      "trans.cd_fatura = fatura.codfatura\n"+
+			"AND trans.excluida = 'N'\n"+
+      ") IS TRUE THEN '4'\n"+
+      "ELSE '0'\n"+
+      "END\n"+
+			"end\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "else\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "when\n"+
+      "exists(\n"+
+      "select\n"+
+      "trans.codtransacaocartao\n"+
+      "from\n"+
+      "mk_transacoes_cartao_geradas trans\n"+
+      "WHERE\n"+
+      "trans.cd_fatura = fatura.codfatura\n"+
+      "AND trans.excluida = 'N'\n"+
+      ") IS TRUE THEN '4'\n"+
+      "ELSE '0'\n"+
+      "END\n"+
+      "end\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end valor_recorrente,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE (\n"+
+      "SELECT\n"+
+      "REPLACE (plano.vlr_mensalidade||'','.',',')\n"+
+      "from\n"+
+      "mk_planos_acesso plano\n"+
+      "where\n"+
+      "planoC = plano.codplano\n"+
+      ")\n"+
+      "END\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "ELSE\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE (\n"+
+      "SELECT\n"+
+      "(plano.vlr_mensalidade * 0.15)||''\n"+
+      "from\n"+
+      "mk_planos_acesso plano\n"+
+      "where\n"+
+      "planoC = plano.codplano\n"+
+      ")\n"+
+      "END\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end comissao_venda,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE (\n"+
+      "SELECT\n"+
+      "REPLACE (plano.vlr_mensalidade||'','.',',')\n"+
+      "from\n"+
+      "mk_planos_acesso plano\n"+
+      "where\n"+
+      "planoC = plano.codplano\n"+
+      ")\n"+
+      "END\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "ELSE\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "WHEN vencimento IN (2) THEN '5'\n"+
+      "WHEN vencimento IN (4) THEN '2.5'\n"+
+      "ELSE '0'\n"+
+      "end\n"+
+      "END\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "END dia_02_04\n"+
+      "FROM\n"+
+      "(\n"+
+      "SELECT\n"+
+      "cliente.codpessoa codigo,\n"+
+      "cliente.nome_razaosocial cliente,\n"+
+      "cidade.cidade,\n"+
+      "contrato.codcontrato contrato,\n"+
+      "contrato.plano_acesso planoC,\n"+
+      "contrato.adesao,\n"+
+      "contrato.operador,\n"+
+      "setor.descricao setor,\n"+
+      "(\n"+
+			"SELECT\n"+
+      "min(faturas.codfatura)\n"+
+			"from\n"+
+      "mk_faturas faturas\n"+
+      "INNER JOIN mk_faturas_historicos histos ON (histos.cd_fatura = faturas.codfatura)\n"+
+			"where\n"+
+      "faturas.cd_pessoa = cliente.codpessoa and\n"+
+      "faturas.excluida = 'N' and\n"+
+      "faturas.suspenso = 'N' and\n"+
+      "faturas.tipo = 'R' and\n"+
+      "faturas.data_vencimento = \n"+
+      "(\n"+
+      "select\n"+
+      "min(fatura.data_vencimento)\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "INNER JOIN mk_faturas_historicos histo ON (histo.cd_fatura = fatura.codfatura)\n"+
+			"where\n"+
+      "fatura.cd_pessoa = faturas.cd_pessoa and\n"+
+      "histo.cd_operacao IN (1,8,40,47) and\n"+
+      "histo.dt_hr >= (histos.dt_hr - INTERVAL '5 minutes') and\n"+
+      "fatura.excluida = 'N' and\n"+
+      "fatura.suspenso = 'N' and\n"+
+      "fatura.tipo = 'R' and\n"+
+      "fatura.data_vencimento > histos.dt_hr::date\n"+
+      ")\n"+
+      "AND histos.cd_operacao IN (1,8,40,47)\n"+
+      "AND histos.dt_hr >= (contrato.adesao - INTERVAL '5 minutes')\n"+
+      ") fat,\n"+
+      "(\n"+
+      "select\n"+
+      "dia.dia_vcto\n"+
+      "from\n"+
+      "mk_faturamentos_regras dia\n"+
+      "where\n"+
+      "dia.codfaturamentoregra = contrato.cd_regra_faturamento\n"+
+      ") vencimento\n"+
+      "FROM\n"+
+      "mk_contratos contrato\n"+
+      "INNER JOIN mk_pessoas cliente ON (cliente.codpessoa = contrato.cliente)\n"+
+      "INNER JOIN mk_cidades cidade ON (cidade.codcidade = cliente.codcidade)\n"+
+      "LEFT JOIN fr_usuario usuario ON (usuario.usr_login = contrato.operador)\n"+
+      "LEFT JOIN mk_usuarios_perfil_acesso_master setor ON (setor.codperfilacessomaster = usuario.cd_perfil_acesso)\n"+
+      "WHERE\n"+
+      "contrato.adesao BETWEEN $1 and $2\n"+
+      "AND cliente.inativo = 'N'\n"+
+      "GROUP BY 1,2,3,4,5,6,7,8\n"+
+      ") AS tabela\n"+
+      "UNION\n"+
+      "SELECT\n"+
+      "codigo,\n"+
+      "cliente,\n"+
+      "cidade,\n"+
+      "contrato,\n"+
+      "ultimo::date AS \"data\",\n"+
+      "operacao,\n"+
+      "operador,\n"+
+      "setor,\n"+
+      "coalesce(fat||'','Cliente não possui faturas') fatura,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+			"CASE\n"+
+      "WHEN fatura.data_liquidacao IS NULL THEN 'Cliente ainda não pagou'\n"+
+      "ELSE fatura.data_liquidacao||''\n"+
+			"END\n"+
+      "from\n"+
+			"mk_faturas fatura\n"+
+      "where\n"+
+			"fatura.codfatura = fat\n"+
+      ") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "else\n"+
+      "(\n"+
+			"SELECT\n"+
+      "CASE\n"+
+      "WHEN fatura.data_liquidacao IS NULL THEN 'Cliente ainda não pagou'\n"+
+      "ELSE fatura.data_liquidacao||''\n"+
+      "END\n"+
+			"from\n"+
+      "mk_faturas fatura\n"+
+			"where\n"+
+      "fatura.codfatura = fat\n"+
+      ")\n"+
+      "end dt_liquidacao,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE 'Cliente pagou a 1ª Mensalidade'\n"+
+      "end\n"+
+			"from\n"+
+      "mk_faturas fatura\n"+
+			"where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "else\n"+
+      "(\n"+
+      "SELECT\n"+
+			"case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE 'Cliente pagou a 1ª Mensalidade'\n"+
+			"end\n"+
+      "from\n"+
+			"mk_faturas fatura\n"+
+      "where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end pago,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE (\n"+
+      "SELECT\n"+
+      "REPLACE (plano.vlr_mensalidade||'','.',',')\n"+
+      "from\n"+
+      "mk_planos_acesso plano\n"+
+      "where\n"+
+      "planoC = plano.codplano\n"+
+      ")\n"+
+			"END\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "ELSE\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE (\n"+
+      "SELECT\n"+
+      "plano.vlr_mensalidade||''\n"+
+      "from\n"+
+      "mk_planos_acesso plano\n"+
+      "where\n"+
+      "planoC = plano.codplano\n"+
+      ")\n"+
+      "END\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end valor_plano,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "produto.descricao\n"+
+      "FROM\n"+
+      "mk_crm_produtos plano\n"+
+      "INNER JOIN mk_crm_produtos_composicao item ON (item.cd_produto = plano.codcrmproduto)\n"+
+      "LEFT JOIN mk_planos_acesso produto ON (produto.codplano = item.cd_plano)\n"+
+      "WHERE\n"+
+      "plano.cd_plano_principal = planoC\n"+
+      "AND (UPPER(produto.descricao) LIKE '%TELA%'\n"+
+      "OR UPPER(produto.descricao) LIKE '%CDN%')\n"+
+      ") IS NOT NULL THEN '2'\n"+
+      "ELSE '0'\n"+
+      "end\n"+
+      "end\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "else\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "produto.descricao\n"+
+      "FROM\n"+
+      "mk_crm_produtos plano\n"+
+      "INNER JOIN mk_crm_produtos_composicao item ON (item.cd_produto = plano.codcrmproduto)\n"+
+      "LEFT JOIN mk_planos_acesso produto ON (produto.codplano = item.cd_plano)\n"+
+      "WHERE\n"+
+      "plano.cd_plano_principal = planoC\n"+
+      "AND (UPPER(produto.descricao) LIKE '%TELA%'\n"+
+      "OR UPPER(produto.descricao) LIKE '%CDN%')\n"+
+      ") IS NOT NULL THEN\n"+
+      "case\n"+
+      "WHEN operador IN (\n"+
+      "'luisgustavo954',\n"+
+      "'cecilia148',\n"+
+      "'grasielaluiza670',\n"+
+      "'deborahabadia609',\n"+
+      "'paulogabriel689',\n"+
+      "'geovaneeutaqui603',\n"+
+      "'jullianabouzan690',\n"+
+      "'marcosrogerio655',\n"+
+      "'yasminsouza696',\n"+
+      "'pedrohenrique608',\n"+
+      "'larissaoliveira613'\n"+
+      ") THEN '2'\n"+
+      "ELSE '0'\n"+
+      "END\n"+
+      "ELSE '0'\n"+
+      "end\n"+
+      "end\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end valor_tv,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "produto.descricao\n"+
+      "FROM\n"+
+      "mk_crm_produtos plano\n"+
+      "INNER JOIN mk_crm_produtos_composicao item ON (item.cd_produto = plano.codcrmproduto)\n"+
+      "INNER JOIN mk_planos_acesso produto ON (produto.codplano = item.cd_plano)\n"+
+      "WHERE\n"+
+      "plano.cd_plano_principal = planoC\n"+
+      "AND (UPPER(produto.descricao) LIKE '%TELEFONIA%'\n"+
+      "OR UPPER(produto.descricao) LIKE '%DDR%')\n"+
+      ") IS NOT NULL THEN '3'\n"+
+      "ELSE '0'\n"+
+      "end\n"+
+      "end\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "else\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "WHEN\n"+
+      "exists(\n"+
+      "SELECT\n"+
+      "produto.descricao\n"+
+      "FROM\n"+
+      "mk_crm_produtos plano\n"+
+      "INNER JOIN mk_crm_produtos_composicao item ON (item.cd_produto = plano.codcrmproduto)\n"+
+      "INNER JOIN mk_planos_acesso produto ON (produto.codplano = item.cd_plano)\n"+
+      "WHERE\n"+
+      "plano.cd_plano_principal = ultimoPlanoV\n"+
+      "AND (UPPER(produto.descricao) LIKE '%TELEFONIA%'\n"+
+      "OR UPPER(produto.descricao) LIKE '%DDR%')\n"+
+      ") IS FALSE AND\n"+
+      "exists(\n"+
+      "SELECT\n"+
+      "produto.descricao\n"+
+      "FROM\n"+
+      "mk_crm_produtos plano\n"+
+      "INNER JOIN mk_crm_produtos_composicao item ON (item.cd_produto = plano.codcrmproduto)\n"+
+      "INNER JOIN mk_planos_acesso produto ON (produto.codplano = item.cd_plano)\n"+
+      "WHERE\n"+
+      "plano.cd_plano_principal = ultimoPlanoN\n"+
+      "AND (UPPER(produto.descricao) LIKE '%TELEFONIA%'\n"+
+      "OR UPPER(produto.descricao) LIKE '%DDR%')\n"+
+      ") IS TRUE THEN\n"+
+      "CASE\n"+
+      "WHEN ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
+      "ELSE '3'\n"+
+      "end\n"+
+      "ELSE '0'\n"+
+      "end\n"+
+      "end\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end valor_telefonia,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "when\n"+
+      "exists(\n"+
+      "select\n"+
+      "trans.codtransacaocartao\n"+
+      "from\n"+
+      "mk_transacoes_cartao_geradas trans\n"+
+      "WHERE\n"+
+      "trans.cd_fatura = fatura.codfatura\n"+
+      "AND trans.excluida = 'N'\n"+
+      ") IS TRUE THEN '4'\n"+
+      "ELSE '0'\n"+
+      "END\n"+
+      "end\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "else\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "when\n"+
+      "exists(\n"+
+      "select\n"+
+      "trans.codtransacaocartao\n"+
+      "from\n"+
+      "mk_transacoes_cartao_geradas trans\n"+
+      "WHERE\n"+
+      "trans.cd_fatura = fatura.codfatura\n"+
+      "AND trans.excluida = 'N'\n"+
+      ") IS TRUE THEN\n"+
+      "case\n"+
+      "WHEN operador IN (\n"+
+      "'rayssa133',\n"+
+      "'eduardareis697',\n"+
+      "'kamilagomes655',\n"+
+      "'andressasouza650',\n"+
+      "'anaflavia183',\n"+
+      "'brunaeduarda622',\n"+
+      "'danielasoares695',\n"+
+      "'erikaalves646',\n"+
+      "'janinemenezes655',\n"+
+      "'keithhellen507',\n"+
+      "'gabriellesilva630',\n"+
+      "'guilhermealves600',\n"+
+      "'jordanacristina679',\n"+
+      "'geovaniasilva127',\n"+
+      "'jessicavieira676',\n"+
+      "'angelicalima645',\n"+
+      "'claricepereira607',\n"+
+      "'danielasilva674',\n"+
+      "'alinerocha658',\n"+
+      "'itamaralorrane622',\n"+
+      "'robertabarbosa840',\n"+
+      "'thaissouza673',\n"+
+      "'lorendannesantana605',\n"+
+      "'robertamonti620',\n"+
+      "'andressalemos657',\n"+
+      "'luizavieira648',\n"+
+      "'adrianecaixeta626',\n"+
+      "'ellencristina667',\n"+
+      "'larissaoliveira678',\n"+
+      "'isabelsoares686',\n"+
+			"'nathanimorais683',\n"+
+      "'joicepereira625',\n"+
+      "'vanielelarisse637'\n"+
+      ") THEN '4'\n"+
+      "WHEN operador IN (\n"+
+      "'luisgustavo954',\n"+
+      "'cecilia148',\n"+
+      "'grasielaluiza670',\n"+
+      "'deborahabadia609',\n"+
+      "'paulogabriel689',\n"+
+      "'geovaneeutaqui603',\n"+
+      "'jullianabouzan690',\n"+
+      "'marcosrogerio655',\n"+
+      "'yasminsouza696',\n"+
+      "'pedrohenrique608',\n"+
+      "'larissaoliveira613'\n"+
+      ") THEN '3'\n"+
+      "ELSE '0'\n"+
+      "end\n"+
+      "ELSE '0'\n"+
+      "END\n"+
+      "end\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end valor_recorrente,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE 'Cliente pagou a 1ª Mensalidade'\n"+
+      "end\n"+
+			"from\n"+
+      "mk_faturas fatura\n"+
+			"where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "ELSE\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "CASE\n"+
+      "WHEN operador IN (\n"+
+      "'rayssa133',\n"+
+      "'eduardareis697',\n"+
+      "'kamilagomes655',\n"+
+      "'andressasouza650',\n"+
+      "'anaflavia183',\n"+
+      "'brunaeduarda622',\n"+
+      "'danielasoares695',\n"+
+      "'erikaalves646',\n"+
+      "'janinemenezes655',\n"+
+      "'keithhellen507',\n"+
+      "'gabriellesilva630',\n"+
+      "'guilhermealves600',\n"+
+      "'jordanacristina679',\n"+
+      "'geovaniasilva127',\n"+
+      "'jessicavieira676',\n"+
+      "'angelicalima645',\n"+
+      "'claricepereira607',\n"+
+      "'danielasilva674',\n"+
+      "'alinerocha658',\n"+
+			"'itamaralorrane622',\n"+
+      "'robertabarbosa840',\n"+
+      "'thaissouza673',\n"+
+      "'lorendannesantana605',\n"+
+      "'robertamonti620',\n"+
+      "'andressalemos657',\n"+
+      "'luizavieira648',\n"+
+      "'adrianecaixeta626',\n"+
+      "'ellencristina667',\n"+
+      "'larissaoliveira678',\n"+
+      "'isabelsoares686',\n"+
+      "'nathanimorais683',\n"+
+      "'joicepereira625',\n"+
+			"'vanielelarisse637'\n"+
+      ") THEN\n"+
+      "case\n"+
+      "WHEN ultimoPlanoVDesc ILIKE '%r-ipca%' then\n"+
+      "case\n"+
+      "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) = 0) THEN\n"+
+      "case\n"+
+      "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
+      "else (ultimoPlanoNmensal * 0.02)||''\n"+
+      "end\n"+
+      "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) > 0) THEN\n"+
+      "case\n"+
+      "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
+      "else ((ultimoPlanoNmensal - penultimoPlanoVmensal) * 0.5)||''\n"+
+      "end\n"+
+      "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) < 0) THEN '0'\n"+
+      "END\n"+
+      "else\n"+
+      "case\n"+
+      "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) = 0) THEN\n"+
+      "case\n"+
+      "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
+      "else (ultimoPlanoNmensal * 0.02)||''\n"+
+      "end\n"+
+      "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) > 0) THEN\n"+
+      "case\n"+
+      "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
+      "ELSE ((ultimoPlanoNmensal - ultimoPlanoVmensal) * 0.5)||''\n"+
+      "end\n"+
+      "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) < 0) THEN '0'\n"+
+      "END\n"+
+      "END\n"+
+      "WHEN operador IN (\n"+
+      "'luisgustavo954',\n"+
+      "'cecilia148',\n"+
+      "'grasielaluiza670',\n"+
+      "'deborahabadia609',\n"+
+      "'paulogabriel689',\n"+
+      "'geovaneeutaqui603',\n"+
+      "'jullianabouzan690',\n"+
+      "'marcosrogerio655',\n"+
+      "'yasminsouza696',\n"+
+      "'pedrohenrique608',\n"+
+      "'larissaoliveira613'\n"+
+      ") THEN\n"+
+      "case\n"+
+      "WHEN ultimoPlanoVDesc ILIKE '%r-ipca%' then\n"+
+      "case\n"+
+      "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) = 0) THEN\n"+
+      "case\n"+
+      "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
+      "else '3'\n"+
+      "end\n"+
+      "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) > 0) THEN\n"+
+      "case\n"+
+      "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
+      "ELSE '4'\n"+
+      "end\n"+
+      "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) < 0) THEN '0'\n"+
+      "END\n"+
+      "else\n"+
+      "case\n"+
+      "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) = 0) THEN\n"+
+      "case\n"+
+      "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
+      "ELSE '3'\n"+
+      "end\n"+
+      "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) > 0) THEN\n"+
+      "case\n"+
+      "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
+      "ELSE '4'\n"+
+      "end\n"+
+      "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) < 0) THEN '0'\n"+
+      "END\n"+
+      "end\n"+
+      "ELSE '0'\n"+
+      "END\n"+
+      "end\n"+
+			"from\n"+
+      "mk_faturas fatura\n"+
+			"where\n"+
+      "fatura.codfatura = fat\n"+
+      ")\n"+
+      "end comissao_venda,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE (\n"+
+      "SELECT\n"+
+      "REPLACE (plano.vlr_mensalidade||'','.',',')\n"+
+      "from\n"+
+      "mk_planos_acesso plano\n"+
+      "where\n"+
+      "planoC = plano.codplano\n"+
+      ")\n"+
+      "END\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "ELSE\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE '0'\n"+
+      "END\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "END dia_02_04\n"+
+      "from\n"+
+      "(\n"+
+      "SELECT distinct\n"+
+      "cliente.codpessoa codigo,\n"+
+      "cliente.nome_razaosocial cliente,\n"+
+      "cidade.cidade,\n"+
+      "contrato.codcontrato contrato,\n"+
+      "contrato.plano_acesso planoC,\n"+
+      "ultimo.codplanoN ultimoPlanoN,\n"+
+      "ultimo.planoNdesc ultimoPlanoNDesc,\n"+
+      "ultimo.planoNmensal ultimoPlanoNmensal,\n"+
+      "ultimo.codplanoV ultimoPlanoV,\n"+
+      "ultimo.planoVdesc ultimoPlanoVDesc,\n"+
+      "ultimo.planoVmensal ultimoPlanoVmensal,\n"+
+      "penultimo.codplanoN penultimoPlanoN,\n"+
+      "penultimo.planoNdesc penultimoPlanoNDesc,\n"+
+      "penultimo.planoNmensal penultimoPlanoNmensal,\n"+
+      "penultimo.codplanoV penultimoPlanoV,\n"+
+      "penultimo.planoVdesc penultimoPlanoVDesc,\n"+
+      "penultimo.planoVmensal penultimoPlanoVmensal,\n"+
+      "ultimo.dt_hr::date ultimo,\n"+
+      "CASE\n"+
+      "WHEN ultimo.planoVdesc ILIKE '%r-ipca%' then\n"+
+      "case\n"+
+			"WHEN (penultimo.codplanoN = ultimo.codplanoV) AND ((ultimo.planoNmensal - penultimo.planoVmensal) = 0) THEN 'Renovação'\n"+
+			"WHEN (penultimo.codplanoN = ultimo.codplanoV) AND ((ultimo.planoNmensal - penultimo.planoVmensal) > 0) THEN 'Upgrade'\n"+
+			"WHEN (penultimo.codplanoN = ultimo.codplanoV) AND ((ultimo.planoNmensal - penultimo.planoVmensal) < 0) THEN 'Downgrade'\n"+
+      "end\n"+
+      "else\n"+
+      "case\n"+
+			"WHEN ((ultimo.planoNmensal - ultimo.planoVmensal) = 0) THEN 'Renovação'\n"+
+			"WHEN ((ultimo.planoNmensal - ultimo.planoVmensal) > 0) THEN 'Upgrade'\n"+
+			"WHEN ((ultimo.planoNmensal - ultimo.planoVmensal) < 0) THEN 'Downgrade'\n"+
+      "end\n"+
+      "END AS operacao,\n"+
+      "usuarios.usr_login operador,\n"+
+      "perfis.descricao setor,\n"+
+      "(\n"+
+      "SELECT\n"+
+      "min(faturas.codfatura)\n"+
+      "from\n"+
+      "mk_faturas faturas\n"+
+      "INNER JOIN mk_faturas_historicos histos ON (histos.cd_fatura = faturas.codfatura)\n"+
+      "where\n"+
+      "faturas.cd_pessoa = cliente.codpessoa and\n"+
+      "faturas.excluida = 'N' and\n"+
+      "faturas.suspenso = 'N' and\n"+
+      "faturas.tipo = 'R' and\n"+
+      "faturas.data_vencimento =\n"+
+      "(\n"+
+			"select\n"+
+      "min(fatura.data_vencimento)\n"+
+			"from\n"+
+      "mk_faturas fatura\n"+
+			"where\n"+
+      "fatura.cd_pessoa = faturas.cd_pessoa and\n"+
+      "fatura.excluida = 'N' and\n"+
+      "fatura.suspenso = 'N' and\n"+
+      "fatura.tipo = 'R' and\n"+
+      "fatura.data_vencimento >= ultimo.dt_hr::date\n"+
+      ")\n"+
+      ") fat,\n"+
+      "(\n"+
+      "select\n"+
+      "dia.dia_vcto\n"+
+      "from\n"+
+      "mk_faturamentos_regras dia\n"+
+      "where\n"+
+      "dia.codfaturamentoregra = contrato.cd_regra_faturamento\n"+
+      ") vencimento\n"+
+      "FROM\n"+
+      "mk_contratos contrato\n"+
+      "INNER JOIN mk_pessoas cliente ON (cliente.codpessoa = contrato.cliente)\n"+
+      "INNER JOIN mk_cidades cidade ON (cidade.codcidade = cliente.codcidade)\n"+
+      "LEFT JOIN (\n"+
+      "SELECT\n"+
+      "clientes.codpessoa,\n"+
+      "contratos.codcontrato,\n"+
+      "hists.dt_hr,\n"+
+      "planoVs.codplano codplanoV,\n"+
+      "planoVs.descricao planoVdesc,\n"+
+      "planoVs.vlr_mensalidade planoVmensal,\n"+
+      "planoNs.codplano codplanoN,\n"+
+      "planoNs.descricao planoNdesc,\n"+
+      "planoNs.vlr_mensalidade planoNmensal\n"+
+      "from\n"+
+      "mk_contratos contratos\n"+
+      "INNER JOIN mk_contratos_historicos hists ON (hists.cd_contrato = contratos.codcontrato AND hists.cd_operacao IN (4,5))\n"+
+      "INNER JOIN mk_pessoas clientes ON (clientes.codpessoa = contratos.cliente)\n"+
+      "INNER JOIN mk_planos_acesso planoVs ON (planoVs.codplano = hists.cd_plano_velho)\n"+
+      "INNER JOIN mk_planos_acesso planoNs ON (planoNs.codplano = hists.cd_plano_novo)\n"+
+      "WHERE\n"+
+      "hists.dt_hr =\n"+
+      "(\n"+
+			"SELECT distinct\n"+
+      "MAX(histss.dt_hr)\n"+
+			"from\n"+
+      "mk_contratos contratoss\n"+
+      "INNER JOIN mk_contratos_historicos histss ON (histss.cd_contrato = contratoss.codcontrato AND histss.cd_operacao IN (4,5))\n"+
+      "INNER JOIN mk_pessoas clientess ON (clientess.codpessoa = contratoss.cliente)\n"+
+			"WHERE\n"+
+      "clientess.codpessoa = clientes.codpessoa\n"+
+      ")\n"+
+      ") as ultimo ON (ultimo.codpessoa = cliente.codpessoa AND ultimo.codcontrato = contrato.codcontrato)\n"+
+      "LEFT JOIN\n"+
+      "(\n"+
+      "SELECT\n"+
+      "clientes.codpessoa,\n"+
+      "contratos.codcontrato,\n"+
+      "hists.dt_hr,\n"+
+      "planoVs.codplano codplanoV,\n"+
+      "planoVs.descricao planoVdesc,\n"+
+      "planoVs.vlr_mensalidade planoVmensal,\n"+
+      "planoNs.codplano codplanoN,\n"+
+      "planoNs.descricao planoNdesc,\n"+
+      "planoNs.vlr_mensalidade planoNmensal\n"+
+      "from\n"+
+      "mk_contratos contratos\n"+
+      "INNER JOIN mk_contratos_historicos hists ON (hists.cd_contrato = contratos.codcontrato)\n"+
+      "INNER JOIN mk_pessoas clientes ON (clientes.codpessoa = contratos.cliente)\n"+
+      "LEFT JOIN mk_planos_acesso planoVs ON (planoVs.codplano = hists.cd_plano_velho)\n"+
+      "LEFT JOIN mk_planos_acesso planoNs ON (planoNs.codplano = hists.cd_plano_novo)\n"+
+      "WHERE\n"+
+      "hists.dt_hr =\n"+
+      "(\n"+
+			"SELECT\n"+
+      "MAX(histss.dt_hr)\n"+
+			"from\n"+
+      "mk_contratos contratoss\n"+
+      "INNER JOIN mk_contratos_historicos histss ON (histss.cd_contrato = contratoss.codcontrato AND histss.cd_operacao IN (4,5))\n"+
+      "INNER JOIN mk_pessoas clientess ON (clientess.codpessoa = contratoss.cliente)\n"+
+			"WHERE\n"+
+      "histss.dt_hr <\n"+
+      "(\n"+
+      "SELECT distinct\n"+
+      "MAX(histss1.dt_hr)\n"+
+      "from\n"+
+      "mk_contratos contratoss1\n"+
+      "INNER JOIN mk_contratos_historicos histss1 ON (histss1.cd_contrato = contratoss1.codcontrato AND histss1.cd_operacao IN (4,5))\n"+
+      "INNER JOIN mk_pessoas clientess1 ON (clientess1.codpessoa = contratoss1.cliente)\n"+
+      "WHERE\n"+
+      "clientess1.codpessoa = clientess.codpessoa\n"+
+      ")\n"+
+      "and\n"+
+      "clientess.codpessoa = clientes.codpessoa\n"+
+      ")\n"+
+			"AND hists.codcontratohist =\n"+
+      "(\n"+
+			"SELECT\n"+
+      "max(histss1.codcontratohist)\n"+
+			"from\n"+
+      "mk_contratos_historicos histss1\n"+
+			"where\n"+
+      "histss1.cd_contrato = contratos.codcontrato and\n"+
+      "histss1.dt_hr = \n"+
+			"(\n"+
+      "SELECT\n"+
+      "MAX(histss.dt_hr)\n"+
+      "FROM\n"+
+      "mk_contratos contratoss\n"+
+      "INNER JOIN mk_contratos_historicos histss ON (histss.cd_contrato = contratoss.codcontrato AND histss.cd_operacao IN (4,5))\n"+
+      "INNER JOIN mk_pessoas clientess ON (clientess.codpessoa = contratoss.cliente)\n"+
+      "WHERE\n"+
+      "histss.dt_hr <\n"+
+      "(\n"+
+      "SELECT distinct\n"+
+      "MAX(histss1.dt_hr)\n"+
+      "from\n"+
+      "mk_contratos contratoss1\n"+
+      "INNER JOIN mk_contratos_historicos histss1 ON (histss1.cd_contrato = contratoss1.codcontrato AND histss1.cd_operacao IN (4,5))\n"+
+      "INNER JOIN mk_pessoas clientess1 ON (clientess1.codpessoa = contratoss1.cliente)\n"+
+      "WHERE\n"+
+      "clientess1.codpessoa = clientess.codpessoa\n"+
+      ")\n"+
+      "and\n"+
+      "clientess.codpessoa = clientes.codpessoa\n"+
+			")\n"+
+      ")\n"+
+      ") as penultimo ON (penultimo.codpessoa = cliente.codpessoa AND penultimo.codcontrato = contrato.codcontrato)\n"+
+      "LEFT JOIN mk_contratos_historicos hist ON (hist.cd_contrato = contrato.codcontrato AND hist.dt_hr = ultimo.dt_hr)\n"+
+      "LEFT JOIN fr_usuario usuarios ON (usuarios.usr_login = hist.operador)\n"+
+      "inner JOIN mk_usuarios_perfil_acesso_master perfis ON (perfis.codperfilacessomaster = usuarios.cd_perfil_acesso)\n"+
+      "WHERE\n"+
+      "ultimo.dt_hr::DATE BETWEEN $1 and $2\n"+
+      "AND contrato.cancelado = 'N'\n"+
+      ") AS tabela\n"+
+      ") AS tb\n"+
+      "ORDER BY 3,6,11";
       const values = [dataInicio, dataFim];
       const result = await db.query(query, values);
       return result.rows;
@@ -13,17 +1163,1379 @@ const Cliente = {
       throw error;
     }
   },
-
-  //   createNewClient: async (nome, cpf) => {
-  //     try {
-  //       const query = 'INSERT INTO Cliente (nome, cpf) VALUES ($1, $2) RETURNING *';
-  //       const values = [nome, cpf];
-  //       const result = await db.query(query, values);
-  //       return result.rows[0];
-  //     } catch (error) {
-  //       throw error;
-  //     }
-  //   }
+  getComissaoVenda: async (comissaoTV, comissaoTel, comissaoRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, dataInicio, dataFim) => {
+    try {
+      const query =
+      "SELECT\n"+
+      "codigo,\n"+
+      "cliente,\n"+
+      "cidade,\n"+
+      "contrato,\n"+
+      "data,\n"+
+      "operacao,\n"+
+      "operador,\n"+
+      "setor,\n"+
+      "fatura,\n"+
+      "dt_liquidacao,\n"+
+      "pago,\n"+
+      "CASE\n"+
+      "WHEN valor_plano NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(valor_plano,'.',',')\n"+
+      "ELSE valor_plano\n"+
+      "END valor_plano,\n"+
+      "CASE\n"+
+      "WHEN valor_tv NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(valor_tv,'.',',')\n"+
+      "ELSE valor_tv\n"+
+      "END valor_tv,\n"+
+      "CASE\n"+
+      "WHEN valor_telefonia NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(valor_telefonia,'.',',')\n"+
+      "ELSE valor_telefonia\n"+
+      "END valor_telefonia,\n"+
+      "CASE\n"+
+      "WHEN valor_recorrente NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(valor_recorrente,'.',',')\n"+
+      "ELSE valor_recorrente\n"+
+      "END valor_recorrente,\n"+
+      "CASE\n"+
+      "WHEN comissao_venda NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(comissao_venda,'.',',')\n"+
+      "ELSE comissao_venda\n"+
+      "END comissao_venda,\n"+
+      "CASE\n"+
+      "WHEN dia_02_04 NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(dia_02_04,'.',',')\n"+
+      "ELSE dia_02_04\n"+
+      "END dia_02_04,\n"+
+      "CASE\n"+
+      "WHEN dt_liquidacao NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN\n"+
+      "REPLACE(\n"+
+      "(\n"+
+			"(\n"+
+      "select\n"+
+      "CASE\n"+
+      "WHEN valor_tv NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN CAST(valor_tv AS NUMERIC(9,3))\n"+
+      "END\n"+
+			")\n"+
+			"+\n"+
+			"(\n"+
+      "select\n"+
+      "CASE\n"+
+      "WHEN valor_telefonia NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN CAST(valor_telefonia AS NUMERIC(9,3))\n"+
+      "END\n"+
+			")\n"+
+			"+\n"+
+			"(\n"+
+      "select\n"+
+      "CASE\n"+
+      "WHEN valor_recorrente NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN CAST(valor_recorrente AS NUMERIC(9,3))\n"+
+      "END\n"+
+			")\n"+
+			"+\n"+
+			"(\n"+
+      "select\n"+
+      "CASE\n"+
+      "WHEN comissao_venda NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN CAST(comissao_venda AS NUMERIC(9,3))\n"+
+      "END\n"+
+			")\n"+
+			"+\n"+
+			"(\n"+
+      "select\n"+
+      "CASE\n"+
+      "WHEN dia_02_04 NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN CAST(dia_02_04 AS NUMERIC(9,3))\n"+
+      "END\n"+
+			")\n"+
+      ")\n"+
+      "||'','.',',')\n"+
+      "ELSE dt_liquidacao\n"+
+      "end valor_total\n"+
+      "FROM\n"+
+      "(\n"+
+      "SELECT\n"+
+      "codigo,\n"+
+      "cliente,\n"+
+      "cidade,\n"+
+      "contrato,\n"+
+      "adesao AS \"data\",\n"+
+      "'Venda' operacao,\n"+
+      "operador,\n"+
+      "setor,\n"+
+      "coalesce(fat||'','Cliente não possui faturas') fatura,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+			"CASE\n"+
+      "WHEN fatura.data_liquidacao IS NULL THEN 'Cliente ainda não pagou'\n"+
+      "ELSE fatura.data_liquidacao||''\n"+
+			"END\n"+
+      "from\n"+
+			"mk_faturas fatura\n"+
+      "where\n"+
+			"fatura.codfatura = fat\n"+
+      ") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "else\n"+
+      "(\n"+
+			"SELECT\n"+
+      "CASE\n"+
+      "WHEN fatura.data_liquidacao IS NULL THEN 'Cliente ainda não pagou'\n"+
+      "ELSE fatura.data_liquidacao||''\n"+
+      "END\n"+
+			"from\n"+
+      "mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end dt_liquidacao,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE 'Cliente pagou a 1ª Mensalidade'\n"+
+      "end\n"+
+			"from\n"+
+      "mk_faturas fatura\n"+
+			"where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "else\n"+
+      "(\n"+
+      "SELECT\n"+
+			"case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE 'Cliente pagou a 1ª Mensalidade'\n"+
+			"end\n"+
+      "from\n"+
+			"mk_faturas fatura\n"+
+      "where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end pago,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE (\n"+
+      "SELECT\n"+
+      "REPLACE (plano.vlr_mensalidade||'','.',',')\n"+
+      "from\n"+
+      "mk_planos_acesso plano\n"+
+      "where\n"+
+      "planoC = plano.codplano\n"+
+      ")\n"+
+      "END\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "ELSE\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE (\n"+
+      "SELECT\n"+
+      "replace(plano.vlr_mensalidade||'','.',',')\n"+
+      "from\n"+
+      "mk_planos_acesso plano\n"+
+      "where\n"+
+      "planoC = plano.codplano\n"+
+      ")\n"+
+      "END\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end valor_plano,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE (\n"+
+      "SELECT\n"+
+      "REPLACE (plano.vlr_mensalidade||'','.',',')\n"+
+      "from\n"+
+      "mk_planos_acesso plano\n"+
+      "where\n"+
+      "planoC = plano.codplano\n"+
+      ")\n"+
+      "END\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "ELSE\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE $1\n"+
+      "END\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "END valor_tv,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+			"ELSE\n"+
+      "case\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "produto.descricao\n"+
+      "FROM\n"+
+      "mk_crm_produtos plano\n"+
+      "INNER JOIN mk_crm_produtos_composicao item ON (item.cd_produto = plano.codcrmproduto)\n"+
+      "INNER JOIN mk_planos_acesso produto ON (produto.codplano = item.cd_plano)\n"+
+      "WHERE\n"+
+			"plano.cd_plano_principal = planoC\n"+
+      "AND UPPER(produto.descricao) LIKE '%TEL%ADICIONAL%'\n"+
+      ") IS NOT NULL THEN $2\n"+
+      "ELSE '0'\n"+
+      "end\n"+
+      "end\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "else\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+			"ELSE\n"+
+      "case\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "produto.descricao\n"+
+      "FROM\n"+
+      "mk_crm_produtos plano\n"+
+      "INNER JOIN mk_crm_produtos_composicao item ON (item.cd_produto = plano.codcrmproduto)\n"+
+      "INNER JOIN mk_planos_acesso produto ON (produto.codplano = item.cd_plano)\n"+
+      "WHERE\n"+
+      "plano.cd_plano_principal = planoC\n"+
+      "AND UPPER(produto.descricao) LIKE '%TEL%ADICIONAL%'\n"+
+      ") IS NOT NULL THEN $2\n"+
+      "ELSE '0'\n"+
+      "end\n"+
+      "end\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end valor_telefonia,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+			"case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "when\n"+
+      "exists(\n"+
+      "select\n"+
+      "trans.codtransacaocartao\n"+
+      "from\n"+
+      "mk_transacoes_cartao_geradas trans\n"+
+      "WHERE\n"+
+      "trans.cd_fatura = fatura.codfatura\n"+
+			"AND trans.excluida = 'N'\n"+
+      ") IS TRUE THEN $3\n"+
+      "ELSE '0'\n"+
+      "END\n"+
+			"end\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "else\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "when\n"+
+      "exists(\n"+
+      "select\n"+
+      "trans.codtransacaocartao\n"+
+      "from\n"+
+      "mk_transacoes_cartao_geradas trans\n"+
+      "WHERE\n"+
+      "trans.cd_fatura = fatura.codfatura\n"+
+      "AND trans.excluida = 'N'\n"+
+      ") IS TRUE THEN $3\n"+
+      "ELSE '0'\n"+
+      "END\n"+
+      "end\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end valor_recorrente,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE (\n"+
+      "SELECT\n"+
+      "REPLACE (plano.vlr_mensalidade||'','.',',')\n"+
+      "from\n"+
+      "mk_planos_acesso plano\n"+
+      "where\n"+
+      "planoC = plano.codplano\n"+
+      ")\n"+
+      "END\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "ELSE\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE (\n"+
+      "SELECT\n"+
+      "(plano.vlr_mensalidade * $4)||''\n"+
+      "from\n"+
+      "mk_planos_acesso plano\n"+
+      "where\n"+
+      "planoC = plano.codplano\n"+
+      ")\n"+
+      "END\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end comissao_venda,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE (\n"+
+      "SELECT\n"+
+      "REPLACE (plano.vlr_mensalidade||'','.',',')\n"+
+      "from\n"+
+      "mk_planos_acesso plano\n"+
+      "where\n"+
+      "planoC = plano.codplano\n"+
+      ")\n"+
+      "END\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "ELSE\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "WHEN vencimento IN (2) THEN $5\n"+
+      "WHEN vencimento IN (4) THEN $6\n"+
+      "ELSE '0'\n"+
+      "end\n"+
+      "END\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "END dia_02_04\n"+
+      "FROM\n"+
+      "(\n"+
+      "SELECT\n"+
+      "cliente.codpessoa codigo,\n"+
+      "cliente.nome_razaosocial cliente,\n"+
+      "cidade.cidade,\n"+
+      "contrato.codcontrato contrato,\n"+
+      "contrato.plano_acesso planoC,\n"+
+      "contrato.adesao,\n"+
+      "contrato.operador,\n"+
+      "setor.descricao setor,\n"+
+      "(\n"+
+			"SELECT\n"+
+      "min(faturas.codfatura)\n"+
+			"from\n"+
+      "mk_faturas faturas\n"+
+      "INNER JOIN mk_faturas_historicos histos ON (histos.cd_fatura = faturas.codfatura)\n"+
+			"where\n"+
+      "faturas.cd_pessoa = cliente.codpessoa and\n"+
+      "faturas.excluida = 'N' and\n"+
+      "faturas.suspenso = 'N' and\n"+
+      "faturas.tipo = 'R' and\n"+
+      "faturas.data_vencimento = \n"+
+      "(\n"+
+      "select\n"+
+      "min(fatura.data_vencimento)\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "INNER JOIN mk_faturas_historicos histo ON (histo.cd_fatura = fatura.codfatura)\n"+
+			"where\n"+
+      "fatura.cd_pessoa = faturas.cd_pessoa and\n"+
+      "histo.cd_operacao IN (1,8,40,47) and\n"+
+      "histo.dt_hr >= (histos.dt_hr - INTERVAL '5 minutes') and\n"+
+      "fatura.excluida = 'N' and\n"+
+      "fatura.suspenso = 'N' and\n"+
+      "fatura.tipo = 'R' and\n"+
+      "fatura.data_vencimento > histos.dt_hr::date\n"+
+      ")\n"+
+      "AND histos.cd_operacao IN (1,8,40,47)\n"+
+      "AND histos.dt_hr >= (contrato.adesao - INTERVAL '5 minutes')\n"+
+      ") fat,\n"+
+      "(\n"+
+      "select\n"+
+      "dia.dia_vcto\n"+
+      "from\n"+
+      "mk_faturamentos_regras dia\n"+
+      "where\n"+
+      "dia.codfaturamentoregra = contrato.cd_regra_faturamento\n"+
+      ") vencimento\n"+
+      "FROM\n"+
+      "mk_contratos contrato\n"+
+      "INNER JOIN mk_pessoas cliente ON (cliente.codpessoa = contrato.cliente)\n"+
+      "INNER JOIN mk_cidades cidade ON (cidade.codcidade = cliente.codcidade)\n"+
+      "LEFT JOIN fr_usuario usuario ON (usuario.usr_login = contrato.operador)\n"+
+      "LEFT JOIN mk_usuarios_perfil_acesso_master setor ON (setor.codperfilacessomaster = usuario.cd_perfil_acesso)\n"+
+      "WHERE\n"+
+      "contrato.adesao BETWEEN $7 and $8\n"+
+      "AND cliente.inativo = 'N'\n"+
+      "GROUP BY 1,2,3,4,5,6,7,8\n"+
+      ") AS tabela\n"+
+      ") AS tb\n"+
+      "ORDER BY 3,6,11";
+      const values = [comissaoTV, comissaoTel, comissaoRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, dataInicio, dataFim];
+      const result = await db.query(query, values);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getComissaoRenovacao: async (comissaoTVFrente, comissaoTVTele, comissaoTelFrente, comissaoTelTele, comissaoRecorrenteFrente, comissaoRecorrenteTele, comissaoVendaFrente2, comissaoVendaFrente50, comissaoVendaTele3, comissaoVendaTele4, dataInicio, dataFim) => {
+    try {
+      const query =
+      "SELECT\n"+
+      "codigo,\n"+
+      "cliente,\n"+
+      "cidade,\n"+
+      "contrato,\n"+
+      "data,\n"+
+      "operacao,\n"+
+      "operador,\n"+
+      "setor,\n"+
+      "fatura,\n"+
+      "dt_liquidacao,\n"+
+      "pago,\n"+
+      "CASE\n"+
+      "WHEN valor_plano NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(valor_plano,'.',',')\n"+
+      "ELSE valor_plano\n"+
+      "END valor_plano,\n"+
+      "CASE\n"+
+      "WHEN valor_tv NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(valor_tv,'.',',')\n"+
+      "ELSE valor_tv\n"+
+      "END valor_tv,\n"+
+      "CASE\n"+
+      "WHEN valor_telefonia NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(valor_telefonia,'.',',')\n"+
+      "ELSE valor_telefonia\n"+
+      "END valor_telefonia,\n"+
+      "CASE\n"+
+      "WHEN valor_recorrente NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(valor_recorrente,'.',',')\n"+
+      "ELSE valor_recorrente\n"+
+      "END valor_recorrente,\n"+
+      "CASE\n"+
+      "WHEN comissao_venda NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(comissao_venda,'.',',')\n"+
+      "ELSE comissao_venda\n"+
+      "END comissao_venda,\n"+
+      "CASE\n"+
+      "WHEN dia_02_04 NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(dia_02_04,'.',',')\n"+
+      "ELSE dia_02_04\n"+
+      "END dia_02_04,\n"+
+      "CASE\n"+
+      "WHEN dt_liquidacao NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN\n"+
+      "REPLACE(\n"+
+      "(\n"+
+			"(\n"+
+      "select\n"+
+      "CASE\n"+
+      "WHEN valor_tv NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN CAST(valor_tv AS NUMERIC(9,3))\n"+
+      "END\n"+
+			")\n"+
+			"+\n"+
+			"(\n"+
+      "select\n"+
+      "CASE\n"+
+      "WHEN valor_telefonia NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN CAST(valor_telefonia AS NUMERIC(9,3))\n"+
+      "END\n"+
+			")\n"+
+			"+\n"+
+			"(\n"+
+      "select\n"+
+      "CASE\n"+
+      "WHEN valor_recorrente NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN CAST(valor_recorrente AS NUMERIC(9,3))\n"+
+      "END\n"+
+			")\n"+
+			"+\n"+
+			"(\n"+
+      "select\n"+
+      "CASE\n"+
+      "WHEN comissao_venda NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN CAST(comissao_venda AS NUMERIC(9,3))\n"+
+      "END\n"+
+			")\n"+
+			"+\n"+
+			"(\n"+
+      "select\n"+
+      "CASE\n"+
+      "WHEN dia_02_04 NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN CAST(dia_02_04 AS NUMERIC(9,3))\n"+
+      "END\n"+
+			")\n"+
+      ")\n"+
+      "||'','.',',')\n"+
+      "ELSE dt_liquidacao\n"+
+      "end valor_total\n"+
+      "FROM\n"+
+      "(\n"+
+      "SELECT\n"+
+      "codigo,\n"+
+      "cliente,\n"+
+      "cidade,\n"+
+      "contrato,\n"+
+      "ultimo::date AS \"data\",\n"+
+      "operacao,\n"+
+      "operador,\n"+
+      "setor,\n"+
+      "coalesce(fat||'','Cliente não possui faturas') fatura,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+			"CASE\n"+
+      "WHEN fatura.data_liquidacao IS NULL THEN 'Cliente ainda não pagou'\n"+
+      "ELSE fatura.data_liquidacao||''\n"+
+			"END\n"+
+      "from\n"+
+			"mk_faturas fatura\n"+
+      "where\n"+
+			"fatura.codfatura = fat\n"+
+      ") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "else\n"+
+      "(\n"+
+			"SELECT\n"+
+      "CASE\n"+
+      "WHEN fatura.data_liquidacao IS NULL THEN 'Cliente ainda não pagou'\n"+
+      "ELSE fatura.data_liquidacao||''\n"+
+      "END\n"+
+			"from\n"+
+      "mk_faturas fatura\n"+
+			"where\n"+
+      "fatura.codfatura = fat\n"+
+      ")\n"+
+      "end dt_liquidacao,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE 'Cliente pagou a 1ª Mensalidade'\n"+
+      "end\n"+
+			"from\n"+
+      "mk_faturas fatura\n"+
+			"where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "else\n"+
+      "(\n"+
+      "SELECT\n"+
+			"case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE 'Cliente pagou a 1ª Mensalidade'\n"+
+			"end\n"+
+      "from\n"+
+			"mk_faturas fatura\n"+
+      "where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end pago,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE (\n"+
+      "SELECT\n"+
+      "REPLACE (plano.vlr_mensalidade||'','.',',')\n"+
+      "from\n"+
+      "mk_planos_acesso plano\n"+
+      "where\n"+
+      "planoC = plano.codplano\n"+
+      ")\n"+
+			"END\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "ELSE\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE (\n"+
+      "SELECT\n"+
+      "plano.vlr_mensalidade||''\n"+
+      "from\n"+
+      "mk_planos_acesso plano\n"+
+      "where\n"+
+      "planoC = plano.codplano\n"+
+      ")\n"+
+      "END\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end valor_plano,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "produto.descricao\n"+
+      "FROM\n"+
+      "mk_crm_produtos plano\n"+
+      "INNER JOIN mk_crm_produtos_composicao item ON (item.cd_produto = plano.codcrmproduto)\n"+
+      "LEFT JOIN mk_planos_acesso produto ON (produto.codplano = item.cd_plano)\n"+
+      "WHERE\n"+
+      "plano.cd_plano_principal = planoC\n"+
+      "AND (UPPER(produto.descricao) LIKE '%TELA%'\n"+
+      "OR UPPER(produto.descricao) LIKE '%CDN%')\n"+
+      ") IS NOT NULL THEN '2'\n"+
+      "ELSE '0'\n"+
+      "end\n"+
+      "end\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "else\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "WHEN\n"+
+      "exists(\n"+
+      "SELECT\n"+
+      "produto.descricao\n"+
+      "FROM\n"+
+      "mk_crm_produtos plano\n"+
+      "INNER JOIN mk_crm_produtos_composicao item ON (item.cd_produto = plano.codcrmproduto)\n"+
+      "INNER JOIN mk_planos_acesso produto ON (produto.codplano = item.cd_plano)\n"+
+      "WHERE\n"+
+      "plano.cd_plano_principal = ultimoPlanoV\n"+
+      "AND (UPPER(produto.descricao) LIKE '%TELA%'\n"+
+      "OR UPPER(produto.descricao) LIKE '%CDN%')\n"+
+      ") IS FALSE AND\n"+
+      "exists(\n"+
+      "SELECT\n"+
+      "produto.descricao\n"+
+      "FROM\n"+
+      "mk_crm_produtos plano\n"+
+      "INNER JOIN mk_crm_produtos_composicao item ON (item.cd_produto = plano.codcrmproduto)\n"+
+      "INNER JOIN mk_planos_acesso produto ON (produto.codplano = item.cd_plano)\n"+
+      "WHERE\n"+
+      "plano.cd_plano_principal = ultimoPlanoN\n"+
+      "AND (UPPER(produto.descricao) LIKE '%TELA%'\n"+
+      "OR UPPER(produto.descricao) LIKE '%CDN%')\n"+
+      ") IS TRUE THEN\n"+
+      "case\n"+
+      "WHEN operador IN (\n"+
+      "'rayssa133',\n"+
+      "'eduardareis697',\n"+
+      "'kamilagomes655',\n"+
+      "'andressasouza650',\n"+
+      "'anaflavia183',\n"+
+      "'brunaeduarda622',\n"+
+      "'danielasoares695',\n"+
+      "'erikaalves646',\n"+
+      "'janinemenezes655',\n"+
+      "'keithhellen507',\n"+
+      "'gabriellesilva630',\n"+
+      "'guilhermealves600',\n"+
+      "'jordanacristina679',\n"+
+      "'geovaniasilva127',\n"+
+      "'jessicavieira676',\n"+
+      "'angelicalima645',\n"+
+      "'claricepereira607',\n"+
+      "'danielasilva674',\n"+
+      "'alinerocha658',\n"+
+      "'itamaralorrane622',\n"+
+      "'robertabarbosa840',\n"+
+      "'thaissouza673',\n"+
+      "'lorendannesantana605',\n"+
+      "'robertamonti620',\n"+
+      "'andressalemos657',\n"+
+      "'luizavieira648',\n"+
+      "'adrianecaixeta626',\n"+
+      "'ellencristina667',\n"+
+      "'larissaoliveira678',\n"+
+      "'isabelsoares686',\n"+
+      "'nathanimorais683',\n"+
+      "'joicepereira625',\n"+
+      "'vanielelarisse637'\n"+
+      ") THEN $1\n"+
+      "WHEN operador IN (\n"+
+      "'luisgustavo954',\n"+
+      "'cecilia148',\n"+
+      "'grasielaluiza670',\n"+
+      "'deborahabadia609',\n"+
+      "'paulogabriel689',\n"+
+      "'geovaneeutaqui603',\n"+
+      "'jullianabouzan690',\n"+
+      "'marcosrogerio655',\n"+
+      "'yasminsouza696',\n"+
+      "'pedrohenrique608',\n"+
+      "'larissaoliveira613'\n"+
+      ") THEN $2\n"+
+      "ELSE '0'\n"+
+      "END\n"+
+      "ELSE '0'\n"+
+      "end\n"+
+      "end\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end valor_tv,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "produto.descricao\n"+
+      "FROM\n"+
+      "mk_crm_produtos plano\n"+
+      "INNER JOIN mk_crm_produtos_composicao item ON (item.cd_produto = plano.codcrmproduto)\n"+
+      "INNER JOIN mk_planos_acesso produto ON (produto.codplano = item.cd_plano)\n"+
+      "WHERE\n"+
+      "plano.cd_plano_principal = planoC\n"+
+      "AND (UPPER(produto.descricao) LIKE '%TELEFONIA%'\n"+
+      "OR UPPER(produto.descricao) LIKE '%DDR%')\n"+
+      ") IS NOT NULL THEN $3\n"+
+      "ELSE '0'\n"+
+      "end\n"+
+      "end\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "else\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "WHEN\n"+
+      "exists(\n"+
+      "SELECT\n"+
+      "produto.descricao\n"+
+      "FROM\n"+
+      "mk_crm_produtos plano\n"+
+      "INNER JOIN mk_crm_produtos_composicao item ON (item.cd_produto = plano.codcrmproduto)\n"+
+      "INNER JOIN mk_planos_acesso produto ON (produto.codplano = item.cd_plano)\n"+
+      "WHERE\n"+
+      "plano.cd_plano_principal = ultimoPlanoV\n"+
+      "AND (UPPER(produto.descricao) LIKE '%TELEFONIA%'\n"+
+      "OR UPPER(produto.descricao) LIKE '%DDR%')\n"+
+      ") IS FALSE AND\n"+
+      "exists(\n"+
+      "SELECT\n"+
+      "produto.descricao\n"+
+      "FROM\n"+
+      "mk_crm_produtos plano\n"+
+      "INNER JOIN mk_crm_produtos_composicao item ON (item.cd_produto = plano.codcrmproduto)\n"+
+      "INNER JOIN mk_planos_acesso produto ON (produto.codplano = item.cd_plano)\n"+
+      "WHERE\n"+
+      "plano.cd_plano_principal = ultimoPlanoN\n"+
+      "AND (UPPER(produto.descricao) LIKE '%TELEFONIA%'\n"+
+      "OR UPPER(produto.descricao) LIKE '%DDR%')\n"+
+      ") IS TRUE THEN\n"+
+      "CASE\n"+
+      "WHEN ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "WHEN operador IN (\n"+
+      "'rayssa133',\n"+
+      "'eduardareis697',\n"+
+      "'kamilagomes655',\n"+
+      "'andressasouza650',\n"+
+      "'anaflavia183',\n"+
+      "'brunaeduarda622',\n"+
+      "'danielasoares695',\n"+
+      "'erikaalves646',\n"+
+      "'janinemenezes655',\n"+
+      "'keithhellen507',\n"+
+      "'gabriellesilva630',\n"+
+      "'guilhermealves600',\n"+
+      "'jordanacristina679',\n"+
+      "'geovaniasilva127',\n"+
+      "'jessicavieira676',\n"+
+      "'angelicalima645',\n"+
+      "'claricepereira607',\n"+
+      "'danielasilva674',\n"+
+      "'alinerocha658',\n"+
+      "'itamaralorrane622',\n"+
+      "'robertabarbosa840',\n"+
+      "'thaissouza673',\n"+
+      "'lorendannesantana605',\n"+
+      "'robertamonti620',\n"+
+      "'andressalemos657',\n"+
+      "'luizavieira648',\n"+
+      "'adrianecaixeta626',\n"+
+      "'ellencristina667',\n"+
+      "'larissaoliveira678',\n"+
+      "'isabelsoares686',\n"+
+      "'nathanimorais683',\n"+
+      "'joicepereira625',\n"+
+      "'vanielelarisse637'\n"+
+      ") THEN $3\n"+
+      "WHEN operador IN (\n"+
+      "'luisgustavo954',\n"+
+      "'cecilia148',\n"+
+      "'grasielaluiza670',\n"+
+      "'deborahabadia609',\n"+
+      "'paulogabriel689',\n"+
+      "'geovaneeutaqui603',\n"+
+      "'jullianabouzan690',\n"+
+      "'marcosrogerio655',\n"+
+      "'yasminsouza696',\n"+
+      "'pedrohenrique608',\n"+
+      "'larissaoliveira613'\n"+
+      ") THEN $4\n"+
+      "ELSE '0'\n"+
+      "END\n"+
+      "end\n"+
+      "ELSE '0'\n"+
+      "end\n"+
+      "end\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end valor_telefonia,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "when\n"+
+      "exists(\n"+
+      "select\n"+
+      "trans.codtransacaocartao\n"+
+      "from\n"+
+      "mk_transacoes_cartao_geradas trans\n"+
+      "WHERE\n"+
+      "trans.cd_fatura = fatura.codfatura\n"+
+      "AND trans.excluida = 'N'\n"+
+      ") IS TRUE THEN '4'\n"+
+      "ELSE '0'\n"+
+      "END\n"+
+      "end\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "else\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "case\n"+
+      "when\n"+
+      "exists(\n"+
+      "select\n"+
+      "trans.codtransacaocartao\n"+
+      "from\n"+
+      "mk_transacoes_cartao_geradas trans\n"+
+      "WHERE\n"+
+      "trans.cd_fatura = fatura.codfatura\n"+
+      "AND trans.excluida = 'N'\n"+
+      ") IS TRUE THEN\n"+
+      "case\n"+
+      "WHEN operador IN (\n"+
+      "'rayssa133',\n"+
+      "'eduardareis697',\n"+
+      "'kamilagomes655',\n"+
+      "'andressasouza650',\n"+
+      "'anaflavia183',\n"+
+      "'brunaeduarda622',\n"+
+      "'danielasoares695',\n"+
+      "'erikaalves646',\n"+
+      "'janinemenezes655',\n"+
+      "'keithhellen507',\n"+
+      "'gabriellesilva630',\n"+
+      "'guilhermealves600',\n"+
+      "'jordanacristina679',\n"+
+      "'geovaniasilva127',\n"+
+      "'jessicavieira676',\n"+
+      "'angelicalima645',\n"+
+      "'claricepereira607',\n"+
+      "'danielasilva674',\n"+
+      "'alinerocha658',\n"+
+      "'itamaralorrane622',\n"+
+      "'robertabarbosa840',\n"+
+      "'thaissouza673',\n"+
+      "'lorendannesantana605',\n"+
+      "'robertamonti620',\n"+
+      "'andressalemos657',\n"+
+      "'luizavieira648',\n"+
+      "'adrianecaixeta626',\n"+
+      "'ellencristina667',\n"+
+      "'larissaoliveira678',\n"+
+      "'isabelsoares686',\n"+
+			"'nathanimorais683',\n"+
+      "'joicepereira625',\n"+
+      "'vanielelarisse637'\n"+
+      ") THEN $5\n"+
+      "WHEN operador IN (\n"+
+      "'luisgustavo954',\n"+
+      "'cecilia148',\n"+
+      "'grasielaluiza670',\n"+
+      "'deborahabadia609',\n"+
+      "'paulogabriel689',\n"+
+      "'geovaneeutaqui603',\n"+
+      "'jullianabouzan690',\n"+
+      "'marcosrogerio655',\n"+
+      "'yasminsouza696',\n"+
+      "'pedrohenrique608',\n"+
+      "'larissaoliveira613'\n"+
+      ") THEN $6\n"+
+      "ELSE '0'\n"+
+      "end\n"+
+      "ELSE '0'\n"+
+      "END\n"+
+      "end\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "end valor_recorrente,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE 'Cliente pagou a 1ª Mensalidade'\n"+
+      "end\n"+
+			"from\n"+
+      "mk_faturas fatura\n"+
+			"where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "ELSE\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE\n"+
+      "CASE\n"+
+      "WHEN operador IN (\n"+
+      "'rayssa133',\n"+
+      "'eduardareis697',\n"+
+      "'kamilagomes655',\n"+
+      "'andressasouza650',\n"+
+      "'anaflavia183',\n"+
+      "'brunaeduarda622',\n"+
+      "'danielasoares695',\n"+
+      "'erikaalves646',\n"+
+      "'janinemenezes655',\n"+
+      "'keithhellen507',\n"+
+      "'gabriellesilva630',\n"+
+      "'guilhermealves600',\n"+
+      "'jordanacristina679',\n"+
+      "'geovaniasilva127',\n"+
+      "'jessicavieira676',\n"+
+      "'angelicalima645',\n"+
+      "'claricepereira607',\n"+
+      "'danielasilva674',\n"+
+      "'alinerocha658',\n"+
+			"'itamaralorrane622',\n"+
+      "'robertabarbosa840',\n"+
+      "'thaissouza673',\n"+
+      "'lorendannesantana605',\n"+
+      "'robertamonti620',\n"+
+      "'andressalemos657',\n"+
+      "'luizavieira648',\n"+
+      "'adrianecaixeta626',\n"+
+      "'ellencristina667',\n"+
+      "'larissaoliveira678',\n"+
+      "'isabelsoares686',\n"+
+      "'nathanimorais683',\n"+
+      "'joicepereira625',\n"+
+			"'vanielelarisse637'\n"+
+      ") THEN\n"+
+      "case\n"+
+      "WHEN ultimoPlanoVDesc ILIKE '%r-ipca%' then\n"+
+      "case\n"+
+      "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) = 0) THEN\n"+
+      "case\n"+
+      "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
+      "else (ultimoPlanoNmensal * $7)||''\n"+
+      "end\n"+
+      "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) > 0) THEN\n"+
+      "case\n"+
+      "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
+      "else ((ultimoPlanoNmensal - penultimoPlanoVmensal) * $8)||''\n"+
+      "end\n"+
+      "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) < 0) THEN '0'\n"+
+      "END\n"+
+      "else\n"+
+      "case\n"+
+      "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) = 0) THEN\n"+
+      "case\n"+
+      "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
+      "else (ultimoPlanoNmensal * $7)||''\n"+
+      "end\n"+
+      "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) > 0) THEN\n"+
+      "case\n"+
+      "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
+      "ELSE ((ultimoPlanoNmensal - ultimoPlanoVmensal) * $8)||''\n"+
+      "end\n"+
+      "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) < 0) THEN '0'\n"+
+      "END\n"+
+      "END\n"+
+      "WHEN operador IN (\n"+
+      "'luisgustavo954',\n"+
+      "'cecilia148',\n"+
+      "'grasielaluiza670',\n"+
+      "'deborahabadia609',\n"+
+      "'paulogabriel689',\n"+
+      "'geovaneeutaqui603',\n"+
+      "'jullianabouzan690',\n"+
+      "'marcosrogerio655',\n"+
+      "'yasminsouza696',\n"+
+      "'pedrohenrique608',\n"+
+      "'larissaoliveira613'\n"+
+      ") THEN\n"+
+      "case\n"+
+      "WHEN ultimoPlanoVDesc ILIKE '%r-ipca%' then\n"+
+      "case\n"+
+      "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) = 0) THEN\n"+
+      "case\n"+
+      "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
+      "else $9\n"+
+      "end\n"+
+      "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) > 0) THEN\n"+
+      "case\n"+
+      "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
+      "ELSE $10\n"+
+      "end\n"+
+      "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) < 0) THEN '0'\n"+
+      "END\n"+
+      "else\n"+
+      "case\n"+
+      "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) = 0) THEN\n"+
+      "case\n"+
+      "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
+      "ELSE $9\n"+
+      "end\n"+
+      "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) > 0) THEN\n"+
+      "case\n"+
+      "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
+      "ELSE $10\n"+
+      "end\n"+
+      "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) < 0) THEN '0'\n"+
+      "END\n"+
+      "end\n"+
+      "ELSE '0'\n"+
+      "END\n"+
+      "end\n"+
+			"from\n"+
+      "mk_faturas fatura\n"+
+			"where\n"+
+      "fatura.codfatura = fat\n"+
+      ")\n"+
+      "end comissao_venda,\n"+
+      "CASE\n"+
+      "WHEN (\n"+
+      "SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE (\n"+
+      "SELECT\n"+
+      "REPLACE (plano.vlr_mensalidade||'','.',',')\n"+
+      "from\n"+
+      "mk_planos_acesso plano\n"+
+      "where\n"+
+      "planoC = plano.codplano\n"+
+      ")\n"+
+      "END\n"+
+      "from\n"+
+      "mk_faturas fatura\n"+
+      "where\n"+
+      "fatura.codfatura = fat\n"+
+			") IS NULL THEN 'Cliente não possui faturas'\n"+
+      "ELSE\n"+
+      "(\n"+
+			"SELECT\n"+
+      "case\n"+
+      "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
+      "ELSE '0'\n"+
+      "END\n"+
+			"from\n"+
+			"mk_faturas fatura\n"+
+			"where\n"+
+			"fatura.codfatura = fat\n"+
+      ")\n"+
+      "END dia_02_04\n"+
+      "from\n"+
+      "(\n"+
+      "SELECT distinct\n"+
+      "cliente.codpessoa codigo,\n"+
+      "cliente.nome_razaosocial cliente,\n"+
+      "cidade.cidade,\n"+
+      "contrato.codcontrato contrato,\n"+
+      "contrato.plano_acesso planoC,\n"+
+      "ultimo.codplanoN ultimoPlanoN,\n"+
+      "ultimo.planoNdesc ultimoPlanoNDesc,\n"+
+      "ultimo.planoNmensal ultimoPlanoNmensal,\n"+
+      "ultimo.codplanoV ultimoPlanoV,\n"+
+      "ultimo.planoVdesc ultimoPlanoVDesc,\n"+
+      "ultimo.planoVmensal ultimoPlanoVmensal,\n"+
+      "penultimo.codplanoN penultimoPlanoN,\n"+
+      "penultimo.planoNdesc penultimoPlanoNDesc,\n"+
+      "penultimo.planoNmensal penultimoPlanoNmensal,\n"+
+      "penultimo.codplanoV penultimoPlanoV,\n"+
+      "penultimo.planoVdesc penultimoPlanoVDesc,\n"+
+      "penultimo.planoVmensal penultimoPlanoVmensal,\n"+
+      "ultimo.dt_hr::date ultimo,\n"+
+      "CASE\n"+
+      "WHEN ultimo.planoVdesc ILIKE '%r-ipca%' then\n"+
+      "case\n"+
+			"WHEN (penultimo.codplanoN = ultimo.codplanoV) AND ((ultimo.planoNmensal - penultimo.planoVmensal) = 0) THEN 'Renovação'\n"+
+			"WHEN (penultimo.codplanoN = ultimo.codplanoV) AND ((ultimo.planoNmensal - penultimo.planoVmensal) > 0) THEN 'Upgrade'\n"+
+			"WHEN (penultimo.codplanoN = ultimo.codplanoV) AND ((ultimo.planoNmensal - penultimo.planoVmensal) < 0) THEN 'Downgrade'\n"+
+      "end\n"+
+      "else\n"+
+      "case\n"+
+			"WHEN ((ultimo.planoNmensal - ultimo.planoVmensal) = 0) THEN 'Renovação'\n"+
+			"WHEN ((ultimo.planoNmensal - ultimo.planoVmensal) > 0) THEN 'Upgrade'\n"+
+			"WHEN ((ultimo.planoNmensal - ultimo.planoVmensal) < 0) THEN 'Downgrade'\n"+
+      "end\n"+
+      "END AS operacao,\n"+
+      "usuarios.usr_login operador,\n"+
+      "perfis.descricao setor,\n"+
+      "(\n"+
+      "SELECT\n"+
+      "min(faturas.codfatura)\n"+
+      "from\n"+
+      "mk_faturas faturas\n"+
+      "INNER JOIN mk_faturas_historicos histos ON (histos.cd_fatura = faturas.codfatura)\n"+
+      "where\n"+
+      "faturas.cd_pessoa = cliente.codpessoa and\n"+
+      "faturas.excluida = 'N' and\n"+
+      "faturas.suspenso = 'N' and\n"+
+      "faturas.tipo = 'R' and\n"+
+      "faturas.data_vencimento =\n"+
+      "(\n"+
+			"select\n"+
+      "min(fatura.data_vencimento)\n"+
+			"from\n"+
+      "mk_faturas fatura\n"+
+			"where\n"+
+      "fatura.cd_pessoa = faturas.cd_pessoa and\n"+
+      "fatura.excluida = 'N' and\n"+
+      "fatura.suspenso = 'N' and\n"+
+      "fatura.tipo = 'R' and\n"+
+      "fatura.data_vencimento >= ultimo.dt_hr::date\n"+
+      ")\n"+
+      ") fat,\n"+
+      "(\n"+
+      "select\n"+
+      "dia.dia_vcto\n"+
+      "from\n"+
+      "mk_faturamentos_regras dia\n"+
+      "where\n"+
+      "dia.codfaturamentoregra = contrato.cd_regra_faturamento\n"+
+      ") vencimento\n"+
+      "FROM\n"+
+      "mk_contratos contrato\n"+
+      "INNER JOIN mk_pessoas cliente ON (cliente.codpessoa = contrato.cliente)\n"+
+      "INNER JOIN mk_cidades cidade ON (cidade.codcidade = cliente.codcidade)\n"+
+      "LEFT JOIN (\n"+
+      "SELECT\n"+
+      "clientes.codpessoa,\n"+
+      "contratos.codcontrato,\n"+
+      "hists.dt_hr,\n"+
+      "planoVs.codplano codplanoV,\n"+
+      "planoVs.descricao planoVdesc,\n"+
+      "planoVs.vlr_mensalidade planoVmensal,\n"+
+      "planoNs.codplano codplanoN,\n"+
+      "planoNs.descricao planoNdesc,\n"+
+      "planoNs.vlr_mensalidade planoNmensal\n"+
+      "from\n"+
+      "mk_contratos contratos\n"+
+      "INNER JOIN mk_contratos_historicos hists ON (hists.cd_contrato = contratos.codcontrato AND hists.cd_operacao IN (4,5))\n"+
+      "INNER JOIN mk_pessoas clientes ON (clientes.codpessoa = contratos.cliente)\n"+
+      "INNER JOIN mk_planos_acesso planoVs ON (planoVs.codplano = hists.cd_plano_velho)\n"+
+      "INNER JOIN mk_planos_acesso planoNs ON (planoNs.codplano = hists.cd_plano_novo)\n"+
+      "WHERE\n"+
+      "hists.dt_hr =\n"+
+      "(\n"+
+			"SELECT distinct\n"+
+      "MAX(histss.dt_hr)\n"+
+			"from\n"+
+      "mk_contratos contratoss\n"+
+      "INNER JOIN mk_contratos_historicos histss ON (histss.cd_contrato = contratoss.codcontrato AND histss.cd_operacao IN (4,5))\n"+
+      "INNER JOIN mk_pessoas clientess ON (clientess.codpessoa = contratoss.cliente)\n"+
+			"WHERE\n"+
+      "clientess.codpessoa = clientes.codpessoa\n"+
+      ")\n"+
+      ") as ultimo ON (ultimo.codpessoa = cliente.codpessoa AND ultimo.codcontrato = contrato.codcontrato)\n"+
+      "LEFT JOIN\n"+
+      "(\n"+
+      "SELECT\n"+
+      "clientes.codpessoa,\n"+
+      "contratos.codcontrato,\n"+
+      "hists.dt_hr,\n"+
+      "planoVs.codplano codplanoV,\n"+
+      "planoVs.descricao planoVdesc,\n"+
+      "planoVs.vlr_mensalidade planoVmensal,\n"+
+      "planoNs.codplano codplanoN,\n"+
+      "planoNs.descricao planoNdesc,\n"+
+      "planoNs.vlr_mensalidade planoNmensal\n"+
+      "from\n"+
+      "mk_contratos contratos\n"+
+      "INNER JOIN mk_contratos_historicos hists ON (hists.cd_contrato = contratos.codcontrato)\n"+
+      "INNER JOIN mk_pessoas clientes ON (clientes.codpessoa = contratos.cliente)\n"+
+      "LEFT JOIN mk_planos_acesso planoVs ON (planoVs.codplano = hists.cd_plano_velho)\n"+
+      "LEFT JOIN mk_planos_acesso planoNs ON (planoNs.codplano = hists.cd_plano_novo)\n"+
+      "WHERE\n"+
+      "hists.dt_hr =\n"+
+      "(\n"+
+			"SELECT\n"+
+      "MAX(histss.dt_hr)\n"+
+			"from\n"+
+      "mk_contratos contratoss\n"+
+      "INNER JOIN mk_contratos_historicos histss ON (histss.cd_contrato = contratoss.codcontrato AND histss.cd_operacao IN (4,5))\n"+
+      "INNER JOIN mk_pessoas clientess ON (clientess.codpessoa = contratoss.cliente)\n"+
+			"WHERE\n"+
+      "histss.dt_hr <\n"+
+      "(\n"+
+      "SELECT distinct\n"+
+      "MAX(histss1.dt_hr)\n"+
+      "from\n"+
+      "mk_contratos contratoss1\n"+
+      "INNER JOIN mk_contratos_historicos histss1 ON (histss1.cd_contrato = contratoss1.codcontrato AND histss1.cd_operacao IN (4,5))\n"+
+      "INNER JOIN mk_pessoas clientess1 ON (clientess1.codpessoa = contratoss1.cliente)\n"+
+      "WHERE\n"+
+      "clientess1.codpessoa = clientess.codpessoa\n"+
+      ")\n"+
+      "and\n"+
+      "clientess.codpessoa = clientes.codpessoa\n"+
+      ")\n"+
+			"AND hists.codcontratohist =\n"+
+      "(\n"+
+			"SELECT\n"+
+      "max(histss1.codcontratohist)\n"+
+			"from\n"+
+      "mk_contratos_historicos histss1\n"+
+			"where\n"+
+      "histss1.cd_contrato = contratos.codcontrato and\n"+
+      "histss1.dt_hr = \n"+
+			"(\n"+
+      "SELECT\n"+
+      "MAX(histss.dt_hr)\n"+
+      "FROM\n"+
+      "mk_contratos contratoss\n"+
+      "INNER JOIN mk_contratos_historicos histss ON (histss.cd_contrato = contratoss.codcontrato AND histss.cd_operacao IN (4,5))\n"+
+      "INNER JOIN mk_pessoas clientess ON (clientess.codpessoa = contratoss.cliente)\n"+
+      "WHERE\n"+
+      "histss.dt_hr <\n"+
+      "(\n"+
+      "SELECT distinct\n"+
+      "MAX(histss1.dt_hr)\n"+
+      "from\n"+
+      "mk_contratos contratoss1\n"+
+      "INNER JOIN mk_contratos_historicos histss1 ON (histss1.cd_contrato = contratoss1.codcontrato AND histss1.cd_operacao IN (4,5))\n"+
+      "INNER JOIN mk_pessoas clientess1 ON (clientess1.codpessoa = contratoss1.cliente)\n"+
+      "WHERE\n"+
+      "clientess1.codpessoa = clientess.codpessoa\n"+
+      ")\n"+
+      "and\n"+
+      "clientess.codpessoa = clientes.codpessoa\n"+
+			")\n"+
+      ")\n"+
+      ") as penultimo ON (penultimo.codpessoa = cliente.codpessoa AND penultimo.codcontrato = contrato.codcontrato)\n"+
+      "LEFT JOIN mk_contratos_historicos hist ON (hist.cd_contrato = contrato.codcontrato AND hist.dt_hr = ultimo.dt_hr)\n"+
+      "LEFT JOIN fr_usuario usuarios ON (usuarios.usr_login = hist.operador)\n"+
+      "inner JOIN mk_usuarios_perfil_acesso_master perfis ON (perfis.codperfilacessomaster = usuarios.cd_perfil_acesso)\n"+
+      "WHERE\n"+
+      "ultimo.dt_hr::DATE BETWEEN $11 and $12\n"+
+      "AND contrato.cancelado = 'N'\n"+
+      ") AS tabela\n"+
+      ") AS tb\n"+
+      "ORDER BY 3,6,11";
+      const values = [comissaoTVFrente, comissaoTVTele, comissaoTelFrente, comissaoTelTele, comissaoRecorrenteFrente, comissaoRecorrenteTele, comissaoVendaFrente2, comissaoVendaFrente50, comissaoVendaTele3, comissaoVendaTele4, dataInicio, dataFim];
+      const result = await db.query(query, values);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllOperators: async () => {
+    try {
+      const query =
+      "SELECT usr_nome, usr_login\n"+
+      "FROM fr_usuario\n"+
+      "WHERE cd_perfil_acesso IN (11,13,14,15,23)\n"+
+      "AND (usr_nome NOT ILIKE '%dispon%'\n"+
+      "AND usr_nome NOT ILIKE '%pap%'\n"+
+      "AND usr_nome NOT ILIKE '%taciana alves sales%'\n"+
+      "AND usr_nome NOT ILIKE '%kênia malaquias gobira%'\n"+
+      "AND usr_nome NOT ILIKE '%Flaviana Aparecida Fassina%'\n"+
+      "AND usr_nome NOT ILIKE '%Tayná Mirian Pereira de Castro%'\n"+
+      "AND usr_nome NOT ILIKE '%Cleber Caetano%'\n"+
+      "AND usr_nome NOT ILIKE '%Vitor Martins Ferreira%'\n"+
+      "AND usr_nome NOT ILIKE '%Ruttiele Aparecida Rodrigues%')";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 module.exports = Cliente;

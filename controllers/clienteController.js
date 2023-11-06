@@ -1,25 +1,43 @@
+const { query } = require("express");
 const ClienteModel = require("../models/ClienteModel"); // Importe o modelo
 
 const clienteController = {
-  getAllClients: async (req, res) => {
+  getComissaoTotal: async (req, res) => {
     const { dataInicio, dataFim } = req.body;
     try {
-      const clients = await ClienteModel.getAllClients(dataInicio, dataFim);
+      const clients = await ClienteModel.getComissaoTotal(dataInicio, dataFim);
       res.status(200).json(clients);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de clientes."+error });
     }
   },
-
-  //   createNewClient: async (req, res) => {
-  //     const { nome, cpf } = req.body;
-  //     try {
-  //       const newClient = await ClienteModel.createNewClient(nome, cpf);
-  //       res.status(201).json(newClient);
-  //     } catch (error) {
-  //       res.status(500).json({ error: 'Erro ao criar novo cliente.' });
-  //     }
-  //   }
+  getComissaoVenda: async (req, res) => {
+    const { comissaoTV, comissaoTel, comissaoRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, dataInicio, dataFim } = req.body;
+    try {
+      const clients = await ClienteModel.getComissaoVenda(comissaoTV, comissaoTel, comissaoRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, dataInicio, dataFim);
+      res.status(200).json(clients);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao obter lista de comissões de Vendas."+error });
+    }
+  },
+  getComissaoRenovacao: async (req, res) => {
+    const { comissaoTVFrente, comissaoTVTele, comissaoTelFrente, comissaoTelTele, comissaoRecorrenteFrente, comissaoRecorrenteTele, comissaoVendaFrente2, comissaoVendaFrente50, comissaoVendaTele3, comissaoVendaTele4, dataInicio, dataFim } = req.body;
+    try {
+      const clients = await ClienteModel.getComissaoRenovacao(comissaoTVFrente, comissaoTVTele, comissaoTelFrente, comissaoTelTele, comissaoRecorrenteFrente, comissaoRecorrenteTele, comissaoVendaFrente2, comissaoVendaFrente50, comissaoVendaTele3, comissaoVendaTele4, dataInicio, dataFim);
+      res.status(200).json(clients);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao obter lista de comissões de Renovação."+error });
+    }
+  },
+  getAllOperators: async (req, res) => {
+    const { } = req.body;
+    try {
+      const operators = await ClienteModel.getAllOperators();
+      res.status(200).json(operators);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao obter lista de operadores."+error });
+    }
+  },
 };
 
 module.exports = clienteController;

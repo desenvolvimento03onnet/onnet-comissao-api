@@ -7,7 +7,10 @@ const PORT = 3000; //Porta para o servidor, por exemplo a 3000
 
 app.use(express.json()); //Middleware para tratar os dados no formato JSON
 
-app.get('/api/bloqueio/', clienteController.getAllClients); //Rota para obter todos os clientes
+app.get('/api/comissaoTotal/', clienteController.getComissaoTotal);
+app.get('/api/comissaoVenda/', clienteController.getComissaoVenda);
+app.get('/api/comissaoRenovacao/', clienteController.getComissaoRenovacao);
+app.get('/api/operators/', clienteController.getAllOperators); //Rota para obter todos os clientes
 //app.post('/api/clientes', clienteController.createNewClient); //Rota para adicionar um novo cliente
 
 app.listen(PORT, () => {
