@@ -7,7 +7,7 @@ const pool = new Pool({
   database: "mkData3.0",
   password: "Cl13nt_R",
   port: 5432, // Porta padrão do PostgreSQL
-  timeout: 3600000,
+  timeout: 360000,
   schema: "public"
 });
 
