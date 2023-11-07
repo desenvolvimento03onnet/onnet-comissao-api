@@ -30,6 +30,7 @@ app.get('/api/Patrocinio/', MKController.getAllOperatorsPatro);
 app.get('/api/QntContratos/', MKController.getAllQntContratos);
 app.get('/api/SMSNumero/', MKController.getClientWithCelNumer);
 app.get('/api/QntContratosAtivos/', MKController.getQuantityContratsActives);
+app.get('/api/ClientesPorCaixa/', MKController.getAllClientsFromNAP);
 //app.post('/api/clientes', clienteController.createNewClient); //Rota para adicionar um novo cliente
 
 app.listen(PORT, () => {

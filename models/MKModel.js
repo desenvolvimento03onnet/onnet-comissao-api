@@ -2881,7 +2881,7 @@ const MK = {
       "mk_contratos contrato\n"+
       "LEFT JOIN mk_faturamentos_regras vencimento ON (vencimento.codfaturamentoregra = contrato.cd_regra_faturamento)\n"+
       "WHERE\n"+
-      "vencimento.dia_vcto||'' IN ($1)\n"+
+      "vencimento.dia_vcto IN ($1)\n"+
       "AND contrato.adesao BETWEEN $2 AND $3\n"+
       "GROUP BY 1";
       const values = [diasVencimento,dataInicio,dataFim];
@@ -2993,6 +2993,29 @@ const MK = {
       "codcidade IN (96, 105, 242, 67, 61, 19, 286, 57, 9, 5, 537, 183, 217, 191, 213, 538)\n"+
       "ORDER BY 2";
       const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllClientsFromNAP: async (caixa) => {
+    try {
+      const query =
+      "SELECT\n"+
+      "cliente.codpessoa AS \"Código do Cliente\",\n"+
+      "cliente.nome_razaosocial AS \"Cliente\",\n"+
+      "conexao.codconexao AS \"Código da Conexão\",\n"+
+      "caixa.identificacao AS \"Caixa\",\n"+
+      "porta.id_porta AS \"Porta\"\n"+
+      "FROM mk_conexoes conexao\n"+
+      "INNER JOIN mk_fiber_splitter splitter ON (conexao.cd_splitter = splitter.codsplitter)\n"+
+      "INNER JOIN mk_fiber_caixa caixa ON (splitter.cd_caixa = caixa.codcaixa)\n"+
+      "INNER JOIN mk_pessoas cliente ON (conexao.codcliente  = cliente.codpessoa)\n"+
+      "INNER JOIN mk_fiber_splitter_portas porta ON (conexao.id_porta_splitter = porta.codsplitterporta)\n"+
+      "WHERE caixa.identificacao LIKE $1\n"+
+      "ORDER BY 5";
+      const value = [caixa];
+      const result = await db.query(query, value);
       return result.rows;
     } catch (error) {
       throw error;

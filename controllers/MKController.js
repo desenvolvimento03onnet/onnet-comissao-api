@@ -212,6 +212,15 @@ const MKController = {
       res.status(500).json({ error: "Erro ao obter cidades."+error });
     }
   },
+  getAllClientsFromNAP: async (req, res) => {
+    const { caixa } = req.body;
+    try {
+      const operators = await MKModel.getAllClientsFromNAP(caixa);
+      res.status(200).json(operators);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao obter clientes."+error });
+    }
+  },
 };
 
 module.exports = MKController;
