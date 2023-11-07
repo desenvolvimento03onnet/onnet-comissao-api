@@ -9,6 +9,8 @@
 <p>
   A descrição a seguir é referente à API criada para a aplicação OnNet Relatórios <br />
   Nela, será apresentada toda a documentação da API, juntamente com o passo a passo para criar uma nova API, caso necessário.
+
+  ⚠️ A Versão do Node.js utilizada foi a V20.9.0 ⚠️
 </p>
 
 </div>
@@ -22,8 +24,6 @@
 ---
 
 <br />
-
-![img_v2_37a7cc04-ab3f-4405-ae9a-f84ceb4c948g](https://user-images.githubusercontent.com/79301703/230892907-5fd5c0c5-1665-4d75-8a35-744e0afc36a5.gif)
 
 ## Iniciando...
 
@@ -157,12 +157,12 @@ No arquivo db.js, coloque o código de acordo com o banco:
 # 
 # // Configurações do banco de dados
 # const pool = new Pool({
-#   user: 'cliente_r', // Usuário de acesso do MK
-#   host: '177.85.0.11', // IP do Banco
-#   database: 'mkData3.0', // Nome do Banco
+#   user: '********', // Usuário de acesso do MK
+#   host: '********', // IP do Banco
+#   database: '********', // Nome do Banco
 #   password: '****', // Senha de acesso do MK
 #   port: 5432, // Porta padrão do PostgreSQL
-#   schema: "public", // Esquema de tabelas usadas no banco
+#   schema: "********", // Esquema de tabelas usadas no banco
 #   timeout: 360000 // Setando timeout para as consultas expirarem
 # });
 # 
@@ -174,13 +174,13 @@ No arquivo db.js, coloque o código de acordo com o banco:
 # 
 # // Configurações do banco de dados
 # const pool = new Pool({
-#   user: 'cliente_r', // Usuário de acesso do MK Espelho
-#   host: '177.85.6.118', // IP do Banco
-#   database: 'mkData3.0', // Nome do Banco
-#   password: '****', // Senha de acesso do MK Espelho
-#   port: 5432, // Porta padrão do PostgreSQL
-#   schema: "public", // Esquema de tabelas usadas no banco
-#   timeout: 360000 // Setando timeout para as consultas expirarem
+#   user: '********', // Usuário de acesso do MK Espelho
+#   host: '********', // IP do Banco
+#   database: '********', // Nome do Banco
+#   password: '********', // Senha de acesso do MK Espelho
+#   port: ********, // Porta padrão do PostgreSQL
+#   schema: "********", // Esquema de tabelas usadas no banco
+#   timeout: ******** // Setando timeout para as consultas expirarem
 # });
 # 
 # module.exports = pool; //Exportando para usarmos posteriomente
