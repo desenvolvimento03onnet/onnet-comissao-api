@@ -1,6 +1,6 @@
 const db = require("../config/db"); // Importe a configuração do banco de dados
 
-const Cliente = {
+const MK = {
   getComissaoTotal: async ( comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoRecorrenteFrente50, comissaoRenovacaoRecorrenteTele3, comissaoRenovacaoRecorrenteTele4, dataInicio, dataFim ) => {
     try {
       const query =
@@ -2870,7 +2870,134 @@ const Cliente = {
     } catch (error) {
       throw error;
     }
-  },    
+  },
+  getAllQntContratos: async (diasVencimento, dataInicio, dataFim) => {
+    try {
+      const query =
+      "SELECT\n"+
+      "vencimento.dia_vcto as \"Dia Vencimento\",\n"+
+      "COUNT(contrato.codcontrato) as \"Quantidade de Contratos\"\n"+
+      "FROM\n"+
+      "mk_contratos contrato\n"+
+      "LEFT JOIN mk_faturamentos_regras vencimento ON (vencimento.codfaturamentoregra = contrato.cd_regra_faturamento)\n"+
+      "WHERE\n"+
+      "vencimento.dia_vcto||'' IN ($1)\n"+
+      "AND contrato.adesao BETWEEN $2 AND $3\n"+
+      "GROUP BY 1";
+      const values = [diasVencimento,dataInicio,dataFim];
+      const result = await db.query(query, values);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getClientWithCelNumer: async (numeroCel, dataInicio, dataFim) => {
+    try {
+      const query =
+      "SELECT\n"+
+      "DISTINCT SMS.DESTINATARIO as \"Nro Destinatário\",\n"+
+      "CLIENTE.NOME_RAZAOSOCIAL as \"Nome do Cliente\",\n"+
+      "SMS.DT_HR AS \"Data Envio\"\n"+
+      "FROM\n"+
+      "MK_SMS_03_HISTORICO SMS\n"+
+      "INNER JOIN MK_PESSOAS CLIENTE ON (CLIENTE.CODPESSOA = SMS.CD_CLIENTE)\n"+
+      "WHERE\n"+
+      "SMS.DESTINATARIO like $1\n"+
+      "AND DT_HR BETWEEN $2 AND $3\n"+
+      "ORDER BY 3 DESC";
+      const values = [numeroCel,dataInicio,dataFim];
+      const result = await db.query(query, values);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getQuantityContratsActives: async (dataFim) => {
+    try {
+      const query =
+      "SELECT\n"+
+      "criados.nomes endereco,\n"+
+      "criados.quantidade criados,\n"+
+      "cancelados.quantidade cancelados,\n"+
+      "(criados.quantidade - cancelados.quantidade) ativos\n"+
+      "FROM (\n"+
+      "SELECT DISTINCT\n"+
+      "count(contrato.codcontrato) quantidade,\n"+
+      "cidade.codcidade endereco,\n"+
+      "cidade.cidade nomes\n"+
+      "FROM mk_contratos contrato\n"+
+      "INNER JOIN mk_pessoas cliente ON (cliente.codpessoa = contrato.cliente)\n"+
+      "inner join MK_CIDADES CIDADE ON (cidade.codcidade = cliente.codcidade)\n"+
+      "INNER JOIN MK_BAIRROS BAIRRO ON (cliente.codbairro = bairro.codbairro and bairro.codbairro NOT IN (16233, 16234))\n"+
+      "WHERE CIDADE.CODCIDADE IN (96, 242, 19, 5, 9, 61, 537, 538, 213, 217, 286, 191, 57, 183, 67)\n"+
+      "AND contrato.adesao BETWEEN '2010-01-01' AND $1\n"+
+      "GROUP BY 2,3\n"+
+      "UNION\n"+
+      "SELECT DISTINCT\n"+
+      "COUNT(contrato.codcontrato) quantidade,\n"+
+      "bairro.codbairro endereco,\n"+
+      "bairro.bairro nomes\n"+
+      "FROM mk_contratos contrato\n"+
+      "INNER JOIN mk_pessoas cliente ON (cliente.codpessoa = contrato.cliente)\n"+
+      "inner join MK_CIDADES CIDADE ON (cidade.codcidade = cliente.codcidade)\n"+
+      "INNER JOIN MK_BAIRROS BAIRRO ON (cliente.codbairro = bairro.codbairro and bairro.codbairro IN (16233, 16234))\n"+
+      "WHERE CIDADE.CODCIDADE IN (96, 242, 19, 5, 9, 61, 537, 538, 213, 217, 286, 191, 57, 183, 67)\n"+
+      "AND contrato.adesao BETWEEN '2010-01-01' AND $1\n"+
+      "GROUP BY 2,3\n"+
+      ") AS criados,\n"+
+      "(\n"+
+      "SELECT DISTINCT\n"+
+      "count(contrato.codcontrato) quantidade,\n"+
+      "cidade.codcidade endereco,\n"+
+      "cidade.cidade nomes\n"+
+      "FROM mk_contratos contrato\n"+
+      "INNER JOIN mk_pessoas cliente ON (cliente.codpessoa = contrato.cliente)\n"+
+      "inner join MK_CIDADES CIDADE ON (cidade.codcidade = cliente.codcidade)\n"+
+      "INNER JOIN MK_BAIRROS BAIRRO ON (cliente.codbairro = bairro.codbairro and bairro.codbairro NOT IN (16233, 16234))\n"+
+      "WHERE CIDADE.CODCIDADE IN (96, 242, 19, 5, 9, 61, 537, 538, 213, 217, 286, 191, 57, 183, 67)\n"+
+      "AND contrato.cancelado = 'S'\n"+
+      "AND contrato.dt_cancelamento BETWEEN '2010-01-01' AND $1\n"+
+      "GROUP BY 2,3\n"+
+      "UNION\n"+
+      "SELECT DISTINCT\n"+
+      "count(contrato.codcontrato) quantidade,\n"+
+      "bairro.codbairro endereco,\n"+
+      "bairro.bairro nomes\n"+
+      "FROM mk_contratos contrato\n"+
+      "INNER JOIN mk_pessoas cliente ON (cliente.codpessoa = contrato.cliente)\n"+
+      "inner join MK_CIDADES CIDADE ON (cidade.codcidade = cliente.codcidade)\n"+
+      "INNER JOIN MK_BAIRROS BAIRRO ON (cliente.codbairro = bairro.codbairro and bairro.codbairro IN (16233, 16234))\n"+
+      "WHERE CIDADE.CODCIDADE IN (96, 242, 19, 5, 9, 61, 537, 538, 213, 217, 286, 191, 57, 183, 67)\n"+
+      "AND contrato.cancelado = 'S'\n"+
+      "AND contrato.dt_cancelamento BETWEEN '2010-01-01' AND $1\n"+
+      "GROUP BY 2,3\n"+
+      ") AS cancelados\n"+
+      "WHERE criados.endereco = cancelados.endereco\n"+
+      "order BY 1";
+      const values = [dataFim];
+      const result = await db.query(query, values);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllCities: async () => {
+    try {
+      const query =
+      "SELECT\n"+
+      "codcidade,\n"+
+      "cidade\n"+
+      "FROM\n"+
+      "mk_cidades\n"+
+      "WHERE\n"+
+      "codcidade IN (96, 105, 242, 67, 61, 19, 286, 57, 9, 5, 537, 183, 217, 191, 213, 538)\n"+
+      "ORDER BY 2";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
-module.exports = Cliente;
+module.exports = MK;

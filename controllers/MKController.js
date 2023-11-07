@@ -1,11 +1,11 @@
 const { query } = require("express");
-const ClienteModel = require("../models/ClienteModel"); // Importe o modelo
+const MKModel = require("../models/MKModel"); // Importe o modelo
 
-const clienteController = {
+const MKController = {
   getComissaoTotal: async (req, res) => {
     const { comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoRecorrenteFrente50, comissaoRenovacaoRecorrenteTele3, comissaoRenovacaoRecorrenteTele4, dataInicio, dataFim } = req.body;
     try {
-      const clients = await ClienteModel.getComissaoTotal( comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoRecorrenteFrente50, comissaoRenovacaoRecorrenteTele3, comissaoRenovacaoRecorrenteTele4, dataInicio, dataFim );
+      const clients = await MKModel.getComissaoTotal( comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoRecorrenteFrente50, comissaoRenovacaoRecorrenteTele3, comissaoRenovacaoRecorrenteTele4, dataInicio, dataFim );
       res.status(200).json(clients);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de clientes."+error });
@@ -14,7 +14,7 @@ const clienteController = {
   getComissaoVenda: async (req, res) => {
     const { comissaoTV, comissaoTel, comissaoRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, dataInicio, dataFim } = req.body;
     try {
-      const clients = await ClienteModel.getComissaoVenda(comissaoTV, comissaoTel, comissaoRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, dataInicio, dataFim);
+      const clients = await MKModel.getComissaoVenda(comissaoTV, comissaoTel, comissaoRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, dataInicio, dataFim);
       res.status(200).json(clients);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de comissões de Vendas."+error });
@@ -23,7 +23,7 @@ const clienteController = {
   getComissaoRenovacao: async (req, res) => {
     const { comissaoTVFrente, comissaoTVTele, comissaoTelFrente, comissaoTelTele, comissaoRecorrenteFrente, comissaoRecorrenteTele, comissaoVendaFrente2, comissaoVendaFrente50, comissaoVendaTele3, comissaoVendaTele4, dataInicio, dataFim } = req.body;
     try {
-      const clients = await ClienteModel.getComissaoRenovacao(comissaoTVFrente, comissaoTVTele, comissaoTelFrente, comissaoTelTele, comissaoRecorrenteFrente, comissaoRecorrenteTele, comissaoVendaFrente2, comissaoVendaFrente50, comissaoVendaTele3, comissaoVendaTele4, dataInicio, dataFim);
+      const clients = await MKModel.getComissaoRenovacao(comissaoTVFrente, comissaoTVTele, comissaoTelFrente, comissaoTelTele, comissaoRecorrenteFrente, comissaoRecorrenteTele, comissaoVendaFrente2, comissaoVendaFrente50, comissaoVendaTele3, comissaoVendaTele4, dataInicio, dataFim);
       res.status(200).json(clients);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de comissões de Renovação."+error });
@@ -32,7 +32,7 @@ const clienteController = {
   getAllOperators: async (req, res) => {
     const { } = req.body;
     try {
-      const operators = await ClienteModel.getAllOperators();
+      const operators = await MKModel.getAllOperators();
       res.status(200).json(operators);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de operadores."+error });
@@ -41,7 +41,7 @@ const clienteController = {
   getAllOperators3M: async (req, res) => {
     const { } = req.body;
     try {
-      const operators = await ClienteModel.getAllOperators3M();
+      const operators = await MKModel.getAllOperators3M();
       res.status(200).json(operators);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de operadores."+error });
@@ -50,7 +50,7 @@ const clienteController = {
   getAllOperatorsVarzea: async (req, res) => {
     const { } = req.body;
     try {
-      const operators = await ClienteModel.getAllOperatorsVarzea();
+      const operators = await MKModel.getAllOperatorsVarzea();
       res.status(200).json(operators);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de operadores."+error });
@@ -59,7 +59,7 @@ const clienteController = {
   getAllOperatorsBuritizeiro: async (req, res) => {
     const { } = req.body;
     try {
-      const operators = await ClienteModel.getAllOperatorsBuritizeiro();
+      const operators = await MKModel.getAllOperatorsBuritizeiro();
       res.status(200).json(operators);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de operadores."+error });
@@ -68,7 +68,7 @@ const clienteController = {
   getAllOperatorsPirapora: async (req, res) => {
     const { } = req.body;
     try {
-      const operators = await ClienteModel.getAllOperatorsPirapora();
+      const operators = await MKModel.getAllOperatorsPirapora();
       res.status(200).json(operators);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de operadores."+error });
@@ -77,7 +77,7 @@ const clienteController = {
   getAllOperatorsJP: async (req, res) => {
     const { } = req.body;
     try {
-      const operators = await ClienteModel.getAllOperatorsJP();
+      const operators = await MKModel.getAllOperatorsJP();
       res.status(200).json(operators);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de operadores."+error });
@@ -86,7 +86,7 @@ const clienteController = {
   getAllOperatorsPatos: async (req, res) => {
     const { } = req.body;
     try {
-      const operators = await ClienteModel.getAllOperatorsPatos();
+      const operators = await MKModel.getAllOperatorsPatos();
       res.status(200).json(operators);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de operadores."+error });
@@ -95,7 +95,7 @@ const clienteController = {
   getAllOperatorsVarjao: async (req, res) => {
     const { } = req.body;
     try {
-      const operators = await ClienteModel.getAllOperatorsVarjao();
+      const operators = await MKModel.getAllOperatorsVarjao();
       res.status(200).json(operators);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de operadores."+error });
@@ -104,7 +104,7 @@ const clienteController = {
   getAllOperatorsSaoGoncalo: async (req, res) => {
     const { } = req.body;
     try {
-      const operators = await ClienteModel.getAllOperatorsSaoGoncalo();
+      const operators = await MKModel.getAllOperatorsSaoGoncalo();
       res.status(200).json(operators);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de operadores."+error });
@@ -113,7 +113,7 @@ const clienteController = {
   getAllOperatorsPresidente: async (req, res) => {
     const { } = req.body;
     try {
-      const operators = await ClienteModel.getAllOperatorsPresidente();
+      const operators = await MKModel.getAllOperatorsPresidente();
       res.status(200).json(operators);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de operadores."+error });
@@ -122,7 +122,7 @@ const clienteController = {
   getAllOperatorsIrai: async (req, res) => {
     const { } = req.body;
     try {
-      const operators = await ClienteModel.getAllOperatorsIrai();
+      const operators = await MKModel.getAllOperatorsIrai();
       res.status(200).json(operators);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de operadores."+error });
@@ -131,7 +131,7 @@ const clienteController = {
   getAllOperatorsAbadia: async (req, res) => {
     const { } = req.body;
     try {
-      const operators = await ClienteModel.getAllOperatorsAbadia();
+      const operators = await MKModel.getAllOperatorsAbadia();
       res.status(200).json(operators);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de operadores."+error });
@@ -140,7 +140,7 @@ const clienteController = {
   getAllOperatorsLagoa: async (req, res) => {
     const { } = req.body;
     try {
-      const operators = await ClienteModel.getAllOperatorsLagoa();
+      const operators = await MKModel.getAllOperatorsLagoa();
       res.status(200).json(operators);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de operadores."+error });
@@ -149,7 +149,7 @@ const clienteController = {
   getAllOperatorsGuima: async (req, res) => {
     const { } = req.body;
     try {
-      const operators = await ClienteModel.getAllOperatorsGuima();
+      const operators = await MKModel.getAllOperatorsGuima();
       res.status(200).json(operators);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de operadores."+error });
@@ -158,7 +158,7 @@ const clienteController = {
   getAllOperatorsCruzeiro: async (req, res) => {
     const { } = req.body;
     try {
-      const operators = await ClienteModel.getAllOperatorsCruzeiro();
+      const operators = await MKModel.getAllOperatorsCruzeiro();
       res.status(200).json(operators);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de operadores."+error });
@@ -167,12 +167,51 @@ const clienteController = {
   getAllOperatorsPatro: async (req, res) => {
     const { } = req.body;
     try {
-      const operators = await ClienteModel.getAllOperatorsPatro();
+      const operators = await MKModel.getAllOperatorsPatro();
       res.status(200).json(operators);
     } catch (error) {
       res.status(500).json({ error: "Erro ao obter lista de operadores."+error });
     }
   },
+  getAllQntContratos: async (req, res) => {
+    const { diasVencimento, dataInicio, dataFim } = req.body;
+    const operators = [];
+    try {
+      for(var i=0;i<diasVencimento.length;i++){
+        operators[i] = await MKModel.getAllQntContratos(diasVencimento[i], dataInicio, dataFim);
+      }
+      res.status(200).json(operators);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao obter relatório. "+error });
+    }
+  },
+  getClientWithCelNumer: async (req, res) => {
+    const { numeroCel, dataInicio, dataFim } = req.body;
+    try {
+      const operators = await MKModel.getClientWithCelNumer(numeroCel, dataInicio, dataFim);
+      res.status(200).json(operators);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao obter cliente/número."+error });
+    }
+  },
+  getQuantityContratsActives: async (req, res) => {
+    const { dataFim } = req.body;
+    try {
+      const operators = await MKModel.getQuantityContratsActives(dataFim);
+      res.status(200).json(operators);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao obter cliente/número."+error });
+    }
+  },
+  getAllCities: async (req, res) => {
+    const { } = req.body;
+    try {
+      const operators = await MKModel.getAllCities();
+      res.status(200).json(operators);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao obter cidades."+error });
+    }
+  },
 };
 
-module.exports = clienteController;
+module.exports = MKController;
