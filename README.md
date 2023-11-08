@@ -49,7 +49,15 @@
 Progresso de Desenvolvimento
 
 ```mermaid
-    %%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#0000FF', 'text': '#0000FF'}}}%%
+    %%{
+      init: {
+        'theme': 'base',
+        'themeVariables': {
+          'pie1': '#0000FF',
+          'primaryTextColor': '#0000FF'
+        }
+      }
+    }%%
     pie
     "Rotas" : 100
 ```
