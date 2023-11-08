@@ -64,14 +64,12 @@
         'theme': 'base',
         'themeVariables': {
           'pie1': '#0000FF',
-          'pie2': '#000000',
           'primaryTextColor': '#FFFFFF'
         }
       }
     }%%
     pie title Rotas
     "Concluído" : 100
-    "Em Desenvolvimento" : 0
 ```
 ```mermaid
     %%{
@@ -79,14 +77,12 @@
         'theme': 'base',
         'themeVariables': {
           'pie1': '#00FF00',
-          'pie2': '#000000',
           'primaryTextColor': '#FFFFFF'
         }
       }
     }%%
     pie title Documentação
     "Concluído" : 100
-    "Em Desenvolvimento" : 0
 ```
 
 ## Rotas
