@@ -45,7 +45,7 @@
 
 <p float="left">
 
- <img src="./images/comissaoFrenteLoja.jpg" width="300" />
+ <img src="./images/comissaoFrenteLoja.jpg" width="250" />
 
  <img src="./images/comissaoTelemarketing.jpg" width="200" /> 
 
@@ -55,7 +55,7 @@
 
 <p float="left">
 
- <img src="./images/comissaoFrenteLoja.jpg" width="300" />
+ <img src="./images/comissaoFrenteLoja.jpg" width="250" />
 
 </p>
 
@@ -63,7 +63,7 @@
 
 <p float="left">
 
- <img src="./images/comissaoFrenteLoja.jpg" width="300" />
+ <img src="./images/comissaoFrenteLoja.jpg" width="250" />
 
  <img src="./images/comissaoTelemarketing.jpg" width="200" /> 
 
