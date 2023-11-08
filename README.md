@@ -44,6 +44,26 @@
 - [X] Back-end com rotas e variáveis
 - [X] Documentação completa do back, com formatação
 
+```mermaid
+xychart-beta
+          title "Progresso do Desenvolvimento"
+          x-axis [Outubro, Novembro, Dezembro]
+          y-axis "Processos (em %)" 0 --> 100
+          bar [100, 100, 100]
+          line [0, 50, 100]
+```
+
+Here is a simple flow chart:
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
+
+
 ## Rotas
 
 - **/api/ClientesPorCaixa/** — Clientes por Caixa, essa rota recebe a caixa e busca todos os clientes que estão com ela no banco;
