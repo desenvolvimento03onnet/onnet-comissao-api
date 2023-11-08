@@ -32,10 +32,12 @@
 
 
 <br />
-<p align="center">
-  Os programas utilizados foram, Node.js, Visual Studio Code, HeidiSQL e Insomnia.<br />
-  Os pacotes utilizados foram o Express, Pg e Nodemon.
-</p>
+
+> [!NOTE]
+> <p align="center">
+>   Os programas utilizados foram, Node.js, Visual Studio Code, HeidiSQL e Insomnia.<br />
+>   Os pacotes utilizados foram o Express, Pg e Nodemon.
+> </p>
 
 ## Progresso
 
