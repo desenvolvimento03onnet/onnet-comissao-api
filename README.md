@@ -37,6 +37,7 @@
 > <p align="center">
 >   Os programas utilizados foram, Node.js, Visual Studio Code, HeidiSQL e Insomnia.<br />
 >   Os pacotes utilizados foram o Express, Pg e Nodemon.
+>   Os gráficos e toda a estilização, foi feita com a ferramenta Mermaid.
 > </p>
 
 ## Progresso
@@ -471,6 +472,10 @@ Segue também a requisição feita:
 > [!WARNING]
 > No exemplo foi usado um array de inteiros, caso o seu array seja de Strings, então basta colocar aspas em cada valor. Exemplo: ["A","B","C","D"]
 
+### Mermaid:
+
+A ferramenta[^9], inspirada em Markdown, foi utlizada para adicionar os diagramas referentes ao progresso do desenvolvimento do projeto. Estou adicionando também, o repositório[^10] onde busquei o modelo do gráfico utilizado.
+
 ## Referências
 
 [^1]: [Node JS](https://nodejs.org/en)
@@ -489,13 +494,6 @@ Segue também a requisição feita:
 
 [^8]: [Guia para Iniciantes: Criando uma API com Node.js, PostgreSQL e Padrão MVC](https://dev.to/matt1cs/guia-para-iniciantes-criando-uma-api-com-nodejs-postgresql-e-padrao-mvc-4027)
 
+[^9]: [Ferramenta Mermaid](http://mermaid.js.org/#/)
 
-
-
-
-
-
-
-
-
-
+[^10]: [Repositório Gráficos](https://gist.github.com/ChristopherA/bffddfdf7b1502215e44cec9fb766dfd)
