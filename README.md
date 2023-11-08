@@ -22,7 +22,7 @@
 </p>
 
 </div>
----
+
 <br />
 
 ## Iniciando...
@@ -32,8 +32,8 @@
 
 ## Progresso
 
-- [x] Back-end com rotas e variáveis
-- [x] Documentação completa do back, com formatação
+- [X] Back-end com rotas e variáveis
+- [X] Documentação completa do back, com formatação
 - [ ] Front-end estilizado
 - [ ] Documentação completa do back, com formatação
 
@@ -101,295 +101,312 @@
 
 O passo à passo a seguir foi inspirado no artigo: [Guia para Iniciantes: Criando uma API com Node.js, PostgreSQL e Padrão MVC](https://dev.to/matt1cs/guia-para-iniciantes-criando-uma-api-com-nodejs-postgresql-e-padrao-mvc-4027) 
 
-> [!NOTE]
-> Passo 1:
->
-> Baixe e instale o [Node.js](https://nodejs.org/en) e o [Visual Code Studio](https://code.visualstudio.com);
+### Passo 1:
 
-> [!NOTE]
-> Passo 2:
-> 
-> Crie uma pasta para que possa iniciar o projeto:
-> 
-> ``` mkdir nome_da_pasta ```
+Baixe e instale o [Node.js](https://nodejs.org/en) e o [Visual Code Studio](https://code.visualstudio.com);
 
-> [!NOTE]
-> Passo 3:
-> 
-> Acesse a pasta:
-> 
-> ``` cd nome_da_pasta ```
+### Passo 2:
 
-> [!NOTE]
-> Passo 4:
-> 
-> Acesse a pasta usando o VSCode e abra o terminal;
+Crie uma pasta para que possa iniciar o projeto:
 
-> [!NOTE]
-> Passo 5:
-> 
-> Dentro da pasta, inicie o projeto em Node.js:
-> 
-> ``` npm init -y ```
+```
+mkdir nome_da_pasta
+```
 
-> [!NOTE]
-> Passo 6:
-> 
-> Dentro da pasta, crie um arquivo chamado app.js:
-> 
+### Passo 3:
+
+Acesse a pasta:
+
+```
+cd nome_da_pasta
+```
+
+### Passo 4:
+
+Acesse a pasta usando o VSCode e abra o terminal;
+
+### Passo 5:
+
+Dentro da pasta, inicie o projeto em Node.js:
+
+```
+npm init -y
+```
+
+### Passo 6:
+
+Dentro da pasta, crie um arquivo chamado app.js:
+
 ![Arquivos 1](./images/1.jpg)
-> 
 
-> [!NOTE]
-> Passo 7:
-> 
-> Agora vamos instalar o Express:
-> 
-> ``` npm install express ```
+### Passo 7:
 
-> [!NOTE]
-> Passo 8:
-> 
-> Agora vamos instalar o Express:
-> 
-> ``` npm install express ```
+Agora vamos instalar o Express:
 
-> [!NOTE]
-> Passo 9:
-> 
-> Crie uma pasta com o nome config e, dentro dela, crie o arquivo db.js:
-> 
-> ![Arquivos 2](./images/2.jpg)
+```
+npm install express
+```
 
-> [!NOTE]
-> Passo 10:
-> 
-> Instale o pacote pg, ele nos permite ter uma interface com o banco de dados PostgreSQL:
-> 
-> ``` npm install pg ```
+### Passo 8:
 
-> [!NOTE]
-> Passo 11:
-> 
-> No arquivo db.js, coloque o código de acordo com o banco:
+Agora vamos instalar o Express:
 
-> [!NOTE]
->- Banco MK:
-> 
-> ``` const { Pool } = require('pg');
->  
->  // Configurações do banco de dados
->  const pool = new Pool({
->    user: '********', // Usuário de acesso do MK
->    host: '********', // IP do Banco
->    database: '********', // Nome do Banco
->    password: '****', // Senha de acesso do MK
->    port: 5432, // Porta padrão do PostgreSQL
->    schema: "********", // Esquema de tabelas usadas no banco
->    timeout: 360000 // Setando timeout para as consultas expirarem
->  });
->  
->  module.exports = pool; //Exportando para usarmos posteriomente ```
+```
+npm install express
+```
 
-> [!NOTE]
->- Banco MK Espelho:
-> 
-> # const { Pool } = require('pg');
-> # 
-> # // Configurações do banco de dados
-> # const pool = new Pool({
-> #   user: '********', // Usuário de acesso do MK Espelho
-> #   host: '********', // IP do Banco
-> #   database: '********', // Nome do Banco
-> #   password: '********', // Senha de acesso do MK Espelho
-> #   port: ********, // Porta padrão do PostgreSQL
-> #   schema: "********", // Esquema de tabelas usadas no banco
-> #   timeout: ******** // Setando timeout para as consultas expirarem
-> # });
-> # 
-> # module.exports = pool; //Exportando para usarmos posteriomente
+### Passo 9:
+
+Crie uma pasta com o nome config e, dentro dela, crie o arquivo db.js:
+
+![Arquivos 2](./images/2.jpg)
+
+### Passo 10:
+
+Instale o pacote pg, ele nos permite ter uma interface com o banco de dados PostgreSQL:
+
+```
+npm install pg
+```
+
+### Passo 11:
+
+No arquivo db.js, coloque o código de acordo com o banco:
+
+  #### Banco MK:
+
+  ```
+  const { Pool } = require('pg');
+
+  // Configurações do banco de dados
+  const pool = new Pool({
+    user: '********', // Usuário de acesso do MK
+    host: '********', // IP do Banco
+    database: '********', // Nome do Banco
+    password: '****', // Senha de acesso do MK
+    port: 5432, // Porta padrão do PostgreSQL
+    schema: "********", // Esquema de tabelas usadas no banco
+    timeout: 360000 // Setando timeout para as consultas expirarem
+  });
+  
+  module.exports = pool; //Exportando para usarmos posteriomente
+  ```
+
+  #### Banco MK Espelho:
+
+  ```
+  const { Pool } = require('pg');
+
+  // Configurações do banco de dados
+  const pool = new Pool({
+    user: '********', // Usuário de acesso do MK Espelho
+    host: '********', // IP do Banco
+    database: '********', // Nome do Banco
+    password: '********', // Senha de acesso do MK Espelho
+    port: ********, // Porta padrão do PostgreSQL
+    schema: "********", // Esquema de tabelas usadas no banco
+    timeout: ******** // Setando timeout para as consultas expirarem
+  });
+
+  module.exports = pool; //Exportando para usarmos posteriomente
+  ```
  
-> [!NOTE]
-> Passo 12:
-> 
-> Crie as pastas "models", "controllers" e "views":
-> 
-> # mkdir models controllers views
-> 
-> ![Arquivos 3](./images/3.jpg)
+### Passo 12:
 
-> [!NOTE]
-> Passo 13:
-> 
-> Dentro da pasta "model" crie o arquivo ContratoModel.js e cole o seguinte código:
-> 
-> # const db = require('../config/db'); // Importe a configuração do banco de dados
-> # 
-> # const Contrato = { // pode colocar o nome que quiser, recomendo colocar o nome referente ao Model que irá usar
-> #   getAllContracts: async () => { // esse async representa que essa é uma consulta assíncrona com o banco
-> #     try {
-> #       const query = 'SELECT * FROM mk_contratos LIMIT 10'; // Query SQL
-> #       const result = await db.query(query); // await serve para que o código aguarde a consulta ser feita, para só após isso, ela ser enviada pro result
-> #       return result.rows;
-> #     } catch (error) {
-> #       throw error;
-> #     }
-> #   }
-> # };
-> # 
-> # module.exports = Contrato; // Exporta a constante Contrato, juntamente com a query para que possa ser usado em outros arquivos/pastas
-> 
-> ![Arquivos 4](./images/4.jpg)
+Crie as pastas "models", "controllers" e "views":
 
-> [!NOTE]
-> Passo 14:
-> 
-> Dentro da pasta "controller", crie o arquivo contractController.js e coloque o seguinte código:
-> 
-> # const ContractModel = require('../models/ContractModel'); // Importe o modelo
-> # 
-> # const contractController = {
-> #   getAllContracts: async (req, res) => {
-> #     const { } = req.body;
-> #     try {
-> #       const contracts = await ContractModel.getAllContracts();
-> #       res.status(200).json(contracts);
-> #     } catch (error) {
-> #       res.status(500).json({ error: 'Erro ao obter lista de contratos.' });
-> #     }
-> #   }
-> # };
-> # 
-> # module.exports = contractController;
-> 
-> ![Arquivos 5](./images/5.jpg)
+```
+mkdir models controllers views
+```
 
-> [!NOTE]
-> Passo 15:
-> 
-> Abra o arquivo app.js e cole o seguinte código:
-> 
-> # const express = require('express');
-> # const db = require('./config/db');
-> # const contractController = require('./controllers/contractController');
-> # 
-> # const app = express(); //Instância do Express
-> # const PORT = 3000; //Porta para o servidor, por exemplo a 3000
-> # 
-> # app.use(express.json()); //Middleware para tratar os dados no formato JSON
-> # 
-> # app.get('/api/contratos', clienteController.getAllContracts); //Rota para obter todos os contratos
-> # 
-> # app.listen(PORT, () => {
-> #   console.log(`Servidor na porta ${PORT}`);
-> # }); 
-> 
-> ![Arquivos 6](./images/6.jpg)
+![Arquivos 3](./images/3.jpg)
 
-> [!NOTE]
-> Passo 16:
-> 
-> Basicamente a API está pronta, para testarmos, recomendo baixar o [Insomnia](https://insomnia.rest/download), assim que baixar, crie uma workspace e uma coleção com o nome que desejar, volte para o VSCode e inicie o servidor com o comando:
-> 
-> # node app.js
-> 
-> Assim que iniciar o servidor, ele irá aparecer isso:
-> 
-> ![Arquivos 7](./images/7.jpg)
-> 
-> Caso não apareça, verifique seu código para confirmar que não digitou nada errado
-> Após validar o código e iniciar o servidor, vá no Insomnia e selecione o tipo de requisição como GET e cole a rota que você acabou de criar
-> 
-> ![Arquivos 8](./images/8.jpg)
-> 
-> Clique em Send, irá retornar o JSON referente a sua query:
-> 
-> ![Arquivos 9](./images/9.jpg)
+### Passo 13:
 
-> [!NOTE]
-> Passo 17:
-> 
-> Com tudo funcionando, nós temos um problema, toda vez que uma alteração for feita no código, teremos que derrubar o servidor e iniciar novamente, para corrigirmos isso acesse o [Nodemon](https://www.npmjs.com/package/nodemon), e encontre o código para baixál-lo:
-> 
-> # npm install -g nodemon
-> 
-> Assim que instalar, acesse o arquivo package.json e adicione a seguinte linha, abaixo do "test":
-> 
-> # "dev": "nodemon app.js"
-> 
-> ![Arquivos 10](./images/10.jpg)
-> 
-> Após realizar esse processo, agora utilize o comando:
-> 
-> # npm run dev
-> 
-> Com esse comando, nós startamos o servidor e, graças ao nodemon, todas as alterações que fizermos e salvarmos no código, serão automaticamente enviadas para o Insomnia enquanto estivermos testando as rotas, sem a necessidade de derrubar e subir novamente o servidor.
+Dentro da pasta "model" crie o arquivo ContratoModel.js e cole o seguinte código:
 
-> [!NOTE]
-> Extras:
-> 
-> Passei algumas dificuldades procurando como fazer oara que a requisição passasse alguma variável, segue abaixo o código referente ao Model:
-> 
-> # getClientWithCelNumer: async (numeroCel, dataInicio, dataFim) => { // as variáveis devem vir aqui
-> #     try {
-> #       const query =
-> #       "SELECT\n"+
-> #       "DISTINCT SMS.DESTINATARIO as \"Nro Destinatário\",\n"+
-> #       "CLIENTE.NOME_RAZAOSOCIAL as \"Nome do Cliente\",\n"+
-> #       "SMS.DT_HR AS \"Data Envio\"\n"+
-> #       "FROM\n"+
-> #       "MK_SMS_03_HISTORICO SMS\n"+
-> #       "INNER JOIN MK_PESSOAS CLIENTE ON (CLIENTE.CODPESSOA = SMS.CD_CLIENTE)\n"+
-> #       "WHERE\n"+
-> #       "SMS.DESTINATARIO like $1\n"+ // Esse $1 representa a 1ª variável
-> #       "AND DT_HR BETWEEN $2 AND $3\n"+ // Esse $2 representa a 2ª variável e o $3, a 3ª
-> #       "ORDER BY 3 DESC";
-> #       const values = [numeroCel,dataInicio,dataFim]; // aqui, declaramos esse array, apenas para receber todas as variáveis
-> #       const result = await db.query(query, values); // quando for enviado para o banco, irá a query, juntamente com o array de variáveis
-> #       return result.rows;
-> #     } catch (error) {
-> #       throw error;
-> #     }
-> # }
-> 
-> Segue agora o código referente ao Controller:
-> 
-> # getClientWithCelNumer: async (req, res) => {
-> #     const { numeroCel, dataInicio, dataFim } = req.body; // requisições vindas do body(Insomnia)
-> #     try {
-> #       const operators = await MKModel.getClientWithCelNumer(numeroCel, dataInicio, dataFim); // variáveis para ser enviadas para o Model
-> #       res.status(200).json(operators); // Mostra o resultado no Insomnia como JSON
-> #     } catch (error) {
-> #       res.status(500).json({ error: "Erro ao obter cliente/número."+error });
-> #     }
-> # }
-> 
-> Para que possamos passar a requisição, pode ser no formato que achar melhor, no exemplo, eu usei JSON:
-> 
-> ![Arquivos 11](./images/11.jpg)
-> 
-> E, como resultado, tivemos:
-> 
-> ![Arquivos 12](./images/12.jpg)
-> 
-> Agora, caso seja necessário uma requisição com Array, segue o seguinte código abaixo, a validação que fiz foi apenas no Controller:
-> 
-> # getAllQntContratos: async (req, res) => {
-> #     const { diasVencimento, dataInicio, dataFim } = req.body;
-> #     const operators = [];
-> #     try {
-> #       for(var i=0;i<diasVencimento.length;i++){
-> #         operators[i] = await MKModel.getAllQntContratos(diasVencimento[i], dataInicio, dataFim);
-> #       }
-> #       res.status(200).json(operators);
-> #     } catch (error) {
-> #       res.status(500).json({ error: "Erro ao obter relatório. "+error });
-> #     }
-> #   }
-> 
-> Segue também a requisição feita:
-> 
-> ![Arquivos 13](./images/13.jpg)
+```
+const db = require('../config/db'); // Importe a configuração do banco de dados
+ 
+const Contrato = { // pode colocar o nome que quiser, recomendo colocar o nome referente ao Model que irá usar
+  getAllContracts: async () => { // esse async representa que essa é uma consulta assíncrona com o banco
+    try {
+      const query = 'SELECT * FROM mk_contratos LIMIT 10'; // Query SQL
+      const result = await db.query(query); // await serve para que o código aguarde a consulta ser feita, para só após isso, ela ser enviada pro result
+      return result.rows;
+    } catch (error) {
+     throw error;
+    }
+  }
+};
+ 
+module.exports = Contrato; // Exporta a constante Contrato, juntamente com a query para que possa ser usado em outros arquivos/pastas
+```
+
+![Arquivos 4](./images/4.jpg)
+
+### Passo 14:
+
+Dentro da pasta "controller", crie o arquivo contractController.js e coloque o seguinte código:
+
+```
+const ContractModel = require('../models/ContractModel'); // Importe o modelo
+
+const contractController = {
+  getAllContracts: async (req, res) => {
+    const { } = req.body;
+    try {
+      const contracts = await ContractModel.getAllContracts();
+      res.status(200).json(contracts);
+    } catch (error) {
+      res.status(500).json({ error: 'Erro ao obter lista de contratos.' });
+    }
+  }
+};
+ 
+module.exports = contractController;
+```
+
+![Arquivos 5](./images/5.jpg)
+
+### Passo 15:
+
+Abra o arquivo app.js e cole o seguinte código:
+
+```
+const express = require('express');
+const db = require('./config/db');
+const contractController = require('./controllers/contractController');
+ 
+const app = express(); //Instância do Express
+const PORT = 3000; //Porta para o servidor, por exemplo a 3000
+ 
+app.use(express.json()); //Middleware para tratar os dados no formato JSON
+
+app.get('/api/contratos', clienteController.getAllContracts); //Rota para obter todos os contratos
+
+app.listen(PORT, () => {
+  console.log(`Servidor na porta ${PORT}`);
+}); 
+```
+ 
+![Arquivos 6](./images/6.jpg)
+
+### Passo 16:
+
+Basicamente a API está pronta, para testarmos, recomendo baixar o [Insomnia](https://insomnia.rest/download), assim que baixar, crie uma workspace e uma coleção com o nome que desejar, volte para o VSCode e inicie o servidor com o comando:
+
+```
+node app.js
+```
+
+Assim que iniciar o servidor, ele irá aparecer isso:
+
+![Arquivos 7](./images/7.jpg)
+
+Caso não apareça, verifique seu código para confirmar que não digitou nada errado
+Após validar o código e iniciar o servidor, vá no Insomnia e selecione o tipo de requisição como GET e cole a rota que você acabou de criar
+
+![Arquivos 8](./images/8.jpg)
+
+Clique em Send, irá retornar o JSON referente a sua query:
+ 
+![Arquivos 9](./images/9.jpg)
+
+### Passo 17:
+
+Com tudo funcionando, nós temos um problema, toda vez que uma alteração for feita no código, teremos que derrubar o servidor e iniciar novamente, para corrigirmos isso acesse o [Nodemon](https://www.npmjs.com/package/nodemon), e encontre o código para baixál-lo:
+
+```
+npm install -g nodemon
+```
+
+Assim que instalar, acesse o arquivo package.json e adicione a seguinte linha, abaixo do "test":
+
+```
+"dev": "nodemon app.js"
+```
+
+![Arquivos 10](./images/10.jpg)
+
+Após realizar esse processo, agora utilize o comando:
+
+```
+npm run dev
+```
+
+Com esse comando, nós startamos o servidor e, graças ao nodemon, todas as alterações que fizermos e salvarmos no código, serão automaticamente enviadas para o Insomnia enquanto estivermos testando as rotas, sem a necessidade de derrubar e subir novamente o servidor.
+
+### Extras:
+
+Passei algumas dificuldades procurando como fazer oara que a requisição passasse alguma variável, segue abaixo o código referente ao Model:
+
+```
+getClientWithCelNumer: async (numeroCel, dataInicio, dataFim) => { // as variáveis devem vir aqui
+   try {
+      const query =
+      "SELECT\n"+
+      "DISTINCT SMS.DESTINATARIO as \"Nro Destinatário\",\n"+
+      "CLIENTE.NOME_RAZAOSOCIAL as \"Nome do Cliente\",\n"+
+      "SMS.DT_HR AS \"Data Envio\"\n"+
+      "FROM\n"+
+       "MK_SMS_03_HISTORICO SMS\n"+
+      "INNER JOIN MK_PESSOAS CLIENTE ON (CLIENTE.CODPESSOA = SMS.CD_CLIENTE)\n"+
+      "WHERE\n"+
+      "SMS.DESTINATARIO like $1\n"+ // Esse $1 representa a 1ª variável
+      "AND DT_HR BETWEEN $2 AND $3\n"+ // Esse $2 representa a 2ª variável e o $3, a 3ª
+      "ORDER BY 3 DESC";
+      const values = [numeroCel,dataInicio,dataFim]; // aqui, declaramos esse array, apenas para receber todas as variáveis
+      const result = await db.query(query, values); // quando for enviado para o banco, irá a query, juntamente com o array de variáveis
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+}
+```
+
+Segue agora o código referente ao Controller:
+
+```
+getClientWithCelNumer: async (req, res) => {
+    const { numeroCel, dataInicio, dataFim } = req.body; // requisições vindas do body(Insomnia)
+    try {
+      const operators = await MKModel.getClientWithCelNumer(numeroCel, dataInicio, dataFim); // variáveis para ser enviadas para o Model
+      res.status(200).json(operators); // Mostra o resultado no Insomnia como JSON
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao obter cliente/número."+error });
+    }
+}
+```
+
+Para que possamos passar a requisição, pode ser no formato que achar melhor, no exemplo, eu usei JSON:
+
+![Arquivos 11](./images/11.jpg)
+
+E, como resultado, tivemos:
+
+![Arquivos 12](./images/12.jpg)
+
+Agora, caso seja necessário uma requisição com Array, segue o seguinte código abaixo, a validação que fiz foi apenas no Controller:
+
+```
+getAllQntContratos: async (req, res) => {
+    const { diasVencimento, dataInicio, dataFim } = req.body;
+    const operators = [];
+    try {
+      for(var i=0;i<diasVencimento.length;i++){
+        operators[i] = await MKModel.getAllQntContratos(diasVencimento[i], dataInicio, dataFim);
+      }
+      res.status(200).json(operators);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao obter relatório. "+error });
+    }
+  }
+```
+
+Segue também a requisição feita:
+
+![Arquivos 13](./images/13.jpg)
 
 > [!WARNING]
 > No exemplo foi usado um array de inteiros, caso o seu array seja de Strings, então basta colocar aspas em cada valor. Exemplo: ["A","B","C","D"]
