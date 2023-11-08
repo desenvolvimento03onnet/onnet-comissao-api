@@ -137,7 +137,8 @@ O passo à passo a seguir foi inspirado no artigo: [Guia para Iniciantes: Criand
 > 
 > Dentro da pasta, crie um arquivo chamado app.js:
 > 
-> ![Arquivos 1](./images/1.jpg)
+![Arquivos 1](./images/1.jpg)
+> 
 
 > [!NOTE]
 > Passo 7:
