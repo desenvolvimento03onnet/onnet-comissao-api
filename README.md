@@ -44,7 +44,7 @@
 - [X] Back-end com rotas e variáveis
 - [X] Documentação completa do back, com formatação
 
-<body>
+
   <pre class="mermaid">
         xychart-beta
           title "Progresso do Desenvolvimento"
@@ -53,7 +53,6 @@
           bar [100, 100, 100]
           line [0, 50, 100]
   </pre>
-</body>
 
 xychart-beta
           title "Progresso do Desenvolvimento"
