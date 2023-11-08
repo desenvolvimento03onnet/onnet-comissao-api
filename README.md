@@ -45,8 +45,9 @@
 - [X] Documentação completa do back, com formatação
 
 ```mermaid
+  title Progresso de Desenvolvimento
+  pie "Rotas" : 100
    pie title Progresso de Desenvolvimento
-    "Rotas" : 100
     "Documentação" : 100
 ```
 
