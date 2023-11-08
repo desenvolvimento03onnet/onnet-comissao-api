@@ -41,8 +41,16 @@
 
 ## Progresso
 
+<div align="center">
+
+Check-list do Desenvolvimento
+
+</div>
+
 - [X] Back-end com rotas e variáveis
 - [X] Documentação completa do back, com formatação
+
+<br />
 
 <div align="center">
 
