@@ -63,12 +63,12 @@
       init: {
         'theme': 'base',
         'themeVariables': {
-          'bar1': '#0000FF',
+          'pie1': '#0000FF',
           'primaryTextColor': '#FFFFFF'
         }
       }
     }%%
-    bar title Rotas
+    pie title Rotas
     "Concluído" : 100
 ```
 ```mermaid
