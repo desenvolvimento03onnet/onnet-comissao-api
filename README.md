@@ -146,7 +146,7 @@
 
 - **/api/SaoGoncalo/** — Busca os vendedores (Frente Loja) de São Gonçalo do Abaeté *(guilhermealves600, jordanacristina679)*;
 
-- **/api/3M/** — Busca os vendedores (Frente Loja) de TRês Marias *(joicepereira625, larissagabriela669, vanielelarisse637)*;
+- **/api/3M/** — Busca os vendedores (Frente Loja) de Três Marias *(joicepereira625, larissagabriela669, vanielelarisse637)*;
 
 - **/api/Varjao/** — Busca os vendedores (Frente Loja) de Varjão de Minas *(keithhellen507, gabriellesilva630)*;
 
