@@ -44,11 +44,19 @@
 - [X] Back-end com rotas e variáveis
 - [X] Documentação completa do back, com formatação
 
+<p>
+
 ```mermaid
-  title Progresso de Desenvolvimento
-    pie "Rotas" : 100
-    pie "Documentação" : 100
+    pie title Progresso de Desenvolvimento
+    "Rotas" : 100
 ```
+
+```mermaid
+    pie title Progresso de Desenvolvimento
+    "Documentação" : 100
+```
+
+</p>
 
 ## Rotas
 
