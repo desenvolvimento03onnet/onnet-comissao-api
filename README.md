@@ -30,10 +30,12 @@
 > [!NOTE]
 > ⚠️ A API ainda está em desenvolvimento, esta é apenas a documentação da mesma para fins de consulta e/ou dúvidas. ⚠️
 
-<p align="center">
-  Os programas utilizados foram, Node.js, PostgreSQL e Insomnia.<br />
-  Os pacotes utilizados foram o Express, Pg e Nodemon.
-</p>
+> [!NOTE]
+> 
+> <p align="center">
+>   Os programas utilizados foram, Node.js, PostgreSQL e Insomnia.<br />
+>   Os pacotes utilizados foram o Express, Pg e Nodemon.
+> </p>
 
 ## Progresso
 
