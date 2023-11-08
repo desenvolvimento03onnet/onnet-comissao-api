@@ -61,12 +61,20 @@ Progresso de Desenvolvimento
       }
     }%%
     pie title Rotas
-    "Progresso" : 100
+    "Concluído" : 100
 ```
 ```mermaid
-    %%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#00FF00'}}}%%
-    pie
-    "Documentação" : 100
+    %%{
+      init: {
+        'theme': 'base',
+        'themeVariables': {
+          'pie1': '#00FF00',
+          'primaryTextColor': '#FFFFFF'
+        }
+      }
+    }%%
+    pie title Documentação
+    "Concluído" : 100
 ```
 
 ## Rotas
