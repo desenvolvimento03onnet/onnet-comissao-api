@@ -33,8 +33,8 @@
 > [!NOTE]
 > 
 > <p align="center">
->   Os programas utilizados foram, Node.js, PostgreSQL e Insomnia.<br />
->   Os pacotes utilizados foram o Express, Pg e Nodemon.
+>   Os programas utilizados foram, Node.js[^1], Visual Studio Code[^2], HeidiSQL[^3] e Insomnia[^4].<br />
+>   Os pacotes utilizados foram o Express[^5], Pg[^6] e Nodemon[^7].
 > </p>
 
 ## Progresso
@@ -116,11 +116,11 @@
 
 ## Passo à Passo
 
-O passo à passo a seguir foi inspirado no artigo: "Guia para Iniciantes: Criando uma API com Node.js, PostgreSQL e Padrão MVC"[^1]
+O passo à passo a seguir foi inspirado no artigo: "Guia para Iniciantes: Criando uma API com Node.js, PostgreSQL e Padrão MVC"[^8]
 
 ### Passo 1:
 
-Baixe e instale o Node.js[^2] e o Visual Code Studio[^3];
+Baixe e instale o Node.js[^1] e o Visual Code Studio[^2];
 
 ### Passo 2:
 
@@ -166,7 +166,7 @@ npm install express
 
 ### Passo 8:
 
-Agora vamos instalar o Express:
+Agora vamos instalar o Express[^5]:
 
 ```
 npm install express
@@ -180,7 +180,7 @@ Crie uma pasta com o nome config e, dentro dela, crie o arquivo db.js:
 
 ### Passo 10:
 
-Instale o pacote pg, ele nos permite ter uma interface com o banco de dados PostgreSQL:
+Instale o pacote Pg[^6], ele nos permite ter uma interface com o banco de dados PostgreSQL:
 
 ```
 npm install pg
@@ -332,7 +332,7 @@ Clique em Send, irá retornar o JSON referente a sua query:
 
 ### Passo 17:
 
-Com tudo funcionando, nós temos um problema, toda vez que uma alteração for feita no código, teremos que derrubar o servidor e iniciar novamente, para corrigirmos isso acesse o Nodemon[^5], e encontre o código para baixál-lo:
+Com tudo funcionando, nós temos um problema, toda vez que uma alteração for feita no código, teremos que derrubar o servidor e iniciar novamente, para corrigirmos isso acesse o Nodemon[^7], e encontre o código para baixál-lo:
 
 ```
 npm install -g nodemon
@@ -430,12 +430,29 @@ Segue também a requisição feita:
 
 ## Referências
 
-[^1]: [Guia para Iniciantes: Criando uma API com Node.js, PostgreSQL e Padrão MVC](https://dev.to/matt1cs/guia-para-iniciantes-criando-uma-api-com-nodejs-postgresql-e-padrao-mvc-4027)
+[^1]: [Node JS](https://nodejs.org/en)
 
-[^2]: [Node JS](https://nodejs.org/en)
+[^2]: [Visual Code Studio](https://code.visualstudio.com)
 
-[^3]: [Visual Code Studio](https://code.visualstudio.com)
+[^3]: [Programa HeidiSQL](https://www.heidisql.com/download.php)
 
 [^4]: [Programa Insomnia](https://insomnia.rest/download)
 
-[^5]: [Pacote Nodemon](https://www.npmjs.com/package/nodemon)
+[^5]: [Pacote Express](https://expressjs.com)
+
+[^6]: [Pacote Pg](https://www.npmjs.com/package/pg)
+
+[^7]: [Pacote Nodemon](https://www.npmjs.com/package/nodemon)
+
+[^8]: [Guia para Iniciantes: Criando uma API com Node.js, PostgreSQL e Padrão MVC](https://dev.to/matt1cs/guia-para-iniciantes-criando-uma-api-com-nodejs-postgresql-e-padrao-mvc-4027)
+
+
+
+
+
+
+
+
+
+
+
