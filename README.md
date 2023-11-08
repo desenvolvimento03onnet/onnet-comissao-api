@@ -109,11 +109,11 @@
 
 ## Passo à Passo
 
-O passo à passo a seguir foi inspirado no artigo: [Guia para Iniciantes: Criando uma API com Node.js, PostgreSQL e Padrão MVC](https://dev.to/matt1cs/guia-para-iniciantes-criando-uma-api-com-nodejs-postgresql-e-padrao-mvc-4027) 
+O passo à passo a seguir foi inspirado no artigo: "Guia para Iniciantes: Criando uma API com Node.js, PostgreSQL e Padrão MVC"[^1]
 
 ### Passo 1:
 
-Baixe e instale o [Node.js](https://nodejs.org/en) e o [Visual Code Studio](https://code.visualstudio.com);
+Baixe e instale o Node.js[^2] e o Visual Code Studio[^3];
 
 ### Passo 2:
 
@@ -304,7 +304,7 @@ app.listen(PORT, () => {
 
 ### Passo 16:
 
-Basicamente a API está pronta, para testarmos, recomendo baixar o [Insomnia](https://insomnia.rest/download), assim que baixar, crie uma workspace e uma coleção com o nome que desejar, volte para o VSCode e inicie o servidor com o comando:
+Basicamente a API está pronta, para testarmos, recomendo baixar o Insomnia[^4], assim que baixar, crie uma workspace e uma coleção com o nome que desejar, volte para o VSCode e inicie o servidor com o comando:
 
 ```
 node app.js
@@ -325,7 +325,7 @@ Clique em Send, irá retornar o JSON referente a sua query:
 
 ### Passo 17:
 
-Com tudo funcionando, nós temos um problema, toda vez que uma alteração for feita no código, teremos que derrubar o servidor e iniciar novamente, para corrigirmos isso acesse o [Nodemon](https://www.npmjs.com/package/nodemon), e encontre o código para baixál-lo:
+Com tudo funcionando, nós temos um problema, toda vez que uma alteração for feita no código, teremos que derrubar o servidor e iniciar novamente, para corrigirmos isso acesse o Nodemon[^5], e encontre o código para baixál-lo:
 
 ```
 npm install -g nodemon
