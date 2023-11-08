@@ -41,7 +41,7 @@
 
 - **/api/comissaoTotal/** — Referente ao relatório de comissões do Comercial (Frente Loja) e Telemarketing *OBS: o PAP não entra pois ainda não havia um processo ou modo de buscar todas as vendas no sistema por não haver um usuário específico. Ele recebe o valor da comissão de TV, Telefonia, Pagamento Recorrente, Comissão de Renovação, Comissão de Upgrade, Data Inicial e Data Final (caso venha vazio, ele busca a data atual) dos operadores Frente de Loja e Telemarketing, com os valores específicos de cada setor. Segue abaixo os valores:
 
-<p float="center">
+<p align="center">
 
  <img src="./images/comissaoFrenteLoja.jpg" width="260" />
 
@@ -51,7 +51,7 @@
 
 - **/api/comissaoVenda/** — Referente ao relatório de comissão de vendas (Frente Loja) de todas as cidades (exceto Araguari, pois ainda não havia migrado os clientes pro mk) Ele recebe o valor da comissão de TV, Telefonia, Pagamento Recorrente, Comissão de Renovação, Comissão de Upgrade, Data Inicial e Data Final (caso venha vazio, ele busca a data atual) dos operadores Frente de Loja, com os valores específicos de cada setor. Segue abaixo os valores:
 
-<p float="center">
+<p align="center">
 
  <img src="./images/comissaoFrenteLoja.jpg" width="260" />
 
@@ -59,7 +59,7 @@
 
 - **/api/comissaoRenovacao/** — Referente ao relatório de comissão de renovações, upgrades e downgrades (Frente Loja e Telemarketing) de todas as cidades (exceto Araguari, pois ainda não havia migrado os clientes pro mk). Ele recebe o valor da comissão de TV, Telefonia, Pagamento Recorrente, Comissão de Renovação, Comissão de Upgrade, Data Inicial e Data Final (caso venha vazio, ele busca a data atual) dos operadores Frente de Loja e Telemarketing, com os valores específicos de cada setor. Segue abaixo os valores:
 
-<p float="center">
+<p align="center">
 
  <img src="./images/comissaoFrenteLoja.jpg" width="260" />
 
