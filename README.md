@@ -48,6 +48,8 @@
 
 Progresso de Desenvolvimento
 
+</p>
+
 ```mermaid
     %%{
       init: {
@@ -58,16 +60,14 @@ Progresso de Desenvolvimento
         }
       }
     }%%
-    pie
-    "Rotas" : 100
+    pie title Rotas
+    "" : 100
 ```
 ```mermaid
     %%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#00FF00'}}}%%
     pie
     "Documentação" : 100
 ```
-
-</p>
 
 ## Rotas
 
