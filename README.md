@@ -30,12 +30,12 @@
 > [!NOTE]
 > ⚠️ A API ainda está em desenvolvimento, esta é apenas a documentação da mesma para fins de consulta e/ou dúvidas. ⚠️
 
-> [!NOTE]
-> 
-> <p align="center">
->   Os programas utilizados foram, Node.js[^1], Visual Studio Code[^2], HeidiSQL[^3] e Insomnia[^4].<br />
->   Os pacotes utilizados foram o Express[^5], Pg[^6] e Nodemon[^7].
-> </p>
+
+<br />
+<p align="center">
+  Os programas utilizados foram, Node.js[^1], Visual Studio Code[^2], HeidiSQL[^3] e Insomnia[^4].<br />
+  Os pacotes utilizados foram o Express[^5], Pg[^6] e Nodemon[^7].
+</p>
 
 ## Progresso
 
