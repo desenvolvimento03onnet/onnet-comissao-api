@@ -44,12 +44,16 @@
 - [X] Back-end com rotas e variáveis
 - [X] Documentação completa do back, com formatação
 
-xychart-beta
-    title "Progresso do Desenvolvimento"
-    x-axis [Outubro, Novembro, Dezembro]
-    y-axis "Processos (em %)" 0 --> 100
-    bar [100, 100, 100]
-    line [0, 50, 100]
+<body>
+  <pre class="mermaid">
+        xychart-beta
+          title "Progresso do Desenvolvimento"
+          x-axis [Outubro, Novembro, Dezembro]
+          y-axis "Processos (em %)" 0 --> 100
+          bar [100, 100, 100]
+          line [0, 50, 100]
+  </pre>
+</body>
 
 ## Rotas
 
