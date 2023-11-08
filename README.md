@@ -429,6 +429,6 @@ Segue também a requisição feita:
 
 [^3]: [Visual Code Studio](https://code.visualstudio.com)
 
-[^4]: [Insomnia](https://insomnia.rest/download)
+[^4]: [Programa Insomnia](https://insomnia.rest/download)
 
-[^5]: [Nodemon](https://www.npmjs.com/package/nodemon)
+[^5]: [Pacote Nodemon](https://www.npmjs.com/package/nodemon)
