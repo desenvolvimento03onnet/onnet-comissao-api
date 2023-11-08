@@ -34,8 +34,6 @@
 
 - [X] Back-end com rotas e variáveis
 - [X] Documentação completa do back, com formatação
-- [ ] Front-end estilizado
-- [ ] Documentação completa do back, com formatação
 
 ## Rotas
 
