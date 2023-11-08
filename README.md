@@ -45,10 +45,10 @@
 
 Check-list do Desenvolvimento
 
-</div>
-
 - [X] Back-end com rotas e variáveis
 - [X] Documentação completa do back, com formatação
+
+</div>
 
 <br />
 
