@@ -44,6 +44,13 @@
 - [X] Back-end com rotas e variáveis
 - [X] Documentação completa do back, com formatação
 
+xychart-beta
+    title "Progresso do Desenvolvimento"
+    x-axis [Outubro, Novembro, Dezembro]
+    y-axis "Processos (em %)" 0 --> 100
+    bar [100, 100, 100]
+    line [0, 50, 100]
+
 ## Rotas
 
 - **/api/ClientesPorCaixa/** — Clientes por Caixa, essa rota recebe a caixa e busca todos os clientes que estão com ela no banco;
