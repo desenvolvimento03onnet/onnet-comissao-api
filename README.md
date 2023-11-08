@@ -315,7 +315,7 @@ const ContractModel = require('../models/ContractModel'); // Importe o modelo
 
 const contractController = {
   getAllContracts: async (req, res) => {
-    const { } = req.body;
+    const { } = req.query;
     try {
       const contracts = await ContractModel.getAllContracts();
       res.status(200).json(contracts);
@@ -430,7 +430,7 @@ Segue agora o código referente ao Controller:
 
 ```
 getClientWithCelNumer: async (req, res) => {
-    const { numeroCel, dataInicio, dataFim } = req.body; // requisições vindas do body(Insomnia)
+    const { numeroCel, dataInicio, dataFim } = req.query; // requisições vindas do Query(URL)
     try {
       const operators = await MKModel.getClientWithCelNumer(numeroCel, dataInicio, dataFim); // variáveis para ser enviadas para o Model
       res.status(200).json(operators); // Mostra o resultado no Insomnia como JSON
@@ -452,7 +452,7 @@ Agora, caso seja necessário uma requisição com Array, segue o seguinte códig
 
 ```
 getAllQntContratos: async (req, res) => {
-    const { diasVencimento, dataInicio, dataFim } = req.body;
+    const { diasVencimento, dataInicio, dataFim } = req.query;
     const operators = [];
     try {
       for(var i=0;i<diasVencimento.length;i++){

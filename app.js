@@ -1,11 +1,14 @@
 const express = require('express');
 const db = require('./config/db');
+const cors = require('cors');
 const MKController = require('./controllers/MKController');
 
 const app = express(); //Instância do Express
 const PORT = 3000; //Porta para o servidor, por exemplo a 3000
 
 app.use(express.json()); //Middleware para tratar os dados no formato JSON
+
+app.use(cors());
 
 app.get('/api/comissaoTotal/', MKController.getComissaoTotal);
 app.get('/api/comissaoVenda/', MKController.getComissaoVenda);

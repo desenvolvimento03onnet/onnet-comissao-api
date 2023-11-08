@@ -2895,9 +2895,9 @@ const MK = {
     try {
       const query =
       "SELECT\n"+
-      "DISTINCT SMS.DESTINATARIO as \"Nro Destinatário\",\n"+
-      "CLIENTE.NOME_RAZAOSOCIAL as \"Nome do Cliente\",\n"+
-      "SMS.DT_HR AS \"Data Envio\"\n"+
+      "DISTINCT SMS.DESTINATARIO nro,\n"+
+      "CLIENTE.NOME_RAZAOSOCIAL nome,\n"+
+      "SMS.DT_HR \"data\"\n"+
       "FROM\n"+
       "MK_SMS_03_HISTORICO SMS\n"+
       "INNER JOIN MK_PESSOAS CLIENTE ON (CLIENTE.CODPESSOA = SMS.CD_CLIENTE)\n"+

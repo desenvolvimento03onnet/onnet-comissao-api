@@ -3,7 +3,7 @@ const MKModel = require("../models/MKModel"); // Importe o modelo
 
 const MKController = {
   getComissaoTotal: async (req, res) => {
-    const { comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoRecorrenteFrente50, comissaoRenovacaoRecorrenteTele3, comissaoRenovacaoRecorrenteTele4, dataInicio, dataFim } = req.body;
+    const { comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoRecorrenteFrente50, comissaoRenovacaoRecorrenteTele3, comissaoRenovacaoRecorrenteTele4, dataInicio, dataFim } = req.query;
     try {
       const clients = await MKModel.getComissaoTotal( comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoRecorrenteFrente50, comissaoRenovacaoRecorrenteTele3, comissaoRenovacaoRecorrenteTele4, dataInicio, dataFim );
       res.status(200).json(clients);
@@ -12,7 +12,7 @@ const MKController = {
     }
   },
   getComissaoVenda: async (req, res) => {
-    const { comissaoTV, comissaoTel, comissaoRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, dataInicio, dataFim } = req.body;
+    const { comissaoTV, comissaoTel, comissaoRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, dataInicio, dataFim } = req.query;
     try {
       const clients = await MKModel.getComissaoVenda(comissaoTV, comissaoTel, comissaoRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, dataInicio, dataFim);
       res.status(200).json(clients);
@@ -21,7 +21,7 @@ const MKController = {
     }
   },
   getComissaoRenovacao: async (req, res) => {
-    const { comissaoTVFrente, comissaoTVTele, comissaoTelFrente, comissaoTelTele, comissaoRecorrenteFrente, comissaoRecorrenteTele, comissaoVendaFrente2, comissaoVendaFrente50, comissaoVendaTele3, comissaoVendaTele4, dataInicio, dataFim } = req.body;
+    const { comissaoTVFrente, comissaoTVTele, comissaoTelFrente, comissaoTelTele, comissaoRecorrenteFrente, comissaoRecorrenteTele, comissaoVendaFrente2, comissaoVendaFrente50, comissaoVendaTele3, comissaoVendaTele4, dataInicio, dataFim } = req.query;
     try {
       const clients = await MKModel.getComissaoRenovacao(comissaoTVFrente, comissaoTVTele, comissaoTelFrente, comissaoTelTele, comissaoRecorrenteFrente, comissaoRecorrenteTele, comissaoVendaFrente2, comissaoVendaFrente50, comissaoVendaTele3, comissaoVendaTele4, dataInicio, dataFim);
       res.status(200).json(clients);
@@ -30,7 +30,7 @@ const MKController = {
     }
   },
   getAllOperators: async (req, res) => {
-    const { } = req.body;
+    const { } = req.query;
     try {
       const operators = await MKModel.getAllOperators();
       res.status(200).json(operators);
@@ -39,7 +39,7 @@ const MKController = {
     }
   },
   getAllOperators3M: async (req, res) => {
-    const { } = req.body;
+    const { } = req.query;
     try {
       const operators = await MKModel.getAllOperators3M();
       res.status(200).json(operators);
@@ -48,7 +48,7 @@ const MKController = {
     }
   },
   getAllOperatorsVarzea: async (req, res) => {
-    const { } = req.body;
+    const { } = req.query;
     try {
       const operators = await MKModel.getAllOperatorsVarzea();
       res.status(200).json(operators);
@@ -57,7 +57,7 @@ const MKController = {
     }
   },
   getAllOperatorsBuritizeiro: async (req, res) => {
-    const { } = req.body;
+    const { } = req.query;
     try {
       const operators = await MKModel.getAllOperatorsBuritizeiro();
       res.status(200).json(operators);
@@ -66,7 +66,7 @@ const MKController = {
     }
   },
   getAllOperatorsPirapora: async (req, res) => {
-    const { } = req.body;
+    const { } = req.query;
     try {
       const operators = await MKModel.getAllOperatorsPirapora();
       res.status(200).json(operators);
@@ -75,7 +75,7 @@ const MKController = {
     }
   },
   getAllOperatorsJP: async (req, res) => {
-    const { } = req.body;
+    const { } = req.query;
     try {
       const operators = await MKModel.getAllOperatorsJP();
       res.status(200).json(operators);
@@ -84,7 +84,7 @@ const MKController = {
     }
   },
   getAllOperatorsPatos: async (req, res) => {
-    const { } = req.body;
+    const { } = req.query;
     try {
       const operators = await MKModel.getAllOperatorsPatos();
       res.status(200).json(operators);
@@ -93,7 +93,7 @@ const MKController = {
     }
   },
   getAllOperatorsVarjao: async (req, res) => {
-    const { } = req.body;
+    const { } = req.query;
     try {
       const operators = await MKModel.getAllOperatorsVarjao();
       res.status(200).json(operators);
@@ -102,7 +102,7 @@ const MKController = {
     }
   },
   getAllOperatorsSaoGoncalo: async (req, res) => {
-    const { } = req.body;
+    const { } = req.query;
     try {
       const operators = await MKModel.getAllOperatorsSaoGoncalo();
       res.status(200).json(operators);
@@ -111,7 +111,7 @@ const MKController = {
     }
   },
   getAllOperatorsPresidente: async (req, res) => {
-    const { } = req.body;
+    const { } = req.query;
     try {
       const operators = await MKModel.getAllOperatorsPresidente();
       res.status(200).json(operators);
@@ -120,7 +120,7 @@ const MKController = {
     }
   },
   getAllOperatorsIrai: async (req, res) => {
-    const { } = req.body;
+    const { } = req.query;
     try {
       const operators = await MKModel.getAllOperatorsIrai();
       res.status(200).json(operators);
@@ -129,7 +129,7 @@ const MKController = {
     }
   },
   getAllOperatorsAbadia: async (req, res) => {
-    const { } = req.body;
+    const { } = req.query;
     try {
       const operators = await MKModel.getAllOperatorsAbadia();
       res.status(200).json(operators);
@@ -138,7 +138,7 @@ const MKController = {
     }
   },
   getAllOperatorsLagoa: async (req, res) => {
-    const { } = req.body;
+    const { } = req.query;
     try {
       const operators = await MKModel.getAllOperatorsLagoa();
       res.status(200).json(operators);
@@ -147,7 +147,7 @@ const MKController = {
     }
   },
   getAllOperatorsGuima: async (req, res) => {
-    const { } = req.body;
+    const { } = req.query;
     try {
       const operators = await MKModel.getAllOperatorsGuima();
       res.status(200).json(operators);
@@ -156,7 +156,7 @@ const MKController = {
     }
   },
   getAllOperatorsCruzeiro: async (req, res) => {
-    const { } = req.body;
+    const { } = req.query;
     try {
       const operators = await MKModel.getAllOperatorsCruzeiro();
       res.status(200).json(operators);
@@ -165,7 +165,7 @@ const MKController = {
     }
   },
   getAllOperatorsPatro: async (req, res) => {
-    const { } = req.body;
+    const { } = req.query;
     try {
       const operators = await MKModel.getAllOperatorsPatro();
       res.status(200).json(operators);
@@ -174,7 +174,7 @@ const MKController = {
     }
   },
   getAllQntContratos: async (req, res) => {
-    const { diasVencimento, dataInicio, dataFim } = req.body;
+    const { diasVencimento, dataInicio, dataFim } = req.query;
     const operators = [];
     try {
       for(var i=0;i<diasVencimento.length;i++){
@@ -186,7 +186,7 @@ const MKController = {
     }
   },
   getClientWithCelNumer: async (req, res) => {
-    const { numeroCel, dataInicio, dataFim } = req.body;
+    const { numeroCel, dataInicio, dataFim } = req.query;
     try {
       const operators = await MKModel.getClientWithCelNumer(numeroCel, dataInicio, dataFim);
       res.status(200).json(operators);
@@ -195,7 +195,7 @@ const MKController = {
     }
   },
   getQuantityContratsActives: async (req, res) => {
-    const { dataFim } = req.body;
+    const { dataFim } = req.query;
     try {
       const operators = await MKModel.getQuantityContratsActives(dataFim);
       res.status(200).json(operators);
@@ -204,7 +204,7 @@ const MKController = {
     }
   },
   getAllCities: async (req, res) => {
-    const { } = req.body;
+    const { } = req.query;
     try {
       const operators = await MKModel.getAllCities();
       res.status(200).json(operators);
@@ -213,7 +213,7 @@ const MKController = {
     }
   },
   getAllClientsFromNAP: async (req, res) => {
-    const { caixa } = req.body;
+    const { caixa } = req.query;
     try {
       const operators = await MKModel.getAllClientsFromNAP(caixa);
       res.status(200).json(operators);
