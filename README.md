@@ -44,14 +44,20 @@
 - [X] Back-end com rotas e variáveis
 - [X] Documentação completa do back, com formatação
 
-<p>
+<p align="center">
+
+Progresso de Desenvolvimento
 
 ```mermaid
-    pie title Progresso de Desenvolvimento
-    "Rotas" : 100
-    
-    pie title Progresso de Desenvolvimento
-    "Documentação" : 100
+    %%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#FFFFFF'}}}%%
+    pie title Rotas
+    "" : 100
+```
+
+```mermaid
+    %%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#00FF00'}}}%%
+    pie title Documentação
+    "" : 100
 ```
 
 </p>
