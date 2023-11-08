@@ -43,7 +43,7 @@
 
 <div align="center">
 
-Check-list do Desenvolvimento
+### Check-list do Desenvolvimento
 
 - [X] Back-end com rotas e variáveis
 - [X] Documentação completa do back, com formatação
@@ -54,7 +54,7 @@ Check-list do Desenvolvimento
 
 <div align="center">
 
-Progresso de Desenvolvimento
+### Progresso de Desenvolvimento
 
 </div>
 
