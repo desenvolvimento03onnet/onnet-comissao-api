@@ -44,14 +44,13 @@
 - [X] Back-end com rotas e variáveis
 - [X] Documentação completa do back, com formatação
 
-Here is a simple flow chart:
-
 ```mermaid
-graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
+  xychart-beta
+          title "Progresso do Desenvolvimento"
+          x-axis [Outubro, Novembro, Dezembro]
+          y-axis "Processos (em %)" 0 --> 100
+          bar [100, 100, 100]
+          line [0, 50, 100]
 ```
 
 ## Rotas
