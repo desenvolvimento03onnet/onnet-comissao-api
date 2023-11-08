@@ -46,9 +46,8 @@
 
 ```mermaid
   title Progresso de Desenvolvimento
-  pie "Rotas" : 100
-   pie title Progresso de Desenvolvimento
-    "Documentação" : 100
+    pie "Rotas" : 100
+    pie "Documentação" : 100
 ```
 
 ## Rotas
