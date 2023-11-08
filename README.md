@@ -44,11 +44,11 @@
 - [X] Back-end com rotas e variáveis
 - [X] Documentação completa do back, com formatação
 
-<p align="center">
+<div align="center">
 
 Progresso de Desenvolvimento
 
-</p>
+</div>
 
 ```mermaid
     %%{
