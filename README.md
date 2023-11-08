@@ -420,3 +420,15 @@ Segue também a requisição feita:
 
 > [!WARNING]
 > No exemplo foi usado um array de inteiros, caso o seu array seja de Strings, então basta colocar aspas em cada valor. Exemplo: ["A","B","C","D"]
+
+## Referências
+
+[^1]: [Guia para Iniciantes: Criando uma API com Node.js, PostgreSQL e Padrão MVC](https://dev.to/matt1cs/guia-para-iniciantes-criando-uma-api-com-nodejs-postgresql-e-padrao-mvc-4027)
+
+[^2]: [Node JS](https://nodejs.org/en)
+
+[^3]: [Visual Code Studio](https://code.visualstudio.com)
+
+[^4]: [Insomnia](https://insomnia.rest/download)
+
+[^5]: [Nodemon](https://www.npmjs.com/package/nodemon)
