@@ -54,7 +54,7 @@ Progresso de Desenvolvimento
         'theme': 'base',
         'themeVariables': {
           'pie1': '#0000FF',
-          'primaryTextColor': '#0000FF'
+          'primaryTextColor': '#FFFFFF'
         }
       }
     }%%
