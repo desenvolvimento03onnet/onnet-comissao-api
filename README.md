@@ -14,7 +14,7 @@
 
 <p>
   A descrição a seguir é referente à API criada para a aplicação OnNet Relatórios <br />
-  Nela, será apresentada toda a documentação da API, juntamente com o passo a passo para criar uma nova API, caso necessário. Os programas utilizados foram, Node.js, PostgreSQL e Insomnia. Os pacotes utilizados foram o Express, Pg e Nodemon.
+  Nela, será apresentada toda a documentação da API, juntamente com o passo a passo para criar uma nova API, caso necessário.
 
 > [!IMPORTANT]
 > A Versão do Node.js utilizada foi a V20.9.0
@@ -29,6 +29,11 @@
 
 > [!NOTE]
 > ⚠️ A API ainda está em desenvolvimento, esta é apenas a documentação da mesma para fins de consulta e/ou dúvidas. ⚠️
+
+<p>
+Os programas utilizados foram, Node.js, PostgreSQL e Insomnia.<br />
+Os pacotes utilizados foram o Express, Pg e Nodemon.
+</p>
 
 ## Progresso
 
