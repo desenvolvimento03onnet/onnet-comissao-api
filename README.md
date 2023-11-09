@@ -327,6 +327,7 @@ const contractController = {
  
 module.exports = contractController;
 ```
+![Arquivos 5](./images/5.jpg)
 
 > [!WARNING]
 > Nesse back eu utilizei o tipo de requisição pelo body, esse tipo funciona apenas em aplicações externas como o Insomnia, caso vá fazer um front-end web, utilize a configuração abaixo:
@@ -350,8 +351,6 @@ module.exports = contractController;
 > ```
 > 
 > Por que essa alteração? o body só pode ser enviado por aplicações externas, pois nelas você consegue enviar todo um corpo diretamente para a API, no navegador isso não é possível, pois não é possível enviar nada diretamente do navegador para a API, apenas passando diretamente por URL, que é o caso do query, ele envia juntamente com a rota, Exemplo: localhost:3000/api/teste?variavel1=teste1&variavel2=teste2
-
-![Arquivos 5](./images/5.jpg)
 
 ### Passo 15:
 
