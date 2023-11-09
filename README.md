@@ -315,7 +315,7 @@ const ContractModel = require('../models/ContractModel'); // Importe o modelo
 
 const contractController = {
   getAllContracts: async (req, res) => {
-    const { } = req.query;
+    const { } = req.body;
     try {
       const contracts = await ContractModel.getAllContracts();
       res.status(200).json(contracts);
@@ -327,6 +327,29 @@ const contractController = {
  
 module.exports = contractController;
 ```
+
+> [!WARNING]
+> Nesse back eu utilizei o tipo de requisição pelo body, esse tipo funciona apenas em aplicações externas como o Insomnia, caso vá fazer um front-end web, utilize a configuração abaixo:
+> 
+> ```
+> const ContractModel = require('../models/ContractModel'); // Importe o modelo
+> 
+> const contractController = {
+>   getAllContracts: async (req, res) => {
+>     const { } = req.query; // No lugar do req.body, coloque req.query
+>     try {
+>       const contracts = await ContractModel.getAllContracts();
+>       res.status(200).json(contracts);
+>     } catch (error) {
+>       res.status(500).json({ error: 'Erro ao obter lista de contratos.' });
+>     }
+>   }
+> };
+>  
+> module.exports = contractController;
+> ```
+> 
+> Por que essa alteração? o body só pode ser enviado por aplicações externas, pois nelas você consegue enviar todo um corpo diretamente para a API, no navegador isso não é possível, pois não é possível enviar nada diretamente do navegador para a API, apenas passando diretamente por URL, que é o caso do query, ele envia juntamente com a rota, Exemplo: localhost:3000/api/teste?variavel1=teste1&variavel2=teste2
 
 ![Arquivos 5](./images/5.jpg)
 
@@ -430,7 +453,7 @@ Segue agora o código referente ao Controller:
 
 ```
 getClientWithCelNumer: async (req, res) => {
-    const { numeroCel, dataInicio, dataFim } = req.query; // requisições vindas do Query(URL)
+    const { numeroCel, dataInicio, dataFim } = req.body; // requisições vindas do Body(JSON)
     try {
       const operators = await MKModel.getClientWithCelNumer(numeroCel, dataInicio, dataFim); // variáveis para ser enviadas para o Model
       res.status(200).json(operators); // Mostra o resultado no Insomnia como JSON
@@ -452,7 +475,7 @@ Agora, caso seja necessário uma requisição com Array, segue o seguinte códig
 
 ```
 getAllQntContratos: async (req, res) => {
-    const { diasVencimento, dataInicio, dataFim } = req.query;
+    const { diasVencimento, dataInicio, dataFim } = req.body;
     const operators = [];
     try {
       for(var i=0;i<diasVencimento.length;i++){
