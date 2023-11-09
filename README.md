@@ -308,7 +308,7 @@ module.exports = Contrato; // Exporta a constante Contrato, juntamente com a que
 
 ### Passo 14:
 
-Dentro da pasta "controller", crie o arquivo contractController.js e coloque o seguinte código:
+Dentro da pasta "controller", crie o arquivo contractController.js e coloque o seguinte código que trabalha com requisição Body[^11]:
 
 ```
 const ContractModel = require('../models/ContractModel'); // Importe o modelo
@@ -519,3 +519,5 @@ A ferramenta[^9], inspirada em Markdown, foi utlizada para adicionar os diagrama
 [^9]: [Ferramenta Mermaid](http://mermaid.js.org/#/)
 
 [^10]: [Repositório Gráficos](https://gist.github.com/ChristopherA/bffddfdf7b1502215e44cec9fb766dfd)
+
+[^11]: [Tipos de Parâmetros nas requisições REST](https://blog.rocketseat.com.br/tipos-de-parametros-nas-requisicoes-rest/)
