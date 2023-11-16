@@ -3014,18 +3014,18 @@ const MK = {
     try {
       const query =
       "SELECT\n"+
-      "cliente.codpessoa AS \"Código do Cliente\",\n"+
-      "cliente.nome_razaosocial AS \"Cliente\",\n"+
-      "conexao.codconexao AS \"Código da Conexão\",\n"+
-      "caixa.identificacao AS \"Caixa\",\n"+
-      "porta.id_porta AS \"Porta\"\n"+
+      "cliente.codpessoa codigo,\n"+
+      "cliente.nome_razaosocial cliente,\n"+
+      "conexao.codconexao conexao,\n"+
+      "caixa.identificacao caixa,\n"+
+      "porta.id_porta porta\n"+
       "FROM mk_conexoes conexao\n"+
       "INNER JOIN mk_fiber_splitter splitter ON (conexao.cd_splitter = splitter.codsplitter)\n"+
       "INNER JOIN mk_fiber_caixa caixa ON (splitter.cd_caixa = caixa.codcaixa)\n"+
       "INNER JOIN mk_pessoas cliente ON (conexao.codcliente  = cliente.codpessoa)\n"+
       "INNER JOIN mk_fiber_splitter_portas porta ON (conexao.id_porta_splitter = porta.codsplitterporta)\n"+
       "WHERE caixa.identificacao LIKE $1\n"+
-      "ORDER BY 5";
+      "ORDER BY 4,5";
       const value = [caixa];
       const result = await db.query(query, value);
       return result.rows;
