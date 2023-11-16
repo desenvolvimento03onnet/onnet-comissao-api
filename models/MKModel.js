@@ -2874,16 +2874,23 @@ const MK = {
   getAllQntContratos: async (diasVencimento, dataInicio, dataFim) => {
     try {
       const query =
-      "SELECT\n"+
-      "vencimento.dia_vcto as \"Dia Vencimento\",\n"+
-      "COUNT(contrato.codcontrato) as \"Quantidade de Contratos\"\n"+
+      "SELECT vencimento.dia_vcto vencimento,\n"+
+      "count(contra.codcontrato) qnt\n"+
+      "FROM\n"+
+      "mk_faturamentos_regras vencimento\n"+
+      "left JOIN (\n"+
+      "SELECT distinct\n"+
+      "contrato.cd_regra_faturamento,\n"+
+      "contrato.codcontrato\n"+
       "FROM\n"+
       "mk_contratos contrato\n"+
-      "LEFT JOIN mk_faturamentos_regras vencimento ON (vencimento.codfaturamentoregra = contrato.cd_regra_faturamento)\n"+
       "WHERE\n"+
-      "vencimento.dia_vcto IN ($1)\n"+
-      "AND contrato.adesao BETWEEN $2 AND $3\n"+
-      "GROUP BY 1";
+      "contrato.adesao between $2 and $3\n"+
+      ") contra ON (contra.cd_regra_faturamento = vencimento.codfaturamentoregra)\n"+
+      "WHERE\n"+
+      "vencimento.dia_vcto||'' IN ($1)\n"+
+      "GROUP BY 1\n"+
+      "ORDER BY 1 ASC";
       const values = [diasVencimento,dataInicio,dataFim];
       const result = await db.query(query, values);
       return result.rows;
@@ -2894,17 +2901,22 @@ const MK = {
   getClientWithCelNumer: async (numeroCel, dataInicio, dataFim) => {
     try {
       const query =
-      "SELECT\n"+
-      "DISTINCT SMS.DESTINATARIO nro,\n"+
+      "SELECT DISTINCT\n"+
+      "CASE\n"+
+      "WHEN length(SMS.DESTINATARIO) = 11 THEN '(' || LEFT(SMS.DESTINATARIO, 2) || ') ' || SUBSTRING(SMS.DESTINATARIO,3,5) || '-' || SUBSTRING(SMS.DESTINATARIO,8,4)\n"+
+      "WHEN length(SMS.DESTINATARIO) = 10 THEN '(' || LEFT(SMS.DESTINATARIO, 2) || ') 9' || SUBSTRING(SMS.DESTINATARIO,3,4) || '-' || SUBSTRING(SMS.DESTINATARIO,7,4)\n"+
+      "ELSE SMS.DESTINATARIO\n"+
+      "end nro,\n"+
       "CLIENTE.NOME_RAZAOSOCIAL nome,\n"+
-      "SMS.DT_HR \"data\"\n"+
+      "SMS.dt_hr \"data\",\n"+
+      "SMS.msg\n"+
       "FROM\n"+
       "MK_SMS_03_HISTORICO SMS\n"+
       "INNER JOIN MK_PESSOAS CLIENTE ON (CLIENTE.CODPESSOA = SMS.CD_CLIENTE)\n"+
       "WHERE\n"+
       "SMS.DESTINATARIO like $1\n"+
       "AND DT_HR BETWEEN $2 AND $3\n"+
-      "ORDER BY 3 DESC";
+      "ORDER BY 3 ASC";
       const values = [numeroCel,dataInicio,dataFim];
       const result = await db.query(query, values);
       return result.rows;
