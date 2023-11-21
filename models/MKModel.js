@@ -405,6 +405,7 @@ const MK = {
       "contrato.plano_acesso planoC,\n"+
       "contrato.adesao,\n"+
       "contrato.operador,\n"+
+      "setor.codperfilacessomaster codsetor,\n"+
       "setor.descricao setor,\n"+
       "(\n"+
 			"SELECT\n"+
@@ -615,54 +616,8 @@ const MK = {
       "OR UPPER(produto.descricao) LIKE '%CDN%')\n"+
       ") IS TRUE THEN\n"+
       "case\n"+
-      "WHEN operador IN (\n"+
-      "'rayssa133',\n"+
-      "'eduardareis697',\n"+
-      "'kamilagomes655',\n"+
-      "'andressasouza650',\n"+
-      "'anaflavia183',\n"+
-      "'brunaeduarda622',\n"+
-      "'danielasoares695',\n"+
-      "'erikaalves646',\n"+
-      "'janinemenezes655',\n"+
-      "'keithhellen507',\n"+
-      "'gabriellesilva630',\n"+
-      "'guilhermealves600',\n"+
-      "'jordanacristina679',\n"+
-      "'geovaniasilva127',\n"+
-      "'jessicavieira676',\n"+
-      "'angelicalima645',\n"+
-      "'claricepereira607',\n"+
-      "'danielasilva674',\n"+
-      "'alinerocha658',\n"+
-      "'itamaralorrane622',\n"+
-      "'robertabarbosa840',\n"+
-      "'thaissouza673',\n"+
-      "'lorendannesantana605',\n"+
-      "'robertamonti620',\n"+
-      "'andressalemos657',\n"+
-      "'luizavieira648',\n"+
-      "'adrianecaixeta626',\n"+
-      "'ellencristina667',\n"+
-      "'larissaoliveira678',\n"+
-      "'isabelsoares686',\n"+
-      "'nathanimorais683',\n"+
-      "'joicepereira625',\n"+
-      "'vanielelarisse637'\n"+
-      ") THEN $7\n"+
-      "WHEN operador IN (\n"+
-      "'luisgustavo954',\n"+
-      "'cecilia148',\n"+
-      "'grasielaluiza670',\n"+
-      "'deborahabadia609',\n"+
-      "'paulogabriel689',\n"+
-      "'geovaneeutaqui603',\n"+
-      "'jullianabouzan690',\n"+
-      "'marcosrogerio655',\n"+
-      "'yasminsouza696',\n"+
-      "'pedrohenrique608',\n"+
-      "'larissaoliveira613'\n"+
-      ") THEN $8\n"+
+      "WHEN codsetor IN (11,13) THEN $7\n"+
+      "WHEN codsetor = 15 THEN $8\n"+
       "ELSE '0'\n"+
       "END\n"+
       "ELSE '0'\n"+
@@ -737,54 +692,8 @@ const MK = {
       "WHEN ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
       "ELSE\n"+
       "case\n"+
-      "WHEN operador IN (\n"+
-      "'rayssa133',\n"+
-      "'eduardareis697',\n"+
-      "'kamilagomes655',\n"+
-      "'andressasouza650',\n"+
-      "'anaflavia183',\n"+
-      "'brunaeduarda622',\n"+
-      "'danielasoares695',\n"+
-      "'erikaalves646',\n"+
-      "'janinemenezes655',\n"+
-      "'keithhellen507',\n"+
-      "'gabriellesilva630',\n"+
-      "'guilhermealves600',\n"+
-      "'jordanacristina679',\n"+
-      "'geovaniasilva127',\n"+
-      "'jessicavieira676',\n"+
-      "'angelicalima645',\n"+
-      "'claricepereira607',\n"+
-      "'danielasilva674',\n"+
-      "'alinerocha658',\n"+
-      "'itamaralorrane622',\n"+
-      "'robertabarbosa840',\n"+
-      "'thaissouza673',\n"+
-      "'lorendannesantana605',\n"+
-      "'robertamonti620',\n"+
-      "'andressalemos657',\n"+
-      "'luizavieira648',\n"+
-      "'adrianecaixeta626',\n"+
-      "'ellencristina667',\n"+
-      "'larissaoliveira678',\n"+
-      "'isabelsoares686',\n"+
-      "'nathanimorais683',\n"+
-      "'joicepereira625',\n"+
-      "'vanielelarisse637'\n"+
-      ") THEN $9\n"+
-      "WHEN operador IN (\n"+
-      "'luisgustavo954',\n"+
-      "'cecilia148',\n"+
-      "'grasielaluiza670',\n"+
-      "'deborahabadia609',\n"+
-      "'paulogabriel689',\n"+
-      "'geovaneeutaqui603',\n"+
-      "'jullianabouzan690',\n"+
-      "'marcosrogerio655',\n"+
-      "'yasminsouza696',\n"+
-      "'pedrohenrique608',\n"+
-      "'larissaoliveira613'\n"+
-      ") THEN $10\n"+
+      "WHEN codsetor IN (11,13) THEN $9\n"+
+      "WHEN codsetor = 15 THEN $10\n"+
       "ELSE '0'\n"+
       "END\n"+
       "end\n"+
@@ -840,54 +749,7 @@ const MK = {
       "AND trans.excluida = 'N'\n"+
       ") IS TRUE THEN\n"+
       "case\n"+
-      "WHEN operador IN (\n"+
-      "'rayssa133',\n"+
-      "'eduardareis697',\n"+
-      "'kamilagomes655',\n"+
-      "'andressasouza650',\n"+
-      "'anaflavia183',\n"+
-      "'brunaeduarda622',\n"+
-      "'danielasoares695',\n"+
-      "'erikaalves646',\n"+
-      "'janinemenezes655',\n"+
-      "'keithhellen507',\n"+
-      "'gabriellesilva630',\n"+
-      "'guilhermealves600',\n"+
-      "'jordanacristina679',\n"+
-      "'geovaniasilva127',\n"+
-      "'jessicavieira676',\n"+
-      "'angelicalima645',\n"+
-      "'claricepereira607',\n"+
-      "'danielasilva674',\n"+
-      "'alinerocha658',\n"+
-      "'itamaralorrane622',\n"+
-      "'robertabarbosa840',\n"+
-      "'thaissouza673',\n"+
-      "'lorendannesantana605',\n"+
-      "'robertamonti620',\n"+
-      "'andressalemos657',\n"+
-      "'luizavieira648',\n"+
-      "'adrianecaixeta626',\n"+
-      "'ellencristina667',\n"+
-      "'larissaoliveira678',\n"+
-      "'isabelsoares686',\n"+
-			"'nathanimorais683',\n"+
-      "'joicepereira625',\n"+
-      "'vanielelarisse637'\n"+
-      ") THEN $11\n"+
-      "WHEN operador IN (\n"+
-      "'luisgustavo954',\n"+
-      "'cecilia148',\n"+
-      "'grasielaluiza670',\n"+
-      "'deborahabadia609',\n"+
-      "'paulogabriel689',\n"+
-      "'geovaneeutaqui603',\n"+
-      "'jullianabouzan690',\n"+
-      "'marcosrogerio655',\n"+
-      "'yasminsouza696',\n"+
-      "'pedrohenrique608',\n"+
-      "'larissaoliveira613'\n"+
-      ") THEN $12\n"+
+      "WHEN codsetor = 15 THEN $12\n"+
       "ELSE '0'\n"+
       "end\n"+
       "ELSE '0'\n"+
@@ -918,41 +780,7 @@ const MK = {
       "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
       "ELSE\n"+
       "CASE\n"+
-      "WHEN operador IN (\n"+
-      "'rayssa133',\n"+
-      "'eduardareis697',\n"+
-      "'kamilagomes655',\n"+
-      "'andressasouza650',\n"+
-      "'anaflavia183',\n"+
-      "'brunaeduarda622',\n"+
-      "'danielasoares695',\n"+
-      "'erikaalves646',\n"+
-      "'janinemenezes655',\n"+
-      "'keithhellen507',\n"+
-      "'gabriellesilva630',\n"+
-      "'guilhermealves600',\n"+
-      "'jordanacristina679',\n"+
-      "'geovaniasilva127',\n"+
-      "'jessicavieira676',\n"+
-      "'angelicalima645',\n"+
-      "'claricepereira607',\n"+
-      "'danielasilva674',\n"+
-      "'alinerocha658',\n"+
-			"'itamaralorrane622',\n"+
-      "'robertabarbosa840',\n"+
-      "'thaissouza673',\n"+
-      "'lorendannesantana605',\n"+
-      "'robertamonti620',\n"+
-      "'andressalemos657',\n"+
-      "'luizavieira648',\n"+
-      "'adrianecaixeta626',\n"+
-      "'ellencristina667',\n"+
-      "'larissaoliveira678',\n"+
-      "'isabelsoares686',\n"+
-      "'nathanimorais683',\n"+
-      "'joicepereira625',\n"+
-			"'vanielelarisse637'\n"+
-      ") THEN\n"+
+      "WHEN codsetor IN (11,13) THEN\n"+
       "case\n"+
       "WHEN ultimoPlanoVDesc ILIKE '%r-ipca%' then\n"+
       "case\n"+
@@ -983,19 +811,7 @@ const MK = {
       "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) < 0) THEN '0'\n"+
       "END\n"+
       "END\n"+
-      "WHEN operador IN (\n"+
-      "'luisgustavo954',\n"+
-      "'cecilia148',\n"+
-      "'grasielaluiza670',\n"+
-      "'deborahabadia609',\n"+
-      "'paulogabriel689',\n"+
-      "'geovaneeutaqui603',\n"+
-      "'jullianabouzan690',\n"+
-      "'marcosrogerio655',\n"+
-      "'yasminsouza696',\n"+
-      "'pedrohenrique608',\n"+
-      "'larissaoliveira613'\n"+
-      ") THEN\n"+
+      "WHEN codsetor = 15 THEN\n"+
       "case\n"+
       "WHEN ultimoPlanoVDesc ILIKE '%r-ipca%' then\n"+
       "case\n"+
@@ -1103,6 +919,7 @@ const MK = {
       "end\n"+
       "END AS operacao,\n"+
       "usuarios.usr_login operador,\n"+
+      "perfis.codperfilacessomaster codsetor,\n"+
       "perfis.descricao setor,\n"+
       "(\n"+
       "SELECT\n"+
