@@ -1,7 +1,7 @@
 const db = require("../config/db"); // Importe a configuração do banco de dados
 
 const MK = {
-  getComissaoTotal: async ( comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoFrente50, comissaoRenovacaoRecorrenteTele3, comissaoRenovacaoRecorrenteTele4, dataInicio, dataFim ) => {
+  getComissaoTotal: async ( comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoFrente50, comissaoRenovacaoTele3, comissaoRenovacaoTele4, dataInicio, dataFim ) => {
     try {
       const query =
       "SELECT\n"+
@@ -1072,7 +1072,7 @@ const MK = {
       ") AS tabela\n"+
       ") AS tb\n"+
       "ORDER BY 3,6,11";
-      const values = [ comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoFrente50, comissaoRenovacaoRecorrenteTele3, comissaoRenovacaoRecorrenteTele4, dataInicio, dataFim ];
+      const values = [ comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoFrente50, comissaoRenovacaoTele3, comissaoRenovacaoTele4, dataInicio, dataFim ];
       const result = await db.query(query, values);
       return result.rows;
     } catch (error) {
