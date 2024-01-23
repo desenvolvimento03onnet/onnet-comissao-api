@@ -1181,47 +1181,47 @@ const MK = {
       "ORDER BY 3,6,13";
       //! FIM DO SQL
       /*
-      TODO $1 - vendaTVFrente
-      TODO $2 - vendaTVTele
-      TODO $3 - vendaTVPAP
-      TODO $4 - vendaTelFrente
-      TODO $5 - vendaTelTele
-      TODO $6 - vendaTelPAP
-      TODO $7 - vendaRecorrenteFrente
-      TODO $8 - vendaRecorrenteTele
-      TODO $9 - vendaRecorrentePAP
-      TODO $10 - vendaPorcentagemFrente
-      TODO $11 - vendaPorcentagemTele
-      TODO $12 - vendaPorcentagemPAP
-      TODO $13 - Dia01
-      TODO $14 - Dia02
-      TODO $15 - vendaDia01
-      TODO $16 - vendaDia02
+      TODO $1 - vendaTVFrente - VALOR PADRÃO: 0
+      TODO $2 - vendaTVTele - VALOR PADRÃO: 0
+      TODO $3 - vendaTVPAP - VALOR PADRÃO: 0
+      TODO $4 - vendaTelFrente - VALOR PADRÃO: 3
+      TODO $5 - vendaTelTele - VALOR PADRÃO: 0
+      TODO $6 - vendaTelPAP - VALOR PADRÃO: 6
+      TODO $7 - vendaRecorrenteFrente - VALOR PADRÃO: 4
+      TODO $8 - vendaRecorrenteTele - VALOR PADRÃO: 3
+      TODO $9 - vendaRecorrentePAP - VALOR PADRÃO: 3
+      TODO $10 - vendaPorcentagemFrente - VALOR PADRÃO: 0.15
+      TODO $11 - vendaPorcentagemTele - VALOR PADRÃO: 0.15
+      TODO $12 - vendaPorcentagemPAP - VALOR PADRÃO: 0.08
+      TODO $13 - Dia01 - VALOR PADRÃO: 2
+      TODO $14 - Dia02 - VALOR PADRÃO: 4
+      TODO $15 - vendaDia01 - VALOR PADRÃO: 6
+      TODO $16 - vendaDia02 - VALOR PADRÃO: 3
       TODO $17 - dataInicio
       TODO $18 - dataFim
-      TODO $19 - setores
-      TODO $20 - cidadesoperadores
-      TODO $21 - renovacaoTVFrente
-      TODO $22 - renovacaoTVTele
-      TODO $23 - renovacaoTVPAP
-      TODO $24 - renovacaoTelFrente
-      TODO $25 - renovacaoTelTele
-      TODO $26 - renovacaoTelPAP
-      TODO $27 - renovacaoRecorrenteFrente
-      TODO $28 - renovacaoRecorrenteTele
-      TODO $29 - renovacaoRecorrentePAP
-      TODO $30 - renovacaoPorcentagemFrenteRenovacao
-      TODO $31 - renovacaoPorcentagemFrenteUpgrade
-      TODO $32 - renovacaoPorcentagemTeleRenovacao
-      TODO $33 - renovacaoPorcentagemTeleUpgrade
-      TODO $34 - renovacaoPorcentagemPAPRenovacao
-      TODO $35 - renovacaoPorcentagemPAPUpgrade
-      TODO $36 - renovacaoDia01Frente
-      TODO $37 - renovacaoDia01Tele
-      TODO $38 - renovacaoDia01PAP
-      TODO $39 - renovacaoDia02Frente
-      TODO $40 - renovacaoDia02Tele
-      TODO $41 - renovacaoDia02PAP
+      TODO $19 - setores - VALOR PADRÃO: 11,13,14,15,32
+      TODO $20 - cidadesoperadores - VALOR PADRÃO: 96,105,242,67,61,19,286,57,9,5,537,183,217,191,213,538
+      TODO $21 - renovacaoTVFrente - VALOR PADRÃO: 0
+      TODO $22 - renovacaoTVTele - VALOR PADRÃO: 2
+      TODO $23 - renovacaoTVPAP - VALOR PADRÃO: 6
+      TODO $24 - renovacaoTelFrente - VALOR PADRÃO: 3
+      TODO $25 - renovacaoTelTele - VALOR PADRÃO: 3
+      TODO $26 - renovacaoTelPAP - VALOR PADRÃO: 6
+      TODO $27 - renovacaoRecorrenteFrente - VALOR PADRÃO: 4
+      TODO $28 - renovacaoRecorrenteTele - VALOR PADRÃO: 3
+      TODO $29 - renovacaoRecorrentePAP - VALOR PADRÃO: 6
+      TODO $30 - renovacaoPorcentagemFrenteRenovacao - VALOR PADRÃO: 0.02
+      TODO $31 - renovacaoPorcentagemFrenteUpgrade - VALOR PADRÃO: 0.5
+      TODO $32 - renovacaoPorcentagemTeleRenovacao - VALOR PADRÃO: 3
+      TODO $33 - renovacaoPorcentagemTeleUpgrade - VALOR PADRÃO: 4
+      TODO $34 - renovacaoPorcentagemPAPRenovacao - VALOR PADRÃO: 6
+      TODO $35 - renovacaoPorcentagemPAPUpgrade - VALOR PADRÃO: 6
+      TODO $36 - renovacaoDia01Frente - VALOR PADRÃO: 0
+      TODO $37 - renovacaoDia01Tele - VALOR PADRÃO: 0
+      TODO $38 - renovacaoDia01PAP - VALOR PADRÃO: 0
+      TODO $39 - renovacaoDia02Frente - VALOR PADRÃO: 0
+      TODO $40 - renovacaoDia02Tele - VALOR PADRÃO: 0
+      TODO $41 - renovacaoDia02PAP - VALOR PADRÃO: 0
       */
       const values = [ comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoFrente50, comissaoRenovacaoTele3, comissaoRenovacaoTele4, dataInicio, dataFim ];
       const result = await db.query(query, values);
