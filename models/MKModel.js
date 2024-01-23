@@ -694,7 +694,7 @@ const MK = {
       "plano.cd_plano_principal = planoC\n"+
       "AND (UPPER(produto.descricao) LIKE '%TELEFONIA%'\n"+
       "OR UPPER(produto.descricao) LIKE '%DDR%')\n"+
-      ") IS NOT NULL THEN $9\n"+
+      ") IS NOT NULL THEN '0'\n"+
       "ELSE '0'\n"+
       "end\n"+
       "end\n"+
@@ -1177,6 +1177,49 @@ const MK = {
       ") AS tabela\n"+
       ") AS tb\n"+
       "ORDER BY 3,6,13";
+      //! FIM DO SQL
+      /*
+      TODO $1 - vendaTVFrente
+      TODO $2 - vendaTVTele
+      TODO $3 - vendaTVPAP
+      TODO $4 - vendaTelFrente
+      TODO $5 - vendaTelTele
+      TODO $6 - vendaTelPAP
+      TODO $7 - vendaRecorrenteFrente
+      TODO $8 - vendaRecorrenteTele
+      TODO $9 - vendaRecorrentePAP
+      TODO $10 - vendaPorcentagemFrente
+      TODO $11 - vendaPorcentagemTele
+      TODO $12 - vendaPorcentagemPAP
+      TODO $13 - Dia01
+      TODO $14 - Dia02
+      TODO $15 - vendaDia01
+      TODO $16 - vendaDia02
+      TODO $17 - dataInicio
+      TODO $18 - dataFim
+      TODO $19 - setores
+      TODO $20 - renovacaoTVFrente
+      TODO $21 - renovacaoTVTele
+      TODO $22 - renovacaoTVPAP
+      TODO $23 - renovacaoTelFrente
+      TODO $24 - renovacaoTelTele
+      TODO $25 - renovacaoTelPAP
+      TODO $26 - renovacaoRecorrenteFrente
+      TODO $27 - renovacaoRecorrenteTele
+      TODO $28 - renovacaoRecorrentePAP
+      TODO $29 - renovacaoPorcentagemFrenteRenovacao
+      TODO $30 - renovacaoPorcentagemFrenteUpgrade
+      TODO $31 - renovacaoPorcentagemTeleRenovacao
+      TODO $32 - renovacaoPorcentagemTeleUpgrade
+      TODO $33 - renovacaoPorcentagemPAPRenovacao
+      TODO $34 - renovacaoPorcentagemPAPUpgrade
+      TODO $35 - renovacaoDia01Frente
+      TODO $36 - renovacaoDia01Tele
+      TODO $37 - renovacaoDia01PAP
+      TODO $38 - renovacaoDia02Frente
+      TODO $39 - renovacaoDia02Tele
+      TODO $40 - renovacaoDia02PAP
+      */
       const values = [ comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoFrente50, comissaoRenovacaoTele3, comissaoRenovacaoTele4, dataInicio, dataFim ];
       const result = await db.query(query, values);
       return result.rows;
