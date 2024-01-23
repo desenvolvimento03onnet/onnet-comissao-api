@@ -213,9 +213,9 @@ const MK = {
       "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
       "ELSE\n"+
       "case\n"+
-      "WHEN codsetor IN (11,13,14) THEN '0'\n"+
-      "WHEN codsetor = 15 THEN '0'\n"+
-      "WHEN codsetor = 32 THEN '0'\n"+
+      "WHEN codsetor IN (11,13,14) THEN $1\n"+
+      "WHEN codsetor = 15 THEN $2\n"+
+      "WHEN codsetor = 32 THEN $3\n"+
       "ELSE '0'\n"+
       "end\n"+
       "END\n"+
@@ -270,9 +270,9 @@ const MK = {
       "AND UPPER(produto.descricao) LIKE '%TEL%ADICIONAL%'\n"+
       ") IS NOT NULL THEN\n"+
       "case\n"+
-      "WHEN codsetor IN (11,13,14) THEN '3'\n"+
-      "WHEN codsetor = 15 THEN '0'\n"+
-      "WHEN codsetor = 32 THEN '6'\n"+
+      "WHEN codsetor IN (11,13,14) THEN $4\n"+
+      "WHEN codsetor = 15 THEN $5\n"+
+      "WHEN codsetor = 32 THEN $6\n"+
       "ELSE '0'\n"+
       "end\n"+
       "ELSE '0'\n"+
@@ -327,9 +327,9 @@ const MK = {
       "AND trans.excluida = 'N'\n"+
       ") IS TRUE THEN\n"+
       "case\n"+
-      "WHEN codsetor IN (11,13,14) THEN '4'\n"+
-      "WHEN codsetor = 15 THEN '3'\n"+
-      "WHEN codsetor = 32 THEN '3'\n"+
+      "WHEN codsetor IN (11,13,14) THEN $7\n"+
+      "WHEN codsetor = 15 THEN $8\n"+
+      "WHEN codsetor = 32 THEN $9\n"+
       "ELSE '0'\n"+
       "end\n"+
       "ELSE '0'\n"+
@@ -370,7 +370,7 @@ const MK = {
       "WHEN codsetor IN (11,13,14) THEN\n"+
       "(\n"+
       "SELECT\n"+
-      "(plano.vlr_mensalidade * 0.15)||''\n"+
+      "(plano.vlr_mensalidade * $10)||''\n"+
       "from\n"+
       "mk_planos_acesso plano\n"+
       "where\n"+
@@ -379,13 +379,13 @@ const MK = {
       "WHEN codsetor = 15 THEN\n"+
       "(\n"+
       "SELECT\n"+
-      "(plano.vlr_mensalidade * 0.15)||''\n"+
+      "(plano.vlr_mensalidade * $11)||''\n"+
       "from\n"+
       "mk_planos_acesso plano\n"+
       "where\n"+
       "planoC = plano.codplano\n"+
       ")\n"+
-      "WHEN codsetor = 32 THEN '0.08'\n"+
+      "WHEN codsetor = 32 THEN $12\n"+
       "ELSE '0'\n"+
       "end\n"+
       "END\n"+
@@ -421,8 +421,8 @@ const MK = {
       "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
       "ELSE\n"+
       "case\n"+
-      "WHEN vencimento IN (2) THEN '6'\n"+
-      "WHEN vencimento IN (4) THEN '3'\n"+
+      "WHEN vencimento IN ($13) THEN $15\n"+
+      "WHEN vencimento IN ($14) THEN $16\n"+
       "ELSE '0'\n"+
       "end\n"+
       "END\n"+
@@ -497,7 +497,8 @@ const MK = {
       "contrato.adesao BETWEEN $17 and $18\n"+
       "AND cliente.inativo = 'N'\n"+
       "AND operador.perfil_ativo = 'S'\n"+
-      "AND setor.codperfilacessomaster IN (11,13,14,15,32)\n"+
+      "AND setor.codperfilacessomaster IN ($19)\n"+
+      "AND cidadeope.codcidade IN ($20)\n"+
       "GROUP BY 1,2,3,4,5,6,7,8,9,10\n"+
       ") AS tabela\n"+
       "UNION\n"+
@@ -662,9 +663,9 @@ const MK = {
       "OR UPPER(produto.descricao) LIKE '%CDN%')\n"+
       ") IS TRUE THEN\n"+
       "case\n"+
-      "WHEN codsetor IN (11,13,14) THEN '0'\n"+
-      "WHEN codsetor = 15 THEN '2'\n"+
-      "WHEN codsetor = 32 THEN '6'\n"+
+      "WHEN codsetor IN (11,13,14) THEN $21\n"+
+      "WHEN codsetor = 15 THEN $22\n"+
+      "WHEN codsetor = 32 THEN $23\n"+
       "ELSE '0'\n"+
       "END\n"+
       "ELSE '0'\n"+
@@ -739,9 +740,9 @@ const MK = {
       "WHEN ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
       "ELSE\n"+
       "case\n"+
-      "WHEN codsetor IN (11,13,14) THEN '3'\n"+
-      "WHEN codsetor = 15 THEN '3'\n"+
-      "WHEN codsetor = 32 THEN '6'\n"+
+      "WHEN codsetor IN (11,13,14) THEN $24\n"+
+      "WHEN codsetor = 15 THEN $25\n"+
+      "WHEN codsetor = 32 THEN $26\n"+
       "ELSE '0'\n"+
       "END\n"+
       "end\n"+
@@ -797,9 +798,9 @@ const MK = {
       "AND trans.excluida = 'N'\n"+
       ") IS TRUE THEN\n"+
       "case\n"+
-      "WHEN codsetor IN (11,13,14) THEN '4'\n"+
-      "WHEN codsetor = 15 THEN '3'\n"+
-      "WHEN codsetor = 32 THEN '6'\n"+
+      "WHEN codsetor IN (11,13,14) THEN $27\n"+
+      "WHEN codsetor = 15 THEN $28\n"+
+      "WHEN codsetor = 32 THEN $29\n"+
       "ELSE '0'\n"+
       "end\n"+
       "ELSE '0'\n"+
@@ -837,12 +838,12 @@ const MK = {
       "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) = 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "else (ultimoPlanoNmensal * '0.02')||''\n"+
+      "else (ultimoPlanoNmensal * $30)||''\n"+
       "end\n"+
       "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) > 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "else ((ultimoPlanoNmensal - penultimoPlanoVmensal) * '0.5')||''\n"+
+      "else ((ultimoPlanoNmensal - penultimoPlanoVmensal) * $31)||''\n"+
       "end\n"+
       "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) < 0) THEN '0'\n"+
       "END\n"+
@@ -851,12 +852,12 @@ const MK = {
       "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) = 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "else (ultimoPlanoNmensal * '0.02')||''\n"+
+      "else (ultimoPlanoNmensal * $30)||''\n"+
       "end\n"+
       "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) > 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "ELSE ((ultimoPlanoNmensal - ultimoPlanoVmensal) * '0.5')||''\n"+
+      "ELSE ((ultimoPlanoNmensal - ultimoPlanoVmensal) * $31)||''\n"+
       "end\n"+
       "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) < 0) THEN '0'\n"+
       "END\n"+
@@ -868,12 +869,12 @@ const MK = {
       "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) = 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "else '3'\n"+
+      "else $32\n"+
       "end\n"+
       "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) > 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "ELSE '4'\n"+
+      "ELSE $33\n"+
       "end\n"+
       "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) < 0) THEN '0'\n"+
       "END\n"+
@@ -882,12 +883,12 @@ const MK = {
       "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) = 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "ELSE '3'\n"+
+      "ELSE $32\n"+
       "end\n"+
       "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) > 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "ELSE '4'\n"+
+      "ELSE $33\n"+
       "end\n"+
       "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) < 0) THEN '0'\n"+
       "END\n"+
@@ -899,12 +900,12 @@ const MK = {
       "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) = 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "ELSE '6'\n"+
+      "ELSE $34\n"+
       "end\n"+
       "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) > 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "ELSE '6'\n"+
+      "ELSE $35\n"+
       "end\n"+
       "WHEN (penultimoPlanoN = ultimoPlanoV) AND ((ultimoPlanoNmensal - penultimoPlanoVmensal) < 0) THEN '0'\n"+
       "END\n"+
@@ -913,12 +914,12 @@ const MK = {
       "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) = 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "ELSE '6'\n"+
+      "ELSE $34\n"+
       "end\n"+
       "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) > 0) THEN\n"+
       "case\n"+
       "when ultimoPlanoNDesc ILIKE '%r-ipca%' THEN '0'\n"+
-      "ELSE '6'\n"+
+      "ELSE $35\n"+
       "end\n"+
       "WHEN ((ultimoPlanoNmensal - ultimoPlanoVmensal) < 0) THEN '0'\n"+
       "END\n"+
@@ -958,18 +959,18 @@ const MK = {
       "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
       "ELSE\n"+
       "CASE\n"+
-      "WHEN vencimento = 2 THEN\n"+
+      "WHEN vencimento = $13 THEN\n"+
       "case\n"+
-      "WHEN codsetor IN (11,13,14) THEN '0'\n"+
-      "WHEN codsetor = 15 THEN '0'\n"+
-      "WHEN codsetor = 32 THEN '0'\n"+
+      "WHEN codsetor IN (11,13,14) THEN $36\n"+
+      "WHEN codsetor = 15 THEN $37\n"+
+      "WHEN codsetor = 32 THEN $38\n"+
       "ELSE '0'\n"+
       "end\n"+
-      "WHEN vencimento = 4 THEN\n"+
+      "WHEN vencimento = $14 THEN\n"+
       "case\n"+
-      "WHEN codsetor IN (11,13,14) THEN '0'\n"+
-      "WHEN codsetor = 15 THEN '0'\n"+
-      "WHEN codsetor = 32 THEN '0'\n"+
+      "WHEN codsetor IN (11,13,14) THEN $39\n"+
+      "WHEN codsetor = 15 THEN $40\n"+
+      "WHEN codsetor = 32 THEN $41\n"+
       "ELSE '0'\n"+
       "end\n"+
       "ELSE '0'\n"+
@@ -1173,7 +1174,8 @@ const MK = {
       "ultimo.dt_hr::DATE BETWEEN $17 and $18\n"+
       "AND contrato.cancelado = 'N'\n"+
       "AND operador.perfil_ativo = 'S'\n"+
-      "AND perfis.codperfilacessomaster IN (11,13,14,15,32)\n"+
+      "AND perfis.codperfilacessomaster IN ($19)\n"+
+      "AND cidadeope.codcidade IN ($20)\n"+
       ") AS tabela\n"+
       ") AS tb\n"+
       "ORDER BY 3,6,13";
@@ -1198,27 +1200,28 @@ const MK = {
       TODO $17 - dataInicio
       TODO $18 - dataFim
       TODO $19 - setores
-      TODO $20 - renovacaoTVFrente
-      TODO $21 - renovacaoTVTele
-      TODO $22 - renovacaoTVPAP
-      TODO $23 - renovacaoTelFrente
-      TODO $24 - renovacaoTelTele
-      TODO $25 - renovacaoTelPAP
-      TODO $26 - renovacaoRecorrenteFrente
-      TODO $27 - renovacaoRecorrenteTele
-      TODO $28 - renovacaoRecorrentePAP
-      TODO $29 - renovacaoPorcentagemFrenteRenovacao
-      TODO $30 - renovacaoPorcentagemFrenteUpgrade
-      TODO $31 - renovacaoPorcentagemTeleRenovacao
-      TODO $32 - renovacaoPorcentagemTeleUpgrade
-      TODO $33 - renovacaoPorcentagemPAPRenovacao
-      TODO $34 - renovacaoPorcentagemPAPUpgrade
-      TODO $35 - renovacaoDia01Frente
-      TODO $36 - renovacaoDia01Tele
-      TODO $37 - renovacaoDia01PAP
-      TODO $38 - renovacaoDia02Frente
-      TODO $39 - renovacaoDia02Tele
-      TODO $40 - renovacaoDia02PAP
+      TODO $20 - cidadesoperadores
+      TODO $21 - renovacaoTVFrente
+      TODO $22 - renovacaoTVTele
+      TODO $23 - renovacaoTVPAP
+      TODO $24 - renovacaoTelFrente
+      TODO $25 - renovacaoTelTele
+      TODO $26 - renovacaoTelPAP
+      TODO $27 - renovacaoRecorrenteFrente
+      TODO $28 - renovacaoRecorrenteTele
+      TODO $29 - renovacaoRecorrentePAP
+      TODO $30 - renovacaoPorcentagemFrenteRenovacao
+      TODO $31 - renovacaoPorcentagemFrenteUpgrade
+      TODO $32 - renovacaoPorcentagemTeleRenovacao
+      TODO $33 - renovacaoPorcentagemTeleUpgrade
+      TODO $34 - renovacaoPorcentagemPAPRenovacao
+      TODO $35 - renovacaoPorcentagemPAPUpgrade
+      TODO $36 - renovacaoDia01Frente
+      TODO $37 - renovacaoDia01Tele
+      TODO $38 - renovacaoDia01PAP
+      TODO $39 - renovacaoDia02Frente
+      TODO $40 - renovacaoDia02Tele
+      TODO $41 - renovacaoDia02PAP
       */
       const values = [ comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoFrente50, comissaoRenovacaoTele3, comissaoRenovacaoTele4, dataInicio, dataFim ];
       const result = await db.query(query, values);
