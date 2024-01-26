@@ -1,7 +1,7 @@
 const db = require("../config/db"); // Importe a configuração do banco de dados
 
 const MK = {
-  getComissaoTotal: async ( comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoFrente50, comissaoRenovacaoTele3, comissaoRenovacaoTele4, dataInicio, dataFim ) => {
+  getComissaoTotal: async ( vendaTVFrente, vendaTVTele, vendaTVPAP, vendaTelFrente, vendaTelTele, vendaTelPAP, vendaRecorrenteFrente, vendaRecorrenteTele, vendaRecorrentePAP, vendaPorcentagemFrente, vendaPorcentagemTele, vendaPorcentagemPAP, Dia01, Dia02, vendaDia01, vendaDia02, dataInicio, dataFim, setores, cidadesoperadores, renovacaoTVFrente, renovacaoTVTele, renovacaoTVPAP, renovacaoTelFrente, renovacaoTelTele, renovacaoTelPAP, renovacaoRecorrenteFrente, renovacaoRecorrenteTele, renovacaoRecorrentePAP, renovacaoPorcentagemFrenteRenovacao, renovacaoPorcentagemFrenteUpgrade, renovacaoPorcentagemTeleRenovacao, renovacaoPorcentagemTeleUpgrade, renovacaoPorcentagemPAPRenovacao, renovacaoPorcentagemPAPUpgrade, renovacaoDia01Frente, renovacaoDia01Tele, renovacaoDia01PAP, renovacaoDia02Frente, renovacaoDia02Tele, renovacaoDia02PAP ) => {
     try {
       const query =
       "SELECT\n"+
@@ -19,32 +19,31 @@ const MK = {
       "dt_liquidacao,\n"+
       "pago,\n"+
       "CASE\n"+
-      "WHEN valor_plano NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(valor_plano,'.',',')\n"+
+      "WHEN valor_plano NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN valor_plano\n"+
       "ELSE valor_plano\n"+
       "END valor_plano,\n"+
       "CASE\n"+
-      "WHEN valor_tv NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(valor_tv,'.',',')\n"+
+      "WHEN valor_tv NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN valor_tv\n"+
       "ELSE valor_tv\n"+
       "END valor_tv,\n"+
       "CASE\n"+
-      "WHEN valor_telefonia NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(valor_telefonia,'.',',')\n"+
+      "WHEN valor_telefonia NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN valor_telefonia\n"+
       "ELSE valor_telefonia\n"+
       "END valor_telefonia,\n"+
       "CASE\n"+
-      "WHEN valor_recorrente NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(valor_recorrente,'.',',')\n"+
+      "WHEN valor_recorrente NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN valor_recorrente\n"+
       "ELSE valor_recorrente\n"+
       "END valor_recorrente,\n"+
       "CASE\n"+
-      "WHEN comissao_venda NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(comissao_venda,'.',',')\n"+
+      "WHEN comissao_venda NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN comissao_venda\n"+
       "ELSE comissao_venda\n"+
       "END comissao_venda,\n"+
       "CASE\n"+
-      "WHEN dia_02_04 NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN REPLACE(dia_02_04,'.',',')\n"+
+      "WHEN dia_02_04 NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN dia_02_04\n"+
       "ELSE dia_02_04\n"+
       "END dia_02_04,\n"+
       "CASE\n"+
       "WHEN dt_liquidacao NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN\n"+
-      "REPLACE(\n"+
       "(\n"+
 			"(\n"+
       "select\n"+
@@ -80,8 +79,7 @@ const MK = {
       "WHEN dia_02_04 NOT IN ('Cliente não possui faturas', 'Cliente ainda não pagou') THEN CAST(dia_02_04 AS NUMERIC(9,3))\n"+
       "END\n"+
 			")\n"+
-      ")\n"+
-      "||'','.',',')\n"+
+      ")||''\n"+
       "ELSE dt_liquidacao\n"+
       "end valor_total\n"+
       "FROM\n"+
@@ -155,7 +153,7 @@ const MK = {
       "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
       "ELSE (\n"+
       "SELECT\n"+
-      "REPLACE (plano.vlr_mensalidade||'','.',',')\n"+
+      "plano.vlr_mensalidade||''\n"+
       "from\n"+
       "mk_planos_acesso plano\n"+
       "where\n"+
@@ -174,7 +172,7 @@ const MK = {
       "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
       "ELSE (\n"+
       "SELECT\n"+
-      "replace(plano.vlr_mensalidade||'','.',',')\n"+
+      "plano.vlr_mensalidade||''\n"+
       "from\n"+
       "mk_planos_acesso plano\n"+
       "where\n"+
@@ -402,7 +400,7 @@ const MK = {
       "WHEN fatura.liquidado = 'N' THEN 'Cliente ainda não pagou'\n"+
       "ELSE (\n"+
       "SELECT\n"+
-      "REPLACE (plano.vlr_mensalidade||'','.',',')\n"+
+      "plano.vlr_mensalidade||''\n"+
       "from\n"+
       "mk_planos_acesso plano\n"+
       "where\n"+
@@ -497,8 +495,8 @@ const MK = {
       "contrato.adesao BETWEEN $17 and $18\n"+
       "AND cliente.inativo = 'N'\n"+
       "AND operador.perfil_ativo = 'S'\n"+
-      "AND setor.codperfilacessomaster IN ($19)\n"+
-      "AND cidadeope.codcidade IN ($20)\n"+
+      "AND setor.codperfilacessomaster||'' IN ($19)\n"+
+      "AND cidadeope.codcidade||'' IN ($20)\n"+
       "GROUP BY 1,2,3,4,5,6,7,8,9,10\n"+
       ") AS tabela\n"+
       "UNION\n"+
@@ -1174,8 +1172,8 @@ const MK = {
       "ultimo.dt_hr::DATE BETWEEN $17 and $18\n"+
       "AND contrato.cancelado = 'N'\n"+
       "AND operador.perfil_ativo = 'S'\n"+
-      "AND perfis.codperfilacessomaster IN ($19)\n"+
-      "AND cidadeope.codcidade IN ($20)\n"+
+      "AND perfis.codperfilacessomaster||'' IN ($19)\n"+
+      "AND cidadeope.codcidade||'' IN ($20)\n"+
       ") AS tabela\n"+
       ") AS tb\n"+
       "ORDER BY 3,6,13";
@@ -1223,265 +1221,8 @@ const MK = {
       TODO $40 - renovacaoDia02Tele - VALOR PADRÃO: 0
       TODO $41 - renovacaoDia02PAP - VALOR PADRÃO: 0
       */
-      const values = [ comissaoVendaTV, comissaoVendaTel, comissaoVendaRecorrente, comissaoVenda, comissaoDia01, comissaoDia02, comissaoRenovacaoTVFrente, comissaoRenovacaoTVTele, comissaoRenovacaoTelFrente, comissaoRenovacaoTelTele, comissaoRenovacaoRecorrenteFrente, comissaoRenovacaoRecorrenteTele, comissaoRenovacaoFrente2, comissaoRenovacaoFrente50, comissaoRenovacaoTele3, comissaoRenovacaoTele4, dataInicio, dataFim ];
+      const values = [ vendaTVFrente, vendaTVTele, vendaTVPAP, vendaTelFrente, vendaTelTele, vendaTelPAP, vendaRecorrenteFrente, vendaRecorrenteTele, vendaRecorrentePAP, vendaPorcentagemFrente, vendaPorcentagemTele, vendaPorcentagemPAP, Dia01, Dia02, vendaDia01, vendaDia02, dataInicio, dataFim, setores, cidadesoperadores, renovacaoTVFrente, renovacaoTVTele, renovacaoTVPAP, renovacaoTelFrente, renovacaoTelTele, renovacaoTelPAP, renovacaoRecorrenteFrente, renovacaoRecorrenteTele, renovacaoRecorrentePAP, renovacaoPorcentagemFrenteRenovacao, renovacaoPorcentagemFrenteUpgrade, renovacaoPorcentagemTeleRenovacao, renovacaoPorcentagemTeleUpgrade, renovacaoPorcentagemPAPRenovacao, renovacaoPorcentagemPAPUpgrade, renovacaoDia01Frente, renovacaoDia01Tele, renovacaoDia01PAP, renovacaoDia02Frente, renovacaoDia02Tele, renovacaoDia02PAP ];
       const result = await db.query(query, values);
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getAllOperators: async () => {
-    try {
-      const query =
-      "SELECT usr_login\n"+
-      "FROM fr_usuario\n"+
-      "WHERE cd_perfil_acesso IN (11,13,14,15,23)\n"+
-      "AND (usr_nome NOT ILIKE '%dispon%'\n"+
-      "AND usr_nome NOT ILIKE '%pap%'\n"+
-      "AND usr_nome NOT ILIKE '%taciana alves sales%'\n"+
-      "AND usr_nome NOT ILIKE '%kênia malaquias gobira%'\n"+
-      "AND usr_nome NOT ILIKE '%Flaviana Aparecida Fassina%'\n"+
-      "AND usr_nome NOT ILIKE '%Tayná Mirian Pereira de Castro%'\n"+
-      "AND usr_nome NOT ILIKE '%Cleber Caetano%'\n"+
-      "AND usr_nome NOT ILIKE '%Vitor Martins Ferreira%'\n"+
-      "AND usr_nome NOT ILIKE '%Ruttiele Aparecida Rodrigues%')";
-      const result = await db.query(query);
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getAllOperators3M: async () => {
-    try {
-      const query =
-      "SELECT usuario.usr_login\n"+
-      "FROM fr_usuario usuario\n"+
-      "WHERE usuario.usr_email ILIKE '%venda%tm.%'\n"+
-      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
-      const result = await db.query(query);
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getAllOperatorsVarzea: async () => {
-    try {
-      const query =
-      "SELECT usuario.usr_login\n"+
-      "FROM fr_usuario usuario\n"+
-      "WHERE usuario.usr_email ILIKE '%venda%vp.%' or usuario.usr_login ILIKE '%itamaralorra%'\n"+
-      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
-      const result = await db.query(query);
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getAllOperatorsBuritizeiro: async () => {
-    try {
-      const query =
-      "SELECT usuario.usr_login\n"+
-      "FROM fr_usuario usuario\n"+
-      "WHERE usuario.usr_login ILIKE '%robertabarbosa840%' or usuario.usr_login ILIKE '%thaissouza673%'\n"+
-      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
-      const result = await db.query(query);
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getAllOperatorsPirapora: async () => {
-    try {
-      const query =
-      "SELECT usuario.usr_login\n"+
-      "FROM fr_usuario usuario\n"+
-      "WHERE usuario.usr_login ILIKE '%robertamonti620%' or usuario.usr_login ILIKE '%lorendannesantana605%'\n"+
-      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
-      const result = await db.query(query);
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getAllOperatorsJP: async () => {
-    try {
-      const query =
-      "SELECT usuario.usr_login\n"+
-      "FROM fr_usuario usuario\n"+
-      "WHERE usuario.usr_login in ('rayssa133',\n"+
-      "'luanasouza177',\n"+
-      "'kamillyramos133',\n"+
-      "'eduardareis697',\n"+
-      "'kamilagomes655')\n"+
-      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
-      const result = await db.query(query);
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getAllOperatorsPatos: async () => {
-    try {
-      const query =
-      "SELECT usuario.usr_login\n"+
-      "FROM fr_usuario usuario\n"+
-      "WHERE usuario.usr_login in (\n"+
-      "'andressasouza650',\n"+
-      "'anaflavia183',\n"+
-      "'brunaeduarda622',\n"+
-      "'danielasoares695',\n"+
-      "'erikaalves646',\n"+
-      "'janinemenezes655',\n"+
-      "'renatalima694')\n"+
-      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
-      const result = await db.query(query);
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getAllOperatorsVarjao: async () => {
-    try {
-      const query =
-      "SELECT usuario.usr_login\n"+
-      "FROM fr_usuario usuario\n"+
-      "WHERE usuario.usr_login in (\n"+
-      "'gabriellesilva630',\n"+
-      "'keithhellen507'\n"+
-      ")\n"+
-      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
-      const result = await db.query(query);
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getAllOperatorsSaoGoncalo: async () => {
-    try {
-      const query =
-      "SELECT usuario.usr_login\n"+
-      "FROM fr_usuario usuario\n"+
-      "WHERE usuario.usr_login in (\n"+
-      "'guilhermealves600',\n"+
-      "'jordanacristina679'\n"+
-      ")\n"+
-      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
-      const result = await db.query(query);
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getAllOperatorsPresidente: async () => {
-    try {
-      const query =
-      "SELECT usuario.usr_login\n"+
-      "FROM fr_usuario usuario\n"+
-      "WHERE usuario.usr_login in (\n"+
-      "'alexarayane680',\n"+
-      "'jessicavieira676',\n"+
-      "'geovaniasilva127'\n"+
-      ")\n"+
-      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
-      const result = await db.query(query);
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getAllOperatorsIrai: async () => {
-    try {
-      const query =
-      "SELECT usuario.usr_login\n"+
-      "FROM fr_usuario usuario\n"+
-      "WHERE usuario.usr_login in (\n"+
-      "'angelicalima645',\n"+
-      "'claricepereira607'\n"+
-      ")\n"+
-      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
-      const result = await db.query(query);
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getAllOperatorsAbadia: async () => {
-    try {
-      const query =
-      "SELECT usuario.usr_login\n"+
-      "FROM fr_usuario usuario\n"+
-      "WHERE usuario.usr_login in (\n"+
-      "'ketnenpaula138',\n"+
-      "'danielasilva674'\n"+
-      ")\n"+
-      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
-      const result = await db.query(query);
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getAllOperatorsLagoa: async () => {
-    try {
-      const query =
-      "SELECT usuario.usr_login\n"+
-      "FROM fr_usuario usuario\n"+
-      "WHERE usuario.usr_login in (\n"+
-      "'isabelsoares686',\n"+
-      "'nathanimorais683'\n"+
-      ")\n"+
-      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
-      const result = await db.query(query);
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getAllOperatorsGuima: async () => {
-    try {
-      const query =
-      "SELECT usuario.usr_login\n"+
-      "FROM fr_usuario usuario\n"+
-      "WHERE usuario.usr_login in (\n"+
-      "'adrianecaixeta626',\n"+
-      "'ellencristina667',\n"+
-      "'larissaoliveira678'\n"+
-      ")\n"+
-      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
-      const result = await db.query(query);
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
-  },   
-  getAllOperatorsCruzeiro: async () => {
-    try {
-      const query =
-      "SELECT usuario.usr_login\n"+
-      "FROM fr_usuario usuario\n"+
-      "WHERE usuario.usr_login in (\n"+
-      "'luizavieira648',\n"+
-      "'andressalemos657'\n"+
-      ")\n"+
-      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
-      const result = await db.query(query);
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
-  },
-  getAllOperatorsPatro: async () => {
-    try {
-      const query =
-      "SELECT usuario.usr_login\n"+
-      "FROM fr_usuario usuario\n"+
-      "WHERE usuario.usr_login in (\n"+
-      "'annaclara621',\n"+
-      "'jessicasilva619',\n"+
-      "'larissasilva681'\n"+
-      ")\n"+
-      "AND usuario.cd_perfil_acesso IN (11,13,14,15,23)";
-      const result = await db.query(query);
       return result.rows;
     } catch (error) {
       throw error;
@@ -1609,23 +1350,6 @@ const MK = {
       throw error;
     }
   },
-  getAllCities: async () => {
-    try {
-      const query =
-      "SELECT\n"+
-      "codcidade,\n"+
-      "cidade\n"+
-      "FROM\n"+
-      "mk_cidades\n"+
-      "WHERE\n"+
-      "codcidade IN (96, 105, 242, 67, 61, 19, 286, 57, 9, 5, 537, 183, 217, 191, 213, 538)\n"+
-      "ORDER BY 2";
-      const result = await db.query(query);
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
-  },
   getAllClientsFromNAP: async (caixa) => {
     try {
       const query =
@@ -1644,6 +1368,61 @@ const MK = {
       "ORDER BY 4,5";
       const value = [caixa];
       const result = await db.query(query, value);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllCities: async () => {
+    try {
+      const query =
+      "SELECT\n"+
+      "codcidade,\n"+
+      "cidade\n"+
+      "FROM\n"+
+      "mk_cidades\n"+
+      "cidade\n"+
+      "WHERE\n"+
+      "codcidade in (96, 105, 242, 67, 61, 19, 286, 57, 9, 5, 537, 183, 217, 191, 213, 538)\n"+
+      "ORDER BY 2";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllCitiesOperators: async () => {
+    try {
+      const query =
+      "SELECT\n"+
+      "usuario.usr_login usuario,\n"+
+      "operadorcid.codcidade\n"+
+      "FROM\n"+
+      "mk_crm_operadores operador\n"+
+      "INNER JOIN mk_pessoas operadorcad ON (operadorcad.codpessoa = operador.codpessoa)\n"+
+      "INNER JOIN mk_cidades operadorcid ON (operadorcid.codcidade = operadorcad.codcidade)\n"+
+      "LEFT JOIN fr_usuario usuario ON (usuario.usr_codigo = operador.cd_operador)\n"+
+      "WHERE\n"+
+      "operador.perfil_ativo = 'S'\n"+
+      "ORDER BY operadorcid.cidade,2";
+      const result = await db.query(query);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getAllSectors: async () => {
+    try {
+      const query =
+      "SELECT\n"+
+      "setor.codperfilacessomaster codsetor,\n"+
+      "setor.descricao setor\n"+
+      "FROM\n"+
+      "mk_usuarios_perfil_acesso_master setor\n"+
+      "WHERE\n"+
+      "setor.codperfilacessomaster IN (11,13,14,15,32)\n"+
+      "ORDER BY 2";
+      const result = await db.query(query);
       return result.rows;
     } catch (error) {
       throw error;
