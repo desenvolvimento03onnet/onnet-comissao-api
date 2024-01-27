@@ -47,15 +47,6 @@ const MKController = {
       res.status(500).json({ error: "Erro ao obter cliente/número."+error });
     }
   },
-  getAllCities: async (req, res) => {
-    const { } = req.query;
-    try {
-      const operators = await MKModel.getAllCities();
-      res.status(200).json(operators);
-    } catch (error) {
-      res.status(500).json({ error: "Erro ao obter cidades."+error });
-    }
-  },
   getAllClientsFromNAP: async (req, res) => {
     const { caixa } = req.query;
     try {

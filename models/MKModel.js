@@ -1365,6 +1365,19 @@ const MK = {
       "INNER JOIN mk_pessoas cliente ON (conexao.codcliente  = cliente.codpessoa)\n"+
       "INNER JOIN mk_fiber_splitter_portas porta ON (conexao.id_porta_splitter = porta.codsplitterporta)\n"+
       "WHERE caixa.identificacao LIKE $1\n"+
+      "UNION\n"+
+      "SELECT\n"+
+      "cliente.codpessoa codigo,\n"+
+      "cliente.nome_razaosocial cliente,\n"+
+      "conexao.codconexao conexao,\n"+
+      "caixa.identificacao caixa,\n"+
+      "porta.id_porta porta\n"+
+      "FROM vi_fiber_info_caixas_conexao vi_caixas\n"+
+      "inner JOIN mk_conexoes conexao ON (conexao.codconexao = vi_caixas.cd_conexao)\n"+
+      "inner JOIN mk_pessoas cliente ON (cliente.codpessoa = conexao.codcliente)\n"+
+      "inner JOIN mk_fiber_caixa caixa ON (caixa.codcaixa = vi_caixas.cd_caixa)\n"+
+      "left JOIN mk_fiber_splitter_portas porta ON (porta.codsplitterporta = vi_caixas.cd_porta_caixa)\n"+
+      "WHERE caixa.identificacao LIKE $1\n"+
       "ORDER BY 4,5";
       const value = [caixa];
       const result = await db.query(query, value);
