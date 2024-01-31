@@ -98,7 +98,7 @@
 
  <img src="./images/comissaoTelemarketing.jpg" width="200" /> 
 
- <img src="./images/comissaoPAP.jpg" width="260" /> 
+ <img src="./images/comissaoPAP.jpg" width="240" /> 
 
 </p>
 
