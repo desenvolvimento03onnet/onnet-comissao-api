@@ -90,7 +90,7 @@
 
 - **/api/ClientesPorCaixa/** — Clientes por Caixa, essa rota recebe a caixa e busca todos os clientes que estão com ela no banco;
 
-- **/api/comissaoTotal/** — Referente ao relatório de comissões do Comercial (Frente Loja) e Telemarketing *OBS: o PAP não entra pois ainda não havia um processo ou modo de buscar todas as vendas no sistema por não haver um usuário específico. Ele recebe o valor da comissão de TV, Telefonia, Pagamento Recorrente, Comissão de Renovação, Comissão de Upgrade, Data Inicial e Data Final (caso venha vazio, ele busca a data atual) dos operadores Frente de Loja e Telemarketing, com os valores específicos de cada setor. Segue abaixo os valores:
+- **/api/comissaoTotal/** — Referente ao relatório de comissões do Comercial (Frente Loja), o PAP e Telemarketing. Ele recebe o valor da comissão de TV, Telefonia, Pagamento Recorrente, Comissão de Renovação, Comissão de Upgrade, Data Inicial e Data Final (caso venha vazio, ele busca a data atual) dos operadores Frente de Loja e Telemarketing, com os valores específicos de cada setor. Segue abaixo os valores:
 
 <p align="center">
 
@@ -98,59 +98,19 @@
 
  <img src="./images/comissaoTelemarketing.jpg" width="200" /> 
 
-</p>
-
-- **/api/comissaoVenda/** — Referente ao relatório de comissão de vendas (Frente Loja) de todas as cidades (exceto Araguari, pois ainda não havia migrado os clientes pro mk) Ele recebe o valor da comissão de TV, Telefonia, Pagamento Recorrente, Comissão de Renovação, Comissão de Upgrade, Data Inicial e Data Final (caso venha vazio, ele busca a data atual) dos operadores Frente de Loja, com os valores específicos de cada setor. Segue abaixo os valores:
-
-<p align="center">
-
- <img src="./images/comissaoFrenteLoja.jpg" width="260" />
+ <img src="./images/comissaoPAP.jpg" width="200" /> 
 
 </p>
 
-- **/api/comissaoRenovacao/** — Referente ao relatório de comissão de renovações, upgrades e downgrades (Frente Loja e Telemarketing) de todas as cidades (exceto Araguari, pois ainda não havia migrado os clientes pro mk). Ele recebe o valor da comissão de TV, Telefonia, Pagamento Recorrente, Comissão de Renovação, Comissão de Upgrade, Data Inicial e Data Final (caso venha vazio, ele busca a data atual) dos operadores Frente de Loja e Telemarketing, com os valores específicos de cada setor. Segue abaixo os valores:
+- **/api/Cidades/** — Retorna todas as cidades que a loja atende;
 
-<p align="center">
+- **/api/ClientesProfile/** — Recebe o nome dos clientes que precisam ser lançados os R-IPCA e retorna a cidade, o cliente, a última data de vencimento e a profile de vencimento;
 
- <img src="./images/comissaoFrenteLoja.jpg" width="260" />
+- **/api/CidadesOperadores/** — Retorna todos os vendedores ativos, com as suas cidades específicas, em relação com seu cadastro de funcionário;
 
- <img src="./images/comissaoTelemarketing.jpg" width="200" /> 
+- **/api/ContratoNumero/** — Recebe o número fixo e retorna o código do cliente, o cliente, o contrato, a situação do contrato, a data de cancelamento (caso haja) e o número fixo;
 
-</p>
-
-- **/api/operators/** — Busca todos os operadores referente aos setores Comercial, SAC,Expedição, Telemarketing e Filiais (Excluindo os gestores, até a data de 07/11/2023);
-
-- **/api/cidades/** — Busca todas as cidades que a empresa atendia até a data de 07/11/2023 (Abadia dos Dourados, Buritizeiro, Cruzeiro da Fortaleza, Guimarânia, Iraí de Minas, João Pinheiro, Lagoa Formosa, Patos de Minas, Patrocínio, Pirapora, Presidente Olegário, São Gonçalo do Abaeté, Três Marias, Varjão de Minas, Várzea da Palma);
-
-- **/api/Abadia/** — Busca os vendedores (Frente Loja) de Abadia *(ketnenpaula138, danielasilva674)*;
-
-- **/api/Buritizeiro/** — Busca os vendedores (Frente Loja) de Buritizeiro *(thaissouza673, robertabarbosa840)*;
-
-- **/api/Cruzeiro/** — Busca os vendedores (Frente Loja) de Cruzeiro da Fortaleza *(luizavieira648, andressalemos657)*;
-
-- **/api/Guima/** — Busca os vendedores (Frente Loja) de Guimarânia *(adrianecaixeta626, ellencristina667, larissaoliveira678)*;
-
-- **/api/Irai/** — Busca os vendedores (Frente Loja) de Iraí de Minas *(claricepereira607, angelicalima645)*;
-
-- **/api/JP/** — Busca os vendedores (Frente Loja) de João Pinheiro *(luanasouza177, rayssa133, kamillyramos133, eduardareis697, kamilagomes655)*;
-
-- **/api/Lagoa/** — Busca os vendedores (Frente Loja) de Lagoa Formosa *(isabelsoares686, nathanimorais683)*;
-
-- **/api/Patos/** — Busca os vendedores (Frente Loja) de Patos de Minas *(andressasouza650, anaflavia183, brunaeduarda622, danielasoares695, erikaalves646, janinemenezes655, renatalima694)*;
-
-- **/api/Patrocinio/** — Busca os vendedores (Frente Loja) de Patrocínio *(jessicasilva619, annaclara621, larissasilva681)*;
-
-- **/api/Pirapora/** — Busca os vendedores (Frente Loja) de Pirapora *(lorendannesantana605, robertamonti620)*;
-
-- **/api/Presidente/** — Busca os vendedores (Frente Loja) de Presidente Olegário *(geovaniasilva127, alexarayane680, jessicavieira676)*;
-
-- **/api/SaoGoncalo/** — Busca os vendedores (Frente Loja) de São Gonçalo do Abaeté *(guilhermealves600, jordanacristina679)*;
-
-- **/api/3M/** — Busca os vendedores (Frente Loja) de Três Marias *(joicepereira625, larissagabriela669, vanielelarisse637)*;
-
-- **/api/Varjao/** — Busca os vendedores (Frente Loja) de Varjão de Minas *(keithhellen507, gabriellesilva630)*;
-
-- **/api/Varzea/** — Busca os vendedores (Frente Loja) de Várzea da Palma *(alinerocha658, itamaralorrane622)*;
+- **/api/Setores/** — Retorna todos os setores da loja;
 
 - **/api/SMSNumero/** — Recebe o nro de celular, a data inicial e a data final (caso venha vazio, ele busca a data atual) e retorna o cliente (caso tenha) que está recebendo os SMS's enviados;
 
