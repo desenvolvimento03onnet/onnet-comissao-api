@@ -15,10 +15,11 @@
 <p>
   A descrição a seguir é referente à API criada para a aplicação OnNet Relatórios <br />
   Nela, será apresentada toda a documentação da API, juntamente com o passo a passo para criar uma nova API, caso necessário.
-</p>
 
 > [!NOTE]
 > A Versão do Node.js utilizada foi a V20.9.0
+
+</p>
 
 </div>
 
@@ -26,7 +27,7 @@
 
 ## Iniciando...
 
-> [!NOTE]
+> [!IMPORTANT]
 > ⚠️ A API ainda está em desenvolvimento, esta é apenas a documentação da mesma para fins de consulta e/ou dúvidas. ⚠️
 
 
