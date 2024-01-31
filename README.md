@@ -17,7 +17,7 @@
   Nela, será apresentada toda a documentação da API, juntamente com o passo a passo para criar uma nova API, caso necessário.
 </p>
 
-> [!TIP]
+> [!NOTE]
 > A Versão do Node.js utilizada foi a V20.9.0
 
 </div>
