@@ -1441,6 +1441,71 @@ const MK = {
       throw error;
     }
   },
+  getContractByNumber: async (fixo) => {
+    try {
+      const query =
+      "SELECT\n"+
+      "pessoa.codpessoa codigo,\n"+
+      "pessoa.nome_razaosocial cliente,\n"+
+      "contrato.codcontrato contrato,\n"+
+      "CASE\n"+
+      "WHEN contrato.cancelado = 'N' THEN 'Não'\n"+
+      "ELSE 'Sim'\n"+
+      "end cancelado,\n"+
+      "COALESCE(to_char(contrato.dt_cancelamento,'DD/MM/YYYY'), 'Contrato Ativo') AS data,\n"+
+      "LEFT(telefone.num_virtual,4) || '-' || RIGHT(telefone.num_virtual,4) numero\n"+
+      "FROM mk_telefonia_assinante_num telefone\n"+
+      "INNER JOIN mk_telefonia_assinante telefonia ON (telefone.cd_assinante = telefonia.codassinante)\n"+
+      "INNER JOIN mk_pessoas pessoa ON (telefonia.cd_pessoa = pessoa.codpessoa)\n"+
+      "LEFT JOIN mk_contratos contrato ON (telefonia.cd_contrato = contrato.codcontrato)\n"+
+      "WHERE telefone.num_virtual LIKE $1";
+      const value = [fixo];
+      const result = await db.query(query, value);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getProfileFromClients: async (listaClientes) => {
+    try {
+      const query =
+      "SELECT distinct\n"+
+      "cliente.codpessoa codigo,\n"+
+      "cliente.nome_razaosocial cliente,\n"+
+      "cidade.cidade cidade,\n"+
+      "fatura.data_vencimento \"data\",\n"+
+      "profile.nome_profile profile\n"+
+      "FROM\n"+
+      "mk_pessoas cliente\n"+
+      "LEFT JOIN mk_cidades cidade ON (cidade.codcidade = cliente.codcidade)\n"+
+      "LEFT JOIN mk_faturas fatura ON (fatura.cd_pessoa = cliente.codpessoa)\n"+
+      "LEFT JOIN mk_contratos contrato ON (contrato.cliente = cliente.codpessoa)\n"+
+      "LEFT JOIN mk_profile_pgto profile ON (profile.codprofile = fatura.cd_profile_cobranca)\n"+
+      "WHERE\n"+
+      "contrato.cancelado = 'N' AND\n"+
+      "fatura.data_vencimento = (\n"+
+      "SELECT\n"+
+      "max(fat.data_vencimento)\n"+
+      "FROM\n"+
+      "mk_faturas fat\n"+
+      "WHERE\n"+
+      "fat.tipo = 'R' AND\n"+
+      "fat.excluida = 'N' AND\n"+
+      "fat.suspenso = 'N' AND\n"+
+      "fat.cd_pessoa = cliente.codpessoa\n"+
+      ") AND\n"+
+      "fatura.tipo = 'R' AND\n"+
+      "fatura.excluida = 'N' AND\n"+
+      "fatura.suspenso = 'N' and\n"+
+      "cliente.nome_razaosocial IN ($1)\n"+
+      "ORDER BY 3,4,2";
+      const values = [listaClientes];
+      const result = await db.query(query, values);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 module.exports = MK;

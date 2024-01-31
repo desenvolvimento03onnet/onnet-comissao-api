@@ -18,6 +18,8 @@ app.get('/api/ClientesPorCaixa/', MKController.getAllClientsFromNAP);
 app.get('/api/Cidades/', MKController.getAllCities);
 app.get('/api/CidadesOperadores/', MKController.getAllCitiesOperators);
 app.get('/api/Setores/', MKController.getAllSectors);
+app.get('/api/ContratoNumero/', MKController.getContractByNumber);
+app.get('/api/ClientesProfile/', MKController.getProfileFromClients);
 //app.post('/api/clientes', clienteController.createNewClient); //Rota para adicionar um novo cliente
 
 app.listen(PORT, () => {

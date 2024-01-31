@@ -83,6 +83,27 @@ const MKController = {
       res.status(500).json({ error: "Erro ao obter clientes."+error });
     }
   },
+  getContractByNumber: async (req, res) => {
+    const { fixo } = req.query;
+    try {
+      const operators = await MKModel.getContractByNumber(fixo);
+      res.status(200).json(operators);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao obter clientes."+error });
+    }
+  },
+  getProfileFromClients: async (req, res) => {
+    const { listaClientes } = req.query;
+    const operators = [];
+    try {
+      for(var i=0;i<listaClientes.length;i++){
+        operators[i] = await MKModel.getProfileFromClients(listaClientes[i]);
+      }
+      res.status(200).json(operators);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao obter relatório. "+error });
+    }
+  },
 };
 
 module.exports = MKController;
