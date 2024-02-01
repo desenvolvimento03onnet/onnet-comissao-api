@@ -1083,6 +1083,7 @@ const MK = {
       "mk_contratos contratoss\n"+
       "INNER JOIN mk_contratos_historicos histss ON (histss.cd_contrato = contratoss.codcontrato AND histss.cd_operacao IN (4,5))\n"+
       "INNER JOIN mk_pessoas clientess ON (clientess.codpessoa = contratoss.cliente)\n"+
+      "INNER JOIN fr_usuario usuarioss ON (usuarioss.usr_login = histss.operador and usuarioss.cd_perfil_acesso||'' in ($19))\n"+
 			"WHERE\n"+
       "clientess.codpessoa = clientes.codpessoa\n"+
       ")\n"+
@@ -1172,7 +1173,6 @@ const MK = {
       "ultimo.dt_hr::DATE BETWEEN $17 and $18\n"+
       "AND contrato.cancelado = 'N'\n"+
       "AND operador.perfil_ativo = 'S'\n"+
-      "AND perfis.codperfilacessomaster||'' IN ($19)\n"+
       "AND cidadeope.codcidade||'' IN ($20)\n"+
       ") AS tabela\n"+
       ") AS tb\n"+
