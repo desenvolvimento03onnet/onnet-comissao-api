@@ -794,6 +794,7 @@ const MK = {
       "WHERE\n"+
       "trans.cd_fatura = fatura.codfatura\n"+
       "AND trans.excluida = 'N'\n"+
+      "AND trans.dh >= (ultimo - INTERVAL '5 minutes')\n"+
       ") IS TRUE THEN\n"+
       "case\n"+
       "WHEN codsetor IN (11,13,14) THEN $27\n"+
@@ -1447,6 +1448,7 @@ const MK = {
       "SELECT\n"+
       "pessoa.codpessoa codigo,\n"+
       "pessoa.nome_razaosocial cliente,\n"+
+      "cidade.cidade,\n"+
       "contrato.codcontrato contrato,\n"+
       "CASE\n"+
       "WHEN contrato.cancelado = 'N' THEN 'Não'\n"+
@@ -1457,6 +1459,7 @@ const MK = {
       "FROM mk_telefonia_assinante_num telefone\n"+
       "INNER JOIN mk_telefonia_assinante telefonia ON (telefone.cd_assinante = telefonia.codassinante)\n"+
       "INNER JOIN mk_pessoas pessoa ON (telefonia.cd_pessoa = pessoa.codpessoa)\n"+
+      "LEFT JOIN mk_cidades cidade on (cidade.codcidade = pessoa.codcidade)\n"+
       "LEFT JOIN mk_contratos contrato ON (telefonia.cd_contrato = contrato.codcontrato)\n"+
       "WHERE telefone.num_virtual LIKE $1";
       const value = [fixo];
@@ -1500,6 +1503,35 @@ const MK = {
       "cliente.nome_razaosocial IN ($1)\n"+
       "ORDER BY 3,4,2";
       const values = [listaClientes];
+      const result = await db.query(query, values);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getRenovationIsPossible: async (info) => {
+    try {
+      const query =
+      "SELECT\n"+
+      "CASE\n"+
+      "WHEN hist.cd_operacao IN (4,5) THEN 'ERRO! Já foi realizada uma renovação para esse cliente, referente ao contrato: ' || contrato.codcontrato || ' no dia: ' || hist.dt_hr::DATE || ' às: ' || hist.dt_hr::TIME || ' hrs, pelo operador(a): ' || hist.operador || ' do setor: ' || setor.descricao\n"+
+      "ELSE 'Não foi encontrato nenhum registro de Upgrade/Downgrade para o contrato: ' || contrato.codcontrato || ' nos últimos 60 dias!'\n"+
+      "END validacao\n"+
+      "FROM\n"+
+      "mk_contratos contrato\n"+
+      "INNER JOIN mk_contratos_historicos hist ON (hist.cd_contrato = contrato.codcontrato)\n"+
+      "INNER JOIN mk_pessoas cliente ON (cliente.codpessoa = contrato.cliente)\n"+
+      "LEFT JOIN mk_cidades cidade ON (cidade.codcidade = cliente.codcidade)\n"+
+      "LEFT JOIN mk_planos_acesso planoV ON (planoV.codplano = hist.cd_plano_velho)\n"+
+      "LEFT JOIN mk_planos_acesso planoN ON (planoN.codplano = hist.cd_plano_novo)\n"+
+      "LEFT JOIN fr_usuario usuario ON (usuario.usr_login = hist.operador)\n"+
+      "LEFT JOIN mk_usuarios_perfil_acesso_master setor ON (setor.codperfilacessomaster = usuario.cd_perfil_acesso)\n"+
+      "WHERE\n"+
+      "hist.dt_hr >= (SELECT (DATE_TRUNC('DAY', CURRENT_DATE) - INTERVAL '60 day')::timestamp) and\n"+
+      "(cliente.nome_razaosocial ILIKE $1 OR contrato.codcontrato||'' ilike $1) AND\n"+
+      "contrato.cancelado = 'N'\n"+
+      "GROUP BY 1";
+      const values = [info];
       const result = await db.query(query, values);
       return result.rows;
     } catch (error) {

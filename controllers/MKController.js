@@ -104,6 +104,15 @@ const MKController = {
       res.status(500).json({ error: "Erro ao obter relatório. "+error });
     }
   },
+  getRenovationIsPossible: async (req, res) => {
+    const { info } = req.query;
+    try {
+      const operators = await MKModel.getRenovationIsPossible(info);
+      res.status(200).json(operators);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao obter relatório. "+error });
+    }
+  },
 };
 
 module.exports = MKController;

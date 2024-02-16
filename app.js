@@ -20,6 +20,7 @@ app.get('/api/CidadesOperadores/', MKController.getAllCitiesOperators);
 app.get('/api/Setores/', MKController.getAllSectors);
 app.get('/api/ContratoNumero/', MKController.getContractByNumber);
 app.get('/api/ClientesProfile/', MKController.getProfileFromClients);
+app.get('/api/RenovacaoPossivel/', MKController.getRenovationIsPossible);
 //app.post('/api/clientes', clienteController.createNewClient); //Rota para adicionar um novo cliente
 
 app.listen(PORT, () => {
